@@ -13,16 +13,14 @@ return [
     |
     */
 
-    'failed' => 'メールアドレスまたはパスワードが間違えています。',
-    '2fa_failed' => '二要素認証に失敗しました。',
-    'password' => 'パスワードが間違えています。',
-    'throttle' => 'ログインに続けて失敗しています。:seconds秒後に再度お試しください。',
-    'logout_success' => 'ログアウトが成功しました。',
-    'login_success' => 'ログインが成功しました。',
-    'login_failed' => 'ログインができません。',
-    'register_success' => '新規登録が成功しました。',
-    'register_failed' => '新規登録に失敗しました。',
-    'token_failed' => 'トークンが無効です。',
-    'email_error' => 'Email not exist',
-    'not_active' => 'ログインはできません。',
+    'password' => 'Mật khẩu không đúng.',
+    'logout_success' => 'Đăng xuất thành công.',
+    'login_success' => 'Đăng nhập thành công.',
+    'login_failed' => 'Địa chỉ email hoặc mật khẩu của bạn không đúng.',
+    'register_success' => 'Đăng ký mới thành công.',
+    'permission_denied' => 'Tài khoản không có quyền truy cập',
+    'register_failed' => 'Đăng ký mới không thành công.',
+    'token_failed' => 'Mã thông báo không hợp lệ.',
+    'email_error' => 'Email không tồn tại',
+    'not_active' => 'Tài khoản của bạn chưa được kích hoạt',
 ];
