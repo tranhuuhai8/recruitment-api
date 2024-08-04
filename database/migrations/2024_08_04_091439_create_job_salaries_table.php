@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('job_salaries', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('job_id')->unique();
+            $table->tinyInteger('type')->default(1)->comment('1: Net | 2: Gross | 3: Exchange');
+            $table->integer('salary_min')->nullable();
+            $table->integer('salary_max');
+            $table->softDeletes();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('job_salaries');
+    }
+};
