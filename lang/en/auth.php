@@ -13,8 +13,14 @@ return [
     |
     */
 
-    'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-
+    'password' => 'Incorrect password.',
+    'logout_success' => 'Login out successfully.',
+    'login_success' => 'Login in successfully.',
+    'login_failed' => 'Your email address or password is incorrect.',
+    'register_success' => 'New registration successful.',
+    'permission_denied' => 'Account does not have access.',
+    'register_failed' => 'New registration failed.',
+    'token_failed' => 'Invalid token.',
+    'email_error' => 'Email does not exist',
+    'not_active' => 'Your account is not activated yet.',
 ];

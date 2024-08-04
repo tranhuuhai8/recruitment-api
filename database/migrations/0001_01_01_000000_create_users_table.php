@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('mail_address')->unique();
             $table->string('password');
             $table->tinyInteger('role')->default(3)->comment('1: Admin | 2: Employer | 3: Candidate');
+            $table->tinyInteger('status')->default(1)->comment('1: Inactive | 2: Active');
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->softDeletes();
