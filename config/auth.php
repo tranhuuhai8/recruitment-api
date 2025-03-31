@@ -40,10 +40,17 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'api' => [
+        'admin' => [
             'driver' => 'jwt',
-            'provider' => 'apis',
-            'hash' => false,
+            'provider' => 'admins',
+        ],
+        'employer' => [
+            'driver' => 'jwt',
+            'provider' => 'employers',
+        ],
+        'candidate' => [
+            'driver' => 'jwt',
+            'provider' => 'candidates',
         ],
     ],
 
@@ -69,15 +76,18 @@ return [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
-        'apis' => [
+        'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'employers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
+        'candidates' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\User::class,
+        ],
     ],
 
     /*
