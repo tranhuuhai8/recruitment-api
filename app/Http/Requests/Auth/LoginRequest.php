@@ -24,7 +24,7 @@ class LoginRequest extends FormRequest
         return [
             'mail_address' => [
                 'required',
-                'string', 
+                'string',
                 'email',
                 'max:' . config('length.max_string'),
             ],

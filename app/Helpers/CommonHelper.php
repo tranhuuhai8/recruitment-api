@@ -7,9 +7,9 @@ class CommonHelper
     /**
      * randomNumber
      *
-     * @param  int $min
-     * @param  int $max
-     * @param  int $number
+     * @param  int  $min
+     * @param  int  $max
+     * @param  int  $number
      * @param  bool $flag
      * @return string
      */

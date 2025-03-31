@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class JobSalary extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
-    const TYPE_NET = 1;
-    const TYPE_GROSS = 2;
-    const TYPE_EXCHANGE = 3;
+    public const TYPE_NET = 1;
+    public const TYPE_GROSS = 2;
+    public const TYPE_EXCHANGE = 3;
 
     /**
      * The attributes that are mass assignable.
