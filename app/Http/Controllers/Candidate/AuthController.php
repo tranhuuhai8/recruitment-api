@@ -13,9 +13,11 @@ class AuthController extends BaseController
      */
     public function __construct()
     {
-        $this->middleware($this->authMiddleware())->except([
+        $this->middleware($this->authMiddleware())->except(
+            [
             'login',
-        ]);
+            ]
+        );
     }
 
     /**

@@ -17,18 +17,21 @@ class LogRequest
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
     public function handle(Request $request, Closure $next): Response
     {
         if (app()->isProduction()) {
-            Log::info('request', [
+            Log::info(
+                'request',
+                [
                 'url' => $request->fullUrl(),
                 'method' => $request->method(),
                 'parameters' => $request->except($this->dontReport),
                 'ip' => $request->ip(),
                 'user_agent' => $request->header('user-agent'),
-            ]);
+                ]
+            );
         }
 
         return $next($request);

@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CompanyContact extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
-    const STATUS_SHOW = 1;
-    const STATUS_HIDE = 2;
+    public const STATUS_SHOW = 1;
+    public const STATUS_HIDE = 2;
 
     /**
      * The attributes that are mass assignable.

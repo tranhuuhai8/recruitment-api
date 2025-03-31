@@ -6,15 +6,15 @@ use Illuminate\Http\JsonResponse;
 
 class ResponseHelper
 {
-    const STATUS_CODE_SUCCESS = 200;
-    const STATUS_CODE_BAD_REQUEST = 400;
-    const STATUS_CODE_UNAUTHORIZED = 401;
-    const STATUS_CODE_FORBIDDEN = 403;
-    const STATUS_CODE_NOT_FOUND = 404;
-    const STATUS_CODE_VALIDATE_ERROR = 422;
-    const STATUS_CODE_SERVER_ERROR = 500;
-    const HTTP_TOO_MANY_REQUESTS = 429;
-    
+    public const STATUS_CODE_SUCCESS = 200;
+    public const STATUS_CODE_BAD_REQUEST = 400;
+    public const STATUS_CODE_UNAUTHORIZED = 401;
+    public const STATUS_CODE_FORBIDDEN = 403;
+    public const STATUS_CODE_NOT_FOUND = 404;
+    public const STATUS_CODE_VALIDATE_ERROR = 422;
+    public const STATUS_CODE_SERVER_ERROR = 500;
+    public const HTTP_TOO_MANY_REQUESTS = 429;
+
     /**
      * Method sendResponse
      *
@@ -27,14 +27,16 @@ class ResponseHelper
      */
     public static function sendResponse($code, $message, $data = null, $errors = null): JsonResponse
     {
-        return response()->json([
+        return response()->json(
+            [
             'status_code' => $code,
             'message' => $message,
             'errors' => $errors,
             'data' => $data,
-        ]);
+            ]
+        );
     }
-    
+
     /**
      * Method notFound
      *
@@ -45,7 +47,7 @@ class ResponseHelper
     public static function notFound(string $text): array
     {
         return [
-            'message' => 'Không tìm thấy '. $text,
+            'message' => 'Không tìm thấy ' . $text,
             'status_code' => ResponseHelper::STATUS_CODE_NOT_FOUND,
         ];
     }
