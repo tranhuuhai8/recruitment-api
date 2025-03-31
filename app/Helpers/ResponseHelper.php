@@ -14,8 +14,15 @@ class ResponseHelper
     const STATUS_CODE_VALIDATE_ERROR = 422;
     const STATUS_CODE_SERVER_ERROR = 500;
     const HTTP_TOO_MANY_REQUESTS = 429;
-
+    
     /**
+     * Method sendResponse
+     *
+     * @param $code
+     * @param $message
+     * @param $data
+     * @param $errors
+     *
      * @return JsonResponse
      */
     public static function sendResponse($code, $message, $data = null, $errors = null): JsonResponse
@@ -27,51 +34,19 @@ class ResponseHelper
             'data' => $data,
         ]);
     }
-
+    
     /**
-     * sendError
+     * Method notFound
      *
-     * @param  string $message
-     * @param  string $code
+     * @param string $text
+     *
      * @return array
      */
-    public static function sendError(string $message, $code = self::STATUS_CODE_BAD_REQUEST): array
+    public static function notFound(string $text): array
     {
         return [
-            'message' => $message,
-            'status_code' => $code,
+            'message' => 'Không tìm thấy '. $text,
+            'status_code' => ResponseHelper::STATUS_CODE_NOT_FOUND,
         ];
-    }
-
-    /**
-     * sendErrorResponse
-     *
-     * @param  mixed $message
-     * @param  mixed $errors
-     * @param  mixed $code
-     * @return JsonResponse
-     */
-    public static function sendErrorResponse($message, $errors = null, $code = self::STATUS_CODE_BAD_REQUEST): JsonResponse
-    {
-        return self::sendResponse($code, $message, null, $errors);
-    }
-
-    /**
-     * @param $data
-     * @param string $message
-     * @param int $code
-     * @return JsonResponse
-     */
-    public static function sendSuccessResponse($data, $message = '', $code = self::STATUS_CODE_SUCCESS): JsonResponse
-    {
-        return self::sendResponse($code, $message, $data);
-    }
-
-    /**
-     * @return JsonResponse
-     */
-    public static function sendJsonResponse($data): JsonResponse
-    {
-        return response()->json($data);
     }
 }

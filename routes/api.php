@@ -1,6 +1,8 @@
 <?php
 
-// use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Candidate\AuthController as CandidateAuthController;
+use App\Http\Controllers\Employer\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,10 +16,23 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-// Route::group(['as' => 'auth.', 'prefix' => 'auth'], function () {
-//     Route::post('/login', [AuthController::class, 'login'])->name('login');
-//     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-//     Route::get('/me', [AuthController::class, 'me'])->name('me');
-//     Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('reset-password');
-//     Route::post('change-password/{token}', [AuthController::class, 'changePassword'])->name('change-password');
-// });
+
+ Route::group(['as' => 'auth.', 'prefix' => 'auth'], function () {
+    Route::group(['as' => 'employer.', 'prefix' => 'employer'], function() {
+        Route::post('/login', [AuthController::class, 'login'])->name('login');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+        Route::get('/me', [AuthController::class, 'me'])->name('me');
+    });
+
+    Route::group(['as' => 'candidate.', 'prefix' => 'candidate'], function() {
+        Route::post('/login', [CandidateAuthController::class, 'login'])->name('login');
+        Route::post('/logout', [CandidateAuthController::class, 'logout'])->name('logout');
+        Route::get('/me', [CandidateAuthController::class, 'me'])->name('me');
+    });
+
+    Route::group(['as' => 'admin.', 'prefix' => 'admin'], function() {
+        Route::post('/login', [AdminAuthController::class, 'login'])->name('login');
+        Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
+        Route::get('/me', [AdminAuthController::class, 'me'])->name('me');
+    });
+});

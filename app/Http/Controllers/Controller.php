@@ -8,22 +8,13 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\ResponseHelper;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     protected $guard = 'api';
-
-    /**
-     * constructor
-     *
-     */
-    public function __construct()
-    {
-        // $this->middleware('logRequest');
-    }
-
 
     /**
      * Get the guest middleware for the application.
@@ -110,5 +101,23 @@ class Controller extends BaseController
             $message ?? trans('response.' . $type . '_success'),
             $code ?? ResponseHelper::STATUS_CODE_SUCCESS
         );
+    }
+
+    /**
+     * Method getParamRequest
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
+    public function getParamRequest(Request $request): array
+    {
+        $search = data_get($request, 'search');
+        $perPage = data_get($request, 'per_page');
+        $orders = data_get($request, 'orders');
+        $filters = data_get($request, 'filters');
+        $all = data_get($request, 'all');
+
+        return [$search, $orders, $filters, $perPage, $all];
     }
 }

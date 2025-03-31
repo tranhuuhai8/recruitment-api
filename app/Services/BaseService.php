@@ -24,7 +24,7 @@ abstract class BaseService
     protected $searchables = [];
 
     /**
-     * [ columnKey => fieldName ]
+     * [ column1, column2 ]
      *
      * @var string[]
      */
