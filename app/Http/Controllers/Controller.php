@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -12,7 +13,9 @@ use Illuminate\Http\Request;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
 
     protected $guard = 'api';
 
@@ -61,34 +64,40 @@ class Controller extends BaseController
     /**
      * Send Error Response
      *
-     * @param string $message
-     * @param mixed $errors
-     * @param integer $code
+     * @param  string  $message
+     * @param  mixed   $errors
+     * @param  integer $code
      * @return JsonResponse
      */
-    protected function sendErrorResponse($message, $errors = null, $code = ResponseHelper::STATUS_CODE_BAD_REQUEST): JsonResponse
-    {
+    protected function sendErrorResponse(
+        string $message,
+        $errors = null,
+        int $code = ResponseHelper::STATUS_CODE_BAD_REQUEST
+    ): JsonResponse {
         return ResponseHelper::sendResponse($code, $message, null, $errors);
     }
 
     /**
      * Send Success Response
      *
-     * @param $data
-     * @param string $message
-     * @param int $code
+     * @param  mixed $data
+     * @param  string $message
+     * @param  int    $code
      * @return JsonResponse
      */
-    protected function sendSuccessResponse($data, $message = '', $code = ResponseHelper::STATUS_CODE_SUCCESS): JsonResponse
-    {
+    protected function sendSuccessResponse(
+        $data,
+        string $message = '',
+        int $code = ResponseHelper::STATUS_CODE_SUCCESS
+    ): JsonResponse {
         return ResponseHelper::sendResponse($code, $message, $data);
     }
 
     /**
      * sendResponse
      *
-     * @param $data
-     * @param string $type
+     * @param  $data
+     * @param  string $type
      * @return JsonResponse
      */
     protected function sendResponse($data, string $type = 'list', string $message = null, $code = null): JsonResponse

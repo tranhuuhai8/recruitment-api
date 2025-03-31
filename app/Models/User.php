@@ -10,13 +10,15 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory;
+    use Notifiable;
+    use SoftDeletes;
 
-    const ROLE_ADMIN = 1;
-    const ROLE_EMPLOYER = 2;
-    const ROLE_CANDIDATE = 3;
-    const STATUS_ACTIVE = 1;
-    const STATUS_INACTIVE = 2;
+    public const ROLE_ADMIN = 1;
+    public const ROLE_EMPLOYER = 2;
+    public const ROLE_CANDIDATE = 3;
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_INACTIVE = 2;
 
     /**
      * The attributes that are mass assignable.
