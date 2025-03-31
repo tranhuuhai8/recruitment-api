@@ -9,8 +9,8 @@ class JobCategory extends Model
 {
     use HasFactory;
 
-    const TYPE_DEFAULT = 1;
-    const TYPE_CUSTOMIZE = 2;
+    public const TYPE_DEFAULT = 1;
+    public const TYPE_CUSTOMIZE = 2;
 
     /**
      * The attributes that are mass assignable.

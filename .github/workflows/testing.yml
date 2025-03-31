@@ -1,0 +1,32 @@
+name: Laravel Coding Convention CI
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  convention-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install PHP and Composer
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer, cs2pr
+
+      - name: Install dependencies
+        run: composer install --no-dev --prefer-dist
+
+      - name: Ensure PHPCS is installed
+        run: composer require --dev squizlabs/php_codesniffer
+
+      - name: Execute PHP CodeSniffer
+        run: vendor/bin/phpcs --standard=PSR12 app/
+
+      # - name: Auto fix
+      #   run: vendor/bin/php-cs-fixer fix app/ --rules=@PSR12

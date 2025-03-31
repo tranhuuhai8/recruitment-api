@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Job extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
-    const TYPE_FULLTIME = 1;
-    const TYPE_PART_TIME = 2;
-    const STATUS_DRAFT = 1;
-    const STATUS_PUBLIC = 2;
+    public const TYPE_FULLTIME = 1;
+    public const TYPE_PART_TIME = 2;
+    public const STATUS_DRAFT = 1;
+    public const STATUS_PUBLIC = 2;
 
     /**
      * The attributes that are mass assignable.

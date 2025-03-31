@@ -8,10 +8,9 @@ use Illuminate\Support\Facades\App;
 
 class DateHelper
 {
-
     /**
-     * @param $date
-     * @param string $format
+     * @param  $date
+     * @param  string $format
      * @return string
      */
     public static function parseDate($date, string $format = 'Y-m-d H:i:s')
@@ -28,7 +27,7 @@ class DateHelper
     }
 
     /**
-     * @param $date
+     * @param  $date
      * @return string
      */
     public static function formattedDate($date, $isBirthday = false)
@@ -88,7 +87,7 @@ class DateHelper
      * getStartEndMonth
      *
      * @param  string $date
-     * @param  bool $tillEndOfMonth
+     * @param  bool   $tillEndOfMonth
      * @return array
      */
     public static function getStartEndMonth(string $date, bool $tillEndOfMonth = true): array
