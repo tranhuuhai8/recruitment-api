@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('company_contacts', function (Blueprint $table) {
+        Schema::create('job_applications', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('company_id');
-            $table->bigInteger('contact_type_id');
-            $table->string('url');
-            $table->tinyInteger('status')->default(1)->comment('1: Show | 2: Hide');
+            $table->unsignedBigInteger('applicant_id');
+            $table->unsignedBigInteger('job_id');
+            $table->string('file')->unique();
+            $table->string('title');
+            $table->text('description');
+            $table->tinyInteger('status')->default(1)->comment('1: Pending | 2: Accepted | 3: Rejected');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('company_contacts');
+        Schema::dropIfExists('applications');
     }
 };

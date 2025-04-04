@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('jobs', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('company_id');
+            $table->unsignedBigInteger('company_id');
             $table->string('name');
             $table->string('banner');
             $table->string('number_of_recruitment');
-            $table->bigInteger('job_category_id');
-            $table->bigInteger('city_id');
+            $table->unsignedBigInteger('job_category_id');
+            $table->unsignedBigInteger('city_id');
             $table->string('address_detail');
             $table->date('start_date');
             $table->date('end_date');
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('request_detail');
             $table->string('contact_detail');
             $table->tinyInteger('type')->default(1)->comment('1: Fulltime | 2: Part time');
-            $table->tinyInteger('status')->default(1)->comment('1: Draft | 2: Public');
+            $table->tinyInteger('status')->default(1)->comment('1: Draft | 2: Open | 3: Closed');
             $table->softDeletes();
             $table->timestamps();
         });

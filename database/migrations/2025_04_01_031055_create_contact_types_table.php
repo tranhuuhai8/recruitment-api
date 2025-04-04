@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('job_images', function (Blueprint $table) {
+        Schema::create('contact_types', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('job_id');
-            $table->string('url')->unique();
-            $table->integer('order_number');
+            $table->string('contact_name');
+            $table->string('logo');
+            $table->tinyInteger('type')->default(1)->comment('1: Default | 2: Customize');
+            $table->tinyInteger('status')->default(1)->comment('1: Show | 2: Hide');
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('job_images');
+        Schema::dropIfExists('contact_types');
     }
 };

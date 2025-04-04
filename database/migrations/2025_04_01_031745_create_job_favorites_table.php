@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('contact_types', function (Blueprint $table) {
+        Schema::create('job_favorites', function (Blueprint $table) {
             $table->id();
-            $table->string('contact_name');
-            $table->string('logo');
-            $table->tinyInteger('type')->default(1)->comment('1: Default | 2: Customize');
+            $table->unsignedBigInteger('applicant_id');
+            $table->unsignedBigInteger('job_id');
+            $table->string('note');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('contact_types');
+        Schema::dropIfExists('job_favorites');
     }
 };

@@ -11,17 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('companies', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unique();
-            $table->string('logo')->nullable();
-            $table->string('cover_img')->nullable();
-            $table->string('company_name')->unique();
-            $table->string('short_name', 10)->unique();
-            $table->string('telephone', 12)->unique();
             $table->string('mail_address')->unique();
-            $table->string('address');
-            $table->text('description');
+            $table->string('password');
+            $table->tinyInteger('role')->default(2)->comment('1: Admin | 2: Company | 3: Applicant');
+            $table->tinyInteger('status')->default(1)->comment('1: Inactive | 2: Active');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('companies');
+        Schema::dropIfExists('users');
     }
 };
