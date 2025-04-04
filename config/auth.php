@@ -44,13 +44,13 @@ return [
             'driver' => 'jwt',
             'provider' => 'admins',
         ],
-        'employer' => [
+        'company' => [
             'driver' => 'jwt',
-            'provider' => 'employers',
+            'provider' => 'companys',
         ],
-        'candidate' => [
+        'applicant' => [
             'driver' => 'jwt',
-            'provider' => 'candidates',
+            'provider' => 'applicants',
         ],
     ],
 
@@ -72,19 +72,15 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
-        ],
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-        'employers' => [
+        'companies' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
-        'candidates' => [
+        'applicants' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],

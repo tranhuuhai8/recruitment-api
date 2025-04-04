@@ -12,6 +12,9 @@ class ContactType extends Model
     public const TYPE_DEFAULT = 1;
     public const TYPE_CUSTOMIZE = 2;
 
+    public const STATUS_SHOW = 1;
+    public const STATUS_HIDE = 2;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -20,6 +23,7 @@ class ContactType extends Model
     protected $fillable = [
         'contact_name',
         'logo',
-        'type'
+        'type',
+        'status',
     ];
 }

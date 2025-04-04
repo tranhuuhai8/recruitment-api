@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('job_applications', function (Blueprint $table) {
+        Schema::create('job_salaries', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('candidate_id');
-            $table->bigInteger('job_id');
-            $table->string('file')->unique();
-            $table->string('title');
-            $table->text('description');
-            $table->string('mail_address');
+            $table->unsignedBigInteger('job_id')->unique();
+            $table->tinyInteger('type')->default(1)->comment('1: Net | 2: Gross | 3: Exchange');
+            $table->integer('salary_min')->nullable();
+            $table->integer('salary_max');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('job_applications');
+        Schema::dropIfExists('job_salaries');
     }
 };

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Candidate;
+namespace App\Services\Applicant;
 
 use App\Services\Auth\BaseAuthService;
 use App\Models\User;
@@ -20,7 +20,7 @@ class AuthService extends BaseService
      */
     public function me(): User|null
     {
-        return auth('candidate')->user();
+        return auth('applicant')->user();
     }
 
     /**
@@ -32,9 +32,9 @@ class AuthService extends BaseService
     public function attemptLogin($request): array
     {
         return BaseAuthService::getInstance()->login(
-            auth('candidate'),
+            auth('applicant'),
             $request,
-            User::ROLE_CANDIDATE
+            User::ROLE_APPLICANT
         );
     }
 
@@ -45,7 +45,7 @@ class AuthService extends BaseService
      */
     public function logout(): void
     {
-        // auth('candidate')->invalidate();
-        auth('candidate')->logout();
+        // auth('applicant')->invalidate();
+        auth('applicant')->logout();
     }
 }

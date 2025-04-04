@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Employer;
+namespace App\Http\Controllers\Company;
 
 use App\Http\Requests\Auth\LoginRequest;
-use App\Services\Employer\AuthService;
+use App\Services\Company\AuthService;
 use Illuminate\Http\JsonResponse;
 
 class AuthController extends BaseController
@@ -39,8 +39,8 @@ class AuthController extends BaseController
      */
     public function me(): JsonResponse
     {
-        $employer = AuthService::getInstance()->me();
-        return $this->sendSuccessResponse($employer);
+        $company = AuthService::getInstance()->me();
+        return $this->sendSuccessResponse($company);
     }
 
     /**
