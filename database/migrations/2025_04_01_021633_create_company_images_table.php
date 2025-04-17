@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('job_favorites', function (Blueprint $table) {
+        Schema::create('company_images', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('candidate_id');
-            $table->bigInteger('job_id');
-            $table->string('note');
-            $table->softDeletes();
+            $table->unsignedBigInteger('company_id');
+            $table->string('url')->unique();
+            $table->integer('order_number')->default(1);
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('job_favorites');
+        Schema::dropIfExists('company_images');
     }
 };

@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Services\Employer;
+namespace App\Services\Company;
 
 use App\Services\Auth\BaseAuthService;
-use Exception;
 use App\Models\User;
 use App\Services\BaseService;
-use Illuminate\Support\Facades\Hash;
 
 class AuthService extends BaseService
 {
@@ -22,7 +20,7 @@ class AuthService extends BaseService
      */
     public function me(): User|null
     {
-        return auth('employer')->user();
+        return auth('company')->user();
     }
 
     /**
@@ -34,9 +32,9 @@ class AuthService extends BaseService
     public function attemptLogin($request): array
     {
         return BaseAuthService::getInstance()->login(
-            auth('employer'),
+            auth('company'),
             $request,
-            User::ROLE_EMPLOYER
+            User::ROLE_COMPANY
         );
     }
 
@@ -47,7 +45,7 @@ class AuthService extends BaseService
      */
     public function logout(): void
     {
-        // auth('employer')->invalidate();
-        auth('employer')->logout();
+        // auth('company')->invalidate();
+        auth('company')->logout();
     }
 }

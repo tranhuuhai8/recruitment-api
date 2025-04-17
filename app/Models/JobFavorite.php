@@ -17,7 +17,7 @@ class JobFavorite extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'candidate_id',
+        'applicant_id',
         'job_id',
         'note',
     ];

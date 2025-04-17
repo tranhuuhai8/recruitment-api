@@ -15,24 +15,21 @@ class DatabaseSeeder extends Seeder
     {
         $dataInsert = [
             [
-                'name' => 'Admin',
                 'mail_address' => 'admin@gmail.com',
-                'password' => Hash::make('123456'),
+                'password' => Hash::make('12345678'),
                 'role' => User::ROLE_ADMIN,
                 'status' => User::STATUS_ACTIVE,
             ],
             [
-                'name' => 'Employer',
                 'mail_address' => 'employer@gmail.com',
-                'password' => Hash::make('123456'),
-                'role' => User::ROLE_EMPLOYER,
+                'password' => Hash::make('12345678'),
+                'role' => User::ROLE_COMPANY,
                 'status' => User::STATUS_ACTIVE,
             ],
             [
-                'name' => 'Candidate',
-                'mail_address' => 'candidate@gmail.com',
-                'password' => Hash::make('123456'),
-                'role' => User::ROLE_CANDIDATE,
+                'mail_address' => 'applicant@gmail.com',
+                'password' => Hash::make('12345678'),
+                'role' => User::ROLE_APPLICANT,
                 'status' => User::STATUS_ACTIVE,
             ],
         ];
