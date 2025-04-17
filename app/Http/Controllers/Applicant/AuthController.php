@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Candidate;
+namespace App\Http\Controllers\Applicant;
 
 use App\Http\Requests\Auth\LoginRequest;
-use App\Services\Candidate\AuthService;
+use App\Services\Applicant\AuthService;
 use Illuminate\Http\JsonResponse;
 
 class AuthController extends BaseController
@@ -39,8 +39,8 @@ class AuthController extends BaseController
      */
     public function me(): JsonResponse
     {
-        $candidate = AuthService::getInstance()->me();
-        return $this->sendSuccessResponse($candidate);
+        $applicant = AuthService::getInstance()->me();
+        return $this->sendSuccessResponse($applicant);
     }
 
     /**

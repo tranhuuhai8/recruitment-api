@@ -72,7 +72,7 @@ class Controller extends BaseController
     protected function sendErrorResponse(
         string $message,
         $errors = null,
-        int $code = ResponseHelper::STATUS_CODE_BAD_REQUEST
+        ?int $code = ResponseHelper::STATUS_CODE_BAD_REQUEST
     ): JsonResponse {
         return ResponseHelper::sendResponse($code, $message, null, $errors);
     }
@@ -88,7 +88,7 @@ class Controller extends BaseController
     protected function sendSuccessResponse(
         $data,
         string $message = '',
-        int $code = ResponseHelper::STATUS_CODE_SUCCESS
+        ?int $code = ResponseHelper::STATUS_CODE_SUCCESS
     ): JsonResponse {
         return ResponseHelper::sendResponse($code, $message, $data);
     }

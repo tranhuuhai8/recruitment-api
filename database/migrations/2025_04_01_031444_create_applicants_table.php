@@ -11,17 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('candidates', function (Blueprint $table) {
+        Schema::create('applicants', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unique();
+            $table->unsignedBigInteger('user_id')->unique();
             $table->string('name');
             $table->string('avatar')->nullable();
             $table->tinyInteger('gender')->default(1)->comment('1: Male | 2: Female | 3: Other');
-            $table->integer('age')->min(16);
-            $table->string('telephone', 12);
-            $table->bigInteger('city_id');
-            $table->string('address_detail');
-            $table->text('description');
+            $table->date('birthday')->nullable();
+            $table->string('telephone', 12)->unique();
+            $table->unsignedBigInteger('city_id');
+            $table->string('address');
+            $table->text('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -32,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('candidates');
+        Schema::dropIfExists('applicants');
     }
 };

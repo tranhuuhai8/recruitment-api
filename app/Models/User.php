@@ -15,8 +15,8 @@ class User extends Authenticatable implements JWTSubject
     use SoftDeletes;
 
     public const ROLE_ADMIN = 1;
-    public const ROLE_EMPLOYER = 2;
-    public const ROLE_CANDIDATE = 3;
+    public const ROLE_COMPANY = 2;
+    public const ROLE_APPLICANT = 3;
     public const STATUS_ACTIVE = 1;
     public const STATUS_INACTIVE = 2;
 

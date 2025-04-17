@@ -4,9 +4,7 @@ namespace App\Services;
 
 use Closure;
 use Exception;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 abstract class BaseService

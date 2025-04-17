@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('job_salaries', function (Blueprint $table) {
+        Schema::create('cities', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('job_id')->unique();
-            $table->tinyInteger('type')->default(1)->comment('1: Net | 2: Gross | 3: Exchange');
-            $table->integer('salary_min')->nullable();
-            $table->integer('salary_max');
+            $table->string('name')->unique();
+            $table->string('description');
+            $table->tinyInteger('status')->default(1)->comment('1: Show | 2: Hide');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('job_salaries');
+        Schema::dropIfExists('cities');
     }
 };
