@@ -22,23 +22,19 @@ class BaseAuthService
      * Method login
      *
      * @param $auth
-     * @param $request
+     * @param array $request
      * @param int $role
      *
      * @return array
      */
-    public function login($auth, $request, int $role): array
+    public function login($auth, array $request, int $role): array
     {
         try {
-            $user = User::where('mail_address', $request->get('mail_address'))->first();
-            $password = $request->get('password');
+            $user = User::where('mail_address', $request['mail_address'])->first();
+            $password = $request['password'];
 
-            if (!Hash::check($password, $user->password)) {
+            if (!$user || $user->role !== $role || !Hash::check($password, $user->password)) {
                 return ['message' => trans('auth.login_failed')];
-            }
-
-            if (!$user || $user->role !== $role) {
-                return ['message' => trans('auth.permission_denied')];
             }
 
             if ($user->status === User::STATUS_INACTIVE) {

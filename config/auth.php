@@ -46,7 +46,7 @@ return [
         ],
         'company' => [
             'driver' => 'jwt',
-            'provider' => 'companys',
+            'provider' => 'companies',
         ],
         'applicant' => [
             'driver' => 'jwt',
