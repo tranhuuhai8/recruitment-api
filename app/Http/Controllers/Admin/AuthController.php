@@ -28,7 +28,7 @@ class AuthController extends BaseController
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        $data = AuthService::getInstance()->attemptLogin($request);
+        $data = AuthService::getInstance()->attemptLogin($request->only($this->getFields()));
         return $this->sendResponse($data, '', trans('auth.login_success'));
     }
 
@@ -52,5 +52,18 @@ class AuthController extends BaseController
     {
         AuthService::getInstance()->logout();
         return $this->sendSuccessResponse(true, trans('auth.logout_success'));
+    }
+
+    /**
+     * getFields
+     *
+     * @return array
+     */
+    public function getFields(): array
+    {
+        return [
+            'mail_address',
+            'password',
+        ];
     }
 }
