@@ -16,7 +16,7 @@ return [
     'password' => 'Mật khẩu không đúng.',
     'logout_success' => 'Đăng xuất thành công.',
     'login_success' => 'Đăng nhập thành công.',
-    'login_failed' => 'Địa chỉ email hoặc mật khẩu của bạn không đúng.',
+    'login_failed' => 'Địa chỉ email hoặc mật khẩu của bạn không đúng!',
     'register_success' => 'Đăng ký mới thành công.',
     'permission_denied' => 'Tài khoản không có quyền truy cập',
     'register_failed' => 'Đăng ký mới không thành công.',
