@@ -1,0 +1,29 @@
+name: Deploy with label
+on:
+  pull_request:
+    branches: ["develop"]
+    types:
+      - labeled
+jobs:
+  deploy:
+    if: github.event.label.name == ':rocket:deploy'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+  
+    - name: Connect via SSH and execute script
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        allenvs: true
+        script: |
+            cd /home/services/recruitment-api
+            git pull origin develop
+            composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+            php artisan migrate --force
+            php artisan config:clear
+            php artisan config:cache
+
