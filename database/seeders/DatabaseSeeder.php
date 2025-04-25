@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
                 'status' => User::STATUS_ACTIVE,
             ],
             [
-                'mail_address' => 'employer@gmail.com',
+                'mail_address' => 'company@gmail.com',
                 'password' => Hash::make('12345678'),
                 'role' => User::ROLE_COMPANY,
                 'status' => User::STATUS_ACTIVE,
