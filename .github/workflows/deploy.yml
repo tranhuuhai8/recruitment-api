@@ -1,0 +1,29 @@
+name: Laravel deploy action
+
+on:
+  push:
+    branches: [ "develop" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Connect via SSH and execute script
+      uses: appleboy/ssh-action@master
+      env:
+        INPUT_PATH: ${{ secrets.SSH_PATH }}
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        allenvs: true
+        script: |
+          cd $INPUT_PATH
+          git pull origin develop
+          composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+          php artisan migrate --force
+          php artisan config:clear
+          php artisan config:cache
