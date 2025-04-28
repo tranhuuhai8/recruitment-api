@@ -1,17 +1,16 @@
-name: Deploy with label
+name: Laravel deploy action
+
 on:
-  pull_request:
-    branches: ["develop"]
-    types:
-      - labeled
+  push:
+    branches: [ "develop" ]
+
 jobs:
   deploy:
-    if: github.event.label.name == ':rocket:deploy'
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-  
+
     - name: Connect via SSH and execute script
       uses: appleboy/ssh-action@master
       with:
@@ -26,4 +25,3 @@ jobs:
             php artisan migrate --force
             php artisan config:clear
             php artisan config:cache
-
