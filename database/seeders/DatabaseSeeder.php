@@ -13,28 +13,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $dataInsert = [
-            [
-                'mail_address' => 'admin@gmail.com',
-                'password' => Hash::make('12345678'),
-                'role' => User::ROLE_ADMIN,
-                'status' => User::STATUS_ACTIVE,
-            ],
-            [
-                'mail_address' => 'company@gmail.com',
-                'password' => Hash::make('12345678'),
-                'role' => User::ROLE_COMPANY,
-                'status' => User::STATUS_ACTIVE,
-            ],
-            [
-                'mail_address' => 'applicant@gmail.com',
-                'password' => Hash::make('12345678'),
-                'role' => User::ROLE_APPLICANT,
-                'status' => User::STATUS_ACTIVE,
-            ],
-        ];
-
-        User::truncate();
-        User::insert($dataInsert);
+        $this->call([
+            AccountSeeder::class,
+            MasterDataSeeder::class,
+        ]);
+        
     }
 }
