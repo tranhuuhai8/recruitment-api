@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Admin\CityController;
+use App\Http\Controllers\Admin\ContactTypeController;
+use App\Http\Controllers\Admin\JobCategoryController;
 use App\Http\Controllers\Applicant\AuthController as ApplicantAuthController;
 use App\Http\Controllers\Company\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -17,22 +20,42 @@ use Illuminate\Support\Facades\Route;
  */
 
 
- Route::group(['as' => 'auth.', 'prefix' => 'auth'], function () {
-    Route::group(['as' => 'company.', 'prefix' => 'company'], function() {
+Route::group(['as' => 'auth.', 'prefix' => 'auth'], function () {
+    Route::group(['as' => 'company.', 'prefix' => 'company'], function () {
         Route::post('/login', [AuthController::class, 'login'])->name('login');
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('/me', [AuthController::class, 'me'])->name('me');
     });
 
-    Route::group(['as' => 'applicant.', 'prefix' => 'applicant'], function() {
+    Route::group(['as' => 'applicant.', 'prefix' => 'applicant'], function () {
         Route::post('/login', [ApplicantAuthController::class, 'login'])->name('login');
         Route::post('/logout', [ApplicantAuthController::class, 'logout'])->name('logout');
         Route::get('/me', [ApplicantAuthController::class, 'me'])->name('me');
     });
 
-    Route::group(['as' => 'admin.', 'prefix' => 'admin'], function() {
+    Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
         Route::post('/login', [AdminAuthController::class, 'login'])->name('login');
         Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
         Route::get('/me', [AdminAuthController::class, 'me'])->name('me');
     });
+});
+
+
+Route::group(['as' => 'master_data.', 'prefix' => 'master-data'], function () {
+    Route::group(['as' => 'cities.', 'prefix' => 'cities'], function () {
+        Route::get('/', [CityController::class, 'list'])->name('list');
+        // Route::get('/{id}', [CityController::class, 'detail'])->name('detail');
+        Route::post('/', [CityController::class, 'store'])->name('store');
+        Route::put('/{id}', [CityController::class, 'update'])->name('update');
+        Route::delete('{id}', [CityController::class, 'delete'])->name('delete');
+    });
+
+    Route::group(['as' => 'job_categories.', 'prefix' => 'job-categories'], function () {
+        Route::get('/', [JobCategoryController::class, 'list'])->name('list');
+        // Route::get('/{id}', [CityController::class, 'detail'])->name('detail');
+        Route::post('/', [JobCategoryController::class, 'store'])->name('store');
+        Route::put('/{id}', [JobCategoryController::class, 'update'])->name('update');
+        Route::delete('{id}', [JobCategoryController::class, 'delete'])->name('delete');
+    });
+
 });

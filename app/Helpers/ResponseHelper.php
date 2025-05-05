@@ -51,4 +51,19 @@ class ResponseHelper
             'status_code' => ResponseHelper::STATUS_CODE_NOT_FOUND,
         ];
     }
+
+    /**
+     * sendError
+     *
+     * @param  string $message
+     * @param  $code
+     * @return array
+     */
+    public static function sendError(string $message, $code = self::STATUS_CODE_BAD_REQUEST): array
+    {
+        return [
+            'message' => $message,
+            'status_code' => $code,
+        ];
+    }
 }
