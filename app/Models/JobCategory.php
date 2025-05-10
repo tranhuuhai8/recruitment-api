@@ -12,6 +12,9 @@ class JobCategory extends Model
     public const TYPE_DEFAULT = 1;
     public const TYPE_CUSTOMIZE = 2;
 
+    public const STATUS_SHOW = 1;
+    public const STATUS_HIDE = 2;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -21,5 +24,7 @@ class JobCategory extends Model
         'name',
         'description',
         'type',
+        'status',
+        'parent_id'
     ];
 }
