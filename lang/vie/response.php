@@ -1,14 +1,13 @@
 <?php
 
 return [
-    'invalid' => '入力したデータが間違っています、再度ご確認ください。',
-    'unauthenticated' => '認証が必要です。ログインしてください。',
-    'token_failed' => 'トークンが無効です。',
-    'success' => '成功しました。',
-    'list_success' => '成功しました。',
-    'create_success' => '登録が成功しました。',
-    'update_success' => '更新が成功しました。',
-    'delete_success' => '削除しました',
-    'login_success' => 'ログインが成功しました。',
-    'calculate_billing_success' => '保管料が計算しました。'
+    'invalid' => 'Dữ liệu bạn nhập không đúng, vui lòng kiểm tra lại.',
+    'unauthenticated' => 'Cần xác thực. Vui lòng đăng nhập.',
+    'token_failed' => 'Token không hợp lệ.',
+    'success' => 'Thành công.',
+    'list_success' => 'Thành công.',
+    'create_success' => 'Tạo mới thành công.',
+    'update_success' => 'Cập nhật thành công.',
+    'delete_success' => 'Đã xóa.',
+    'login_success' => 'Đăng nhập thành công.',
 ];

@@ -13,6 +13,7 @@ class Job extends Model
 
     public const TYPE_FULLTIME = 1;
     public const TYPE_PART_TIME = 2;
+
     public const STATUS_DRAFT = 1;
     public const STATUS_OPEN = 2;
     public const STATUS_CLOSED = 3;
