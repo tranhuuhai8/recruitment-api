@@ -17,12 +17,32 @@ class CityService extends BaseService
 
     protected $searchables = ['name'];
 
+    protected $filterables = [
+        'status' => 'filterByStatus'
+    ];
+
+    /**
+     * filterByStatus
+     *
+     * @param  Eloquent $query
+     * @param  array $filter
+     * @return Eloquent
+     */
+    public function filterByStatus(Eloquent $query, array $filter): Eloquent|QueryBuilder
+    {
+        if (!isset($filter['data']) || !$filter['data']) {
+            return $query;
+        }
+
+        return $query->where('status', +$filter['data']);
+    }
+
     /**
      * makeNewQuery
      *
      * @return Eloquent | QueryBuilder
      */
-    public function makeNewQuery(): Eloquent | QueryBuilder
+    public function makeNewQuery(): Eloquent|QueryBuilder
     {
         return City::query();
     }
@@ -33,7 +53,7 @@ class CityService extends BaseService
      * @param  array $data
      * @return City | array
      */
-    public function store(array $data): City | array
+    public function store(array $data): City|array
     {
         try {
             return City::create($data);
@@ -49,7 +69,7 @@ class CityService extends BaseService
      * @param  int $id
      * @return bool | array
      */
-    public function update(array $data, int $id): bool | array
+    public function update(array $data, int $id): bool|array
     {
         try {
             $city = City::find($id);
@@ -69,7 +89,7 @@ class CityService extends BaseService
      * @param  int $id
      * @return bool | array
      */
-    public function delete(int $id): bool | array
+    public function delete(int $id): bool|array
     {
         try {
             $city = City::find($id);
