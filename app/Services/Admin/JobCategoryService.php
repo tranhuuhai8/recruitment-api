@@ -15,6 +15,45 @@ class JobCategoryService extends BaseService
         'name' => 'name',
     ];
 
+    protected $searchables = ['name'];
+
+    protected $filterables = [
+        'status' => 'filterByStatus',
+        'type' => 'filterByType',
+    ];
+
+    /**
+     * filterByType
+     *
+     * @param  Eloquent $query
+     * @param  array $filter
+     * @return Eloquent
+     */
+    public function filterByType(Eloquent $query, array $filter): Eloquent|QueryBuilder
+    {
+        if (!isset($filter['data']) || !$filter['data']) {
+            return $query;
+        }
+
+        return $query->where('type', +$filter['data']);
+    }
+
+    /**
+     * filterByStatus
+     *
+     * @param  Eloquent $query
+     * @param  array $filter
+     * @return Eloquent
+     */
+    public function filterByStatus(Eloquent $query, array $filter): Eloquent|QueryBuilder
+    {
+        if (!isset($filter['data']) || !$filter['data']) {
+            return $query;
+        }
+
+        return $query->where('status', +$filter['data']);
+    }
+
     /**
      * makeNewQuery
      *
