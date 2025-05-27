@@ -15,7 +15,7 @@ class CityService extends BaseService
         'name' => 'name',
     ];
 
-    protected $searchables = ['name'];
+    protected $searchables = ['name', 'description'];
 
     protected $filterables = [
         'status' => 'filterByStatus'
