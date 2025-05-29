@@ -3,19 +3,28 @@
 namespace App\Http\Controllers\Company;
 
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Services\Company\AuthService;
 use Illuminate\Http\JsonResponse;
 
 class AuthController extends BaseController
 {
+    protected $authService;
+
     /**
-     * AuthController constructor.
+     * Method __construct
+     *
+     * @param AuthService $authService
+     *
+     * @return void
      */
-    public function __construct()
+    public function __construct(AuthService $authService)
     {
+        $this->authService = $authService;
         $this->middleware($this->authMiddleware())->except(
             [
-            'login',
+                'login',
+                'register'
             ]
         );
     }
@@ -28,8 +37,23 @@ class AuthController extends BaseController
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        $data = AuthService::getInstance()->attemptLogin($request->only($this->getFields()));
+        if ($request->get('token')) {
+            $this->authService->verifyEmail($request->get('token'));
+        }
+        $data = $this->authService->attemptLogin($request->only($this->getFields()));
         return $this->sendResponse($data, '', trans('auth.login_success'));
+    }
+
+    /**
+     * register
+     *
+     * @param  RegisterRequest $request
+     * @return JsonResponse
+     */
+    public function register(RegisterRequest $request): JsonResponse
+    {
+        $data = $this->authService->register($request->only($this->getFields()));
+        return $this->sendResponse($data, '', trans('auth.register_success'));
     }
 
     /**
@@ -39,7 +63,7 @@ class AuthController extends BaseController
      */
     public function me(): JsonResponse
     {
-        $company = AuthService::getInstance()->me();
+        $company = $this->authService->me();
         return $this->sendSuccessResponse($company);
     }
 
@@ -50,7 +74,7 @@ class AuthController extends BaseController
      */
     public function logout(): JsonResponse
     {
-        AuthService::getInstance()->logout();
+        $this->authService->logout();
         return $this->sendSuccessResponse(true, trans('auth.logout_success'));
     }
 

@@ -115,6 +115,7 @@ return [
     'url'                  => ':attribute phải có định dạng URL hợp lệ',
 
     'attributes' => [
-        'mail_address' => 'địa chỉ email',
+        'name' => 'Tên',
+        'mail_address' => 'Địa chỉ email',
     ],
 ];
