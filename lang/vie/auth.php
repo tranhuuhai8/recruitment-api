@@ -17,10 +17,16 @@ return [
     'logout_success' => 'Đăng xuất thành công.',
     'login_success' => 'Đăng nhập thành công.',
     'login_failed' => 'Địa chỉ email hoặc mật khẩu của bạn không đúng.',
-    'register_success' => 'Đăng ký mới thành công.',
+    'register_success' => 'Đăng ký tài khoản thành công. Vui lòng kiểm tra gmail để xác thực tài khoản',
     'permission_denied' => 'Tài khoản không có quyền truy cập',
     'register_failed' => 'Đăng ký mới không thành công.',
     'token_failed' => 'Mã thông báo không hợp lệ.',
     'email_error' => 'Email không tồn tại',
-    'not_active' => 'Tài khoản của bạn chưa được kích hoạt',
+    'not_active' => 'Tài khoản của bạn chưa được xác thực. Vui lòng kiểm tra email để xác thực!',
+    'mail' => [
+        'register' => [
+            'mail_address' => 'Email',
+            'text_verify' => 'Vui lòng bấm vào đây để xác thực tài khoản và đăng nhập!',
+        ],
+    ],
 ];
