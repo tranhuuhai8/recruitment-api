@@ -39,6 +39,33 @@ class AuthService extends BaseService
     }
 
     /**
+     * Method verifyEmail
+     *
+     * @param string $token
+     *
+     * @return bool | array
+     */
+    public function verifyEmail(string $token): bool|array
+    {
+        return BaseAuthService::getInstance()->verifyAccount($token);
+    }
+
+    /**
+     * Method register
+     *
+     * @param array $request
+     *
+     * @return bool | array
+     */
+    public function register(array $request): bool|array
+    {
+        return BaseAuthService::getInstance()->register(
+            $request,
+            User::ROLE_APPLICANT,
+        );
+    }
+
+    /**
      * logout
      *
      * @return void

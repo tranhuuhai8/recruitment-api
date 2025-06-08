@@ -23,12 +23,14 @@ use Illuminate\Support\Facades\Route;
 Route::group(['as' => 'auth.', 'prefix' => 'auth'], function () {
     Route::group(['as' => 'company.', 'prefix' => 'company'], function () {
         Route::post('/login', [AuthController::class, 'login'])->name('login');
+        Route::post('/register', [AuthController::class, 'register'])->name('register');
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('/me', [AuthController::class, 'me'])->name('me');
     });
 
     Route::group(['as' => 'applicant.', 'prefix' => 'applicant'], function () {
         Route::post('/login', [ApplicantAuthController::class, 'login'])->name('login');
+        Route::post('/register', [ApplicantAuthController::class, 'register'])->name('register');
         Route::post('/logout', [ApplicantAuthController::class, 'logout'])->name('logout');
         Route::get('/me', [ApplicantAuthController::class, 'me'])->name('me');
     });
