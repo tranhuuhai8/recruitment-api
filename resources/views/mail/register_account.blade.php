@@ -9,7 +9,7 @@
 
 <body>
     <div>{{ __('auth.mail.register.mail_address') }}: {{ $data['mail_address'] }}</div>
-    <a href="{{ config('app.url') }}?token=<?= $data['token_verify'] ?>">{{ __('auth.mail.register.text_verify') }}</a>
+    <a href="{{ config('app.url_home') }}/login?token=<?= $data['token_verify'] ?>">{{ __('auth.mail.register.text_verify') }}</a>
 </body>
 
 </html>
