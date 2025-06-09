@@ -160,6 +160,9 @@ return [
 
     'attributes' => [
         'name' => 'name',
-        'mail_address' => 'Email'
+        'mail_address' => 'Email',
+        'telephone' => 'Number phone',
+        'gender' => 'Gender',
+        'birthday' => 'Date of birth',
     ],
 ];
