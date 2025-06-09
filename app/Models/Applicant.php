@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Applicant extends Model
@@ -28,8 +29,17 @@ class Applicant extends Model
         'gender',
         'birthday',
         'telephone',
-        'city_id',
-        'address_detail',
+        'address',
         'description',
     ];
+
+    /**
+     * Method user
+     *
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }
