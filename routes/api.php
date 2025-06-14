@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\CityController;
-use App\Http\Controllers\Admin\ContactTypeController;
+use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\Admin\ApplicantController;
 use App\Http\Controllers\Admin\JobCategoryController;
 use App\Http\Controllers\Applicant\AuthController as ApplicantAuthController;
 use App\Http\Controllers\Company\AuthController;
@@ -46,7 +47,6 @@ Route::group(['as' => 'auth.', 'prefix' => 'auth'], function () {
 Route::group(['as' => 'master_data.', 'prefix' => 'master-data'], function () {
     Route::group(['as' => 'cities.', 'prefix' => 'cities'], function () {
         Route::get('/', [CityController::class, 'list'])->name('list');
-        // Route::get('/{id}', [CityController::class, 'detail'])->name('detail');
         Route::post('/', [CityController::class, 'store'])->name('store');
         Route::put('/{id}', [CityController::class, 'update'])->name('update');
         Route::delete('{id}', [CityController::class, 'delete'])->name('delete');
@@ -54,10 +54,24 @@ Route::group(['as' => 'master_data.', 'prefix' => 'master-data'], function () {
 
     Route::group(['as' => 'job_categories.', 'prefix' => 'job-categories'], function () {
         Route::get('/', [JobCategoryController::class, 'list'])->name('list');
-        // Route::get('/{id}', [CityController::class, 'detail'])->name('detail');
         Route::post('/', [JobCategoryController::class, 'store'])->name('store');
         Route::put('/{id}', [JobCategoryController::class, 'update'])->name('update');
         Route::delete('{id}', [JobCategoryController::class, 'delete'])->name('delete');
     });
+});
 
+Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
+    Route::group(['as' => 'company.', 'prefix' => 'company'], function () {
+        Route::get('/', [CompanyController::class, 'list'])->name('list');
+        Route::get('/{id}', [CompanyController::class, 'detail'])->name('detail');
+        Route::put('/{id}', [CompanyController::class, 'update'])->name('update');
+        Route::delete('{id}', [CompanyController::class, 'delete'])->name('delete');
+    });
+
+    Route::group(['as' => 'applicant.', 'prefix' => 'applicant'], function () {
+        Route::get('/', [ApplicantController::class, 'list'])->name('list');
+        Route::get('/{id}', [ApplicantController::class, 'detail'])->name('detail');
+        Route::put('/{id}', [ApplicantController::class, 'update'])->name('update');
+        Route::delete('{id}', [ApplicantController::class, 'delete'])->name('delete');
+    });
 });
