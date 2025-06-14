@@ -117,5 +117,8 @@ return [
     'attributes' => [
         'name' => 'Tên',
         'mail_address' => 'Địa chỉ email',
+        'telephone' => 'Số điện thoại',
+        'gender' => 'Giới tính',
+        'birthday' => 'Ngày sinh',
     ],
 ];
