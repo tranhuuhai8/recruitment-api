@@ -13,6 +13,8 @@ return [
     |
     */
 
+    'unauthenticated' => 'Authentication is required. Please login.',
+    'token_failed' => 'The token is invalid.',
     'password' => 'Incorrect password.',
     'logout_success' => 'Login out successfully.',
     'login_success' => 'Login in successfully.',
@@ -20,7 +22,6 @@ return [
     'register_success' => 'Account registration successful. Please check your gmail to verify your account.',
     'permission_denied' => 'Account does not have access.',
     'register_failed' => 'New registration failed.',
-    'token_failed' => 'Invalid token.',
     'email_error' => 'Email does not exist',
     'not_active' => 'Your account is not verified. Please check your email to verify!',
     'mail' => [

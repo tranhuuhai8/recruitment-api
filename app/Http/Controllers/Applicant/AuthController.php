@@ -20,13 +20,14 @@ class AuthController extends BaseController
      */
     public function __construct(AuthService $authService)
     {
-        $this->authService = $authService;
-        $this->middleware($this->authMiddleware())->except(
+        $this->middleware([$this->authMiddleware(), 'is-applicant'])->except(
             [
                 'login',
-                'register'
+                'register',
+                'refresh',
             ]
         );
+        $this->authService = $authService;
     }
 
     /**
@@ -42,6 +43,16 @@ class AuthController extends BaseController
         }
         $data = $this->authService->attemptLogin($request->only($this->getFields()));
         return $this->sendResponse($data, '', trans('auth.login_success'));
+    }
+
+    /**
+     * Method refresh
+     *
+     * @return JsonResponse
+     */
+    public function refresh(): JsonResponse
+    {
+        return $this->sendResponse($this->authService->refreshToken());
     }
 
     /**

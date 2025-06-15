@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\JobCategory\CreateJobCategoryRequest;
 use App\Http\Requests\Admin\JobCategory\UpdateJobCategoryRequest;
+use App\Http\Resources\Admin\MasterData\JobCategoriesCollection;
 use App\Services\Admin\JobCategoryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ class JobCategoryController extends BaseController
     public function list(Request $request): JsonResponse
     {
         $data = $this->jobCategoryService::getInstance()->data(...$this->getParamRequest($request));
-        return $this->sendSuccessResponse($data);
+        return $this->sendSuccessResponse(new JobCategoriesCollection($data));
     }
 
     /**
