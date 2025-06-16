@@ -2,11 +2,14 @@
 
 namespace App\Services\Auth;
 
+use App\Helpers\ResponseHelper;
 use App\Jobs\SendMailAuth;
 use Exception;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class BaseAuthService
 {
@@ -58,7 +61,7 @@ class BaseAuthService
      *
      * @return bool | array
      */
-    public function register(array $data, int $role): bool | array
+    public function register(array $data, int $role): bool|array
     {
         try {
             DB::beginTransaction();
@@ -89,26 +92,27 @@ class BaseAuthService
      *
      * @return bool
      */
-    public function verifyAccount(string $token): bool | array
+    public function verifyAccount(string $token): bool|array
     {
         try {
             return User::query()
-            ->where('token_verify', $token)
-            ->update([
-                'status' => User::STATUS_ACTIVE,
-                'token_verify' => null,
-                'email_verified_at' => now(),
-            ]);
+                ->where('token_verify', $token)
+                ->update([
+                    'status' => User::STATUS_ACTIVE,
+                    'token_verify' => null,
+                    'email_verified_at' => now(),
+                ]);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
     }
 
     /**
-     * respondWithToken
+     * Method respondWithToken
      *
-     * @param  $token
-     * @param  $auth
+     * @param $token
+     * @param $auth
+     *
      * @return array
      */
     protected function respondWithToken($token, $auth): array
@@ -117,7 +121,23 @@ class BaseAuthService
             'me' => $auth->user(),
             'access_token' => $token,
             'token_type' => 'bearer',
-            // 'expires_in' => auth('admin')->factory()->getTTL(),
+            'expires_in' => $auth->factory()->getTTL() * 60,
         ];
+    }
+
+    /**
+     * Method refreshToken
+     *
+     * @param $auth $auth [explicite description]
+     *
+     * @return array
+     */
+    public function refreshToken($auth): array
+    {
+        try {
+            return $this->respondWithToken(JWTAuth::parseToken()->refresh(), $auth);
+        } catch (JWTException $e) {
+            return ResponseHelper::sendError(trans('auth.token_failed'), ResponseHelper::STATUS_CODE_UNAUTHORIZED);
+        }
     }
 }

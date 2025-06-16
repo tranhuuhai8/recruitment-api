@@ -67,7 +67,7 @@ class CompanyService extends BaseService
         try {
             $company = Company::with('user')->find($id);
             if (!$company) {
-                return ResponseHelper::notFound('Company not found');
+                return ResponseHelper::notFound();
             }
 
             return $company;
@@ -90,7 +90,7 @@ class CompanyService extends BaseService
             DB::beginTransaction();
             $company = Company::find($id);
             if (!$company) {
-                return ResponseHelper::notFound('Company not found');
+                return ResponseHelper::notFound();
             }
 
             User::find($company->user_id)->update([

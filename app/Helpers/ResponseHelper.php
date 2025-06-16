@@ -27,27 +27,23 @@ class ResponseHelper
      */
     public static function sendResponse($code, $message, $data = null, $errors = null): JsonResponse
     {
-        return response()->json(
-            [
+        return response()->json([
             'status_code' => $code,
             'message' => $message,
             'errors' => $errors,
             'data' => $data,
-            ]
-        );
+        ]);
     }
 
     /**
      * Method notFound
      *
-     * @param string $text
-     *
      * @return array
      */
-    public static function notFound(string $text): array
+    public static function notFound(): array
     {
         return [
-            'message' => 'Không tìm thấy ' . $text,
+            'message' => trans("data_not_found"),
             'status_code' => ResponseHelper::STATUS_CODE_NOT_FOUND,
         ];
     }

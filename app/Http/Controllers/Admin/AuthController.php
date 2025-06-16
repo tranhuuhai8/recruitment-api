@@ -8,16 +8,24 @@ use Illuminate\Http\JsonResponse;
 
 class AuthController extends BaseController
 {
+    protected $authService;
+
     /**
-     * AuthController constructor.
+     * Method __construct
+     *
+     * @param AuthService $authService [explicite description]
+     *
+     * @return void
      */
-    public function __construct()
+    public function __construct(AuthService $authService)
     {
-        $this->middleware($this->authMiddleware())->except(
+        $this->middleware([$this->authMiddleware(), 'is-admin'])->except(
             [
-            'login',
+                'login',
+                'refresh'
             ]
         );
+        $this->authService = $authService;
     }
 
     /**
@@ -28,8 +36,18 @@ class AuthController extends BaseController
      */
     public function login(LoginRequest $request): JsonResponse
     {
-        $data = AuthService::getInstance()->attemptLogin($request->only($this->getFields()));
+        $data = $this->authService->attemptLogin($request->only($this->getFields()));
         return $this->sendResponse($data, '', trans('auth.login_success'));
+    }
+
+    /**
+     * Method refresh
+     *
+     * @return JsonResponse
+     */
+    public function refresh(): JsonResponse
+    {
+        return $this->sendResponse($this->authService->refreshToken());
     }
 
     /**
@@ -39,7 +57,7 @@ class AuthController extends BaseController
      */
     public function me(): JsonResponse
     {
-        $admin = AuthService::getInstance()->me();
+        $admin = $this->authService->me();
         return $this->sendSuccessResponse($admin);
     }
 
@@ -50,7 +68,7 @@ class AuthController extends BaseController
      */
     public function logout(): JsonResponse
     {
-        AuthService::getInstance()->logout();
+        $this->authService->logout();
         return $this->sendSuccessResponse(true, trans('auth.logout_success'));
     }
 

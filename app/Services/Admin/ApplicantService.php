@@ -79,7 +79,7 @@ class ApplicantService extends BaseService
         try {
             $applicant = Applicant::with('user')->find($id);
             if (!$applicant) {
-                return ResponseHelper::notFound('Applicant not found');
+                return ResponseHelper::notFound();
             }
 
             return $applicant;
@@ -102,7 +102,7 @@ class ApplicantService extends BaseService
             DB::beginTransaction();
             $applicant = Applicant::find($id);
             if (!$applicant) {
-                return ResponseHelper::notFound('Applicant not found');
+                return ResponseHelper::notFound();
             }
 
             User::find($applicant->user_id)->update([

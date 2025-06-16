@@ -8,6 +8,13 @@ use App\Services\BaseService;
 
 class AuthService extends BaseService
 {
+    protected $auth;
+
+    public function __construct()
+    {
+        $this->auth = auth('company');
+    }
+
     public function makeNewQuery()
     {
         return User::query();
@@ -20,7 +27,7 @@ class AuthService extends BaseService
      */
     public function me(): User|null
     {
-        return auth('company')->user();
+        return $this->auth->user();
     }
 
     /**
@@ -31,11 +38,7 @@ class AuthService extends BaseService
      */
     public function attemptLogin(array $request): array
     {
-        return BaseAuthService::getInstance()->login(
-            auth('company'),
-            $request,
-            User::ROLE_COMPANY
-        );
+        return BaseAuthService::getInstance()->login($this->auth, $request, User::ROLE_COMPANY);
     }
 
     /**
@@ -66,13 +69,23 @@ class AuthService extends BaseService
     }
 
     /**
-     * logout
+     * Method logout
      *
      * @return void
      */
     public function logout(): void
     {
-        // auth('company')->invalidate();
-        auth('company')->logout();
+        // $this->auth->invalidate();
+        $this->auth->logout();
+    }
+
+    /**
+     * Method refreshToken
+     *
+     * @return array
+     */
+    public function refreshToken(): array
+    {
+        return BaseAuthService::getInstance()->refreshToken($this->auth);
     }
 }

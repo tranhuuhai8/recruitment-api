@@ -21,6 +21,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->use([
             App\Http\Middleware\LogRequest::class,
         ]);
+        $middleware->alias([
+            'is-admin' => \App\Http\Middleware\IsAdmin::class,
+            'is-company' => \App\Http\Middleware\IsCompany::class,
+            'is-applicant' => \App\Http\Middleware\IsApplicant::class,
+        ]);
         $middleware->append(Cors::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
