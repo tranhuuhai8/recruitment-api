@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\City\CreateCityRequest;
 use App\Http\Requests\Admin\City\UpdateCityRequest;
+use App\Http\Resources\Admin\MasterData\CitiesCollection;
 use App\Services\Admin\CityService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -30,7 +31,7 @@ class CityController extends BaseController
     public function list(Request $request): JsonResponse
     {
         $data = $this->cityService::getInstance()->data(...$this->getParamRequest($request));
-        return $this->sendSuccessResponse($data);
+        return $this->sendSuccessResponse(new CitiesCollection($data));
     }
 
     /**

@@ -8,6 +8,13 @@ use App\Services\Auth\BaseAuthService;
 
 class AuthService extends BaseService
 {
+    protected $auth;
+
+    public function __construct()
+    {
+        $this->auth = auth('admin');
+    }
+
     public function makeNewQuery()
     {
         return User::query();
@@ -20,7 +27,7 @@ class AuthService extends BaseService
      */
     public function me(): User|null
     {
-        return auth('admin')->user();
+        return $this->auth->user();
     }
 
     /**
@@ -31,21 +38,27 @@ class AuthService extends BaseService
      */
     public function attemptLogin($request): array
     {
-        return BaseAuthService::getInstance()->login(
-            auth('admin'),
-            $request,
-            User::ROLE_ADMIN
-        );
+        return BaseAuthService::getInstance()->login($this->auth, $request, User::ROLE_ADMIN);
     }
 
     /**
-     * logout
+     * Method logout
      *
      * @return void
      */
     public function logout(): void
     {
-        // auth('admin')->invalidate();
-        auth('admin')->logout();
+        // $this->auth->invalidate();
+        $this->auth->logout();
+    }
+
+    /**
+     * Method refreshToken
+     *
+     * @return array
+     */
+    public function refreshToken(): array
+    {
+        return BaseAuthService::getInstance()->refreshToken($this->auth);
     }
 }

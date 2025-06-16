@@ -13,6 +13,8 @@ return [
     |
     */
 
+    'unauthenticated' => 'Cần xác thực. Vui lòng đăng nhập.',
+    'token_failed' => 'Mã xác thực không hợp lệ.',
     'password' => 'Mật khẩu không đúng.',
     'logout_success' => 'Đăng xuất thành công.',
     'login_success' => 'Đăng nhập thành công.',
@@ -20,7 +22,6 @@ return [
     'register_success' => 'Đăng ký tài khoản thành công. Vui lòng kiểm tra gmail để xác thực tài khoản',
     'permission_denied' => 'Tài khoản không có quyền truy cập',
     'register_failed' => 'Đăng ký mới không thành công.',
-    'token_failed' => 'Mã thông báo không hợp lệ.',
     'email_error' => 'Email không tồn tại',
     'not_active' => 'Tài khoản của bạn chưa được xác thực. Vui lòng kiểm tra email để xác thực!',
     'mail' => [

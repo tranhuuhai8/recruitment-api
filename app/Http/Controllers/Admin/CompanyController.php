@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\Company\UpdateCompanyRequest;
+use App\Http\Resources\Admin\Company\CompaniesCollection;
 use App\Services\Admin\CompanyService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,7 +30,7 @@ class CompanyController extends BaseController
     public function list(Request $request): JsonResponse
     {
         $data = $this->companyService->data(...$this->getParamRequest($request));
-        return $this->sendSuccessResponse($data);
+        return $this->sendSuccessResponse(new CompaniesCollection($data));
     }
 
     /**
