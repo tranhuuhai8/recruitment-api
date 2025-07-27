@@ -91,7 +91,7 @@ class JobCategoryService extends BaseService
         try {
             $jobCategory = JobCategory::find($id);
             if (!$jobCategory) {
-                return ResponseHelper::sendError(trans('JobCategory not found!'));
+                return ResponseHelper::notFound();
             }
 
             return $jobCategory->update($data);
@@ -111,7 +111,7 @@ class JobCategoryService extends BaseService
         try {
             $jobCategory = JobCategory::find($id);
             if (!$jobCategory) {
-                return ResponseHelper::sendError(trans('JobCategory not found!'));
+                return ResponseHelper::notFound();
             }
 
             return $jobCategory->delete();
