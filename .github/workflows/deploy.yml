@@ -19,7 +19,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         allenvs: true
         script: |
-            cd /home/services/recruitment-api
+            cd /var/www/recruitment-api
             git pull origin develop
             composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
             php artisan migrate --force

@@ -43,7 +43,7 @@ class ResponseHelper
     public static function notFound(): array
     {
         return [
-            'message' => trans("data_not_found"),
+            'message' => trans("response.data_not_found"),
             'status_code' => ResponseHelper::STATUS_CODE_NOT_FOUND,
         ];
     }

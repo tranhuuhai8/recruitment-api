@@ -74,7 +74,7 @@ class CityService extends BaseService
         try {
             $city = City::find($id);
             if (!$city) {
-                return ResponseHelper::sendError(trans('City not found!'));
+                return ResponseHelper::notFound();
             }
 
             return $city->update($data);
@@ -94,7 +94,7 @@ class CityService extends BaseService
         try {
             $city = City::find($id);
             if (!$city) {
-                return ResponseHelper::sendError(trans('City not found!'));
+                return ResponseHelper::notFound();
             }
 
             return $city->delete();
