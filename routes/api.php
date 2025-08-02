@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\ApplicantController;
 use App\Http\Controllers\Admin\JobCategoryController;
 use App\Http\Controllers\Applicant\AuthController as ApplicantAuthController;
 use App\Http\Controllers\Company\AuthController as CompanyAuthController;
+use App\Http\Controllers\Home\CityController as HomeCityController;
+use App\Http\Controllers\Home\JobCategoryController as HomeJobCategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,12 +22,12 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-
+// route auth
 Route::group(['as' => 'auth.', 'prefix' => 'auth'], function () {
     Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
         Route::post('/login', [AuthController::class, 'login'])->name('login');
         Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
-        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+        Route::post('/logout', action: [AuthController::class, 'logout'])->name('logout');
         Route::get('/me', [AuthController::class, 'me'])->name('me');
     });
 
@@ -46,6 +48,7 @@ Route::group(['as' => 'auth.', 'prefix' => 'auth'], function () {
     });
 });
 
+// route admin
 Route::group(
     [
         'as' => 'admin.',
@@ -81,6 +84,43 @@ Route::group(
                 Route::put('/{id}', [JobCategoryController::class, 'update'])->name('update');
                 Route::delete('{id}', [JobCategoryController::class, 'delete'])->name('delete');
             });
+        });
+    }
+);
+
+// route applicant
+Route::group(
+    [
+        'as' => 'applicant.',
+        'prefix' => 'applicant',
+        'middleware' => ['auth:applicant', 'is-applicant']
+    ],
+    function () {
+        Route::put('/update', [ApplicantAuthController::class, 'update'])->name('update');
+    }
+);
+
+// route company
+Route::group(
+    [
+        'as' => 'company.',
+        'prefix' => 'company',
+        'middleware' => ['auth:company', 'is-company']
+    ],
+    function () {
+        Route::put('/update', [CompanyAuthController::class, 'update'])->name('update');
+    }
+);
+
+Route::group(
+    [
+        'as' => 'home.',
+        'prefix' => 'home',
+    ],
+    function () {
+        Route::group(['as' => 'masterData.', 'prefix' => 'master-data'], function () {
+            Route::get('/cities', [HomeCityController::class, 'list'])->name('cities');
+            Route::get('/job-categories', [HomeJobCategoryController::class, 'list'])->name('job_categories');
         });
     }
 );

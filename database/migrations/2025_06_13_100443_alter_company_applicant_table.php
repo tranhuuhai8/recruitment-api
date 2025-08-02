@@ -11,7 +11,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('companies', function (Blueprint $table) {
-            $table->unsignedBigInteger('city_id')->nullable()->after('telephone');
+            $table->unsignedBigInteger('city_id')->after('telephone');
         });
         Schema::table('applicants', function (Blueprint $table) {
             $table->dropColumn('city_id');
