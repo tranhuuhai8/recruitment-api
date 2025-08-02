@@ -116,9 +116,12 @@ return [
 
     'attributes' => [
         'name' => 'Tên',
+        'short_name' => 'Tên viết tắt',
+        'description' => 'Mô tả',
         'mail_address' => 'Địa chỉ email',
         'telephone' => 'Số điện thoại',
         'gender' => 'Giới tính',
         'birthday' => 'Ngày sinh',
+        'city_id' => 'Thành phố',
     ],
 ];

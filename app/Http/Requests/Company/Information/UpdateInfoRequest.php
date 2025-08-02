@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Admin\Company;
+namespace App\Http\Requests\Company\Information;
 
-use App\Models\User;
+use App\Models\Company;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateCompanyRequest extends FormRequest
+class UpdateInfoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,33 +23,54 @@ class UpdateCompanyRequest extends FormRequest
      */
     public function rules(): array
     {
+        $company = Company::where('user_id', auth('company')->id())->first();
+        $telephoneRule = Rule::unique('companies', 'telephone');
+        $nameRule = Rule::unique('companies', 'name');
+        $shortNameRule = Rule::unique('companies', 'short_name');
+        if ($company) {
+            $telephoneRule->ignore($company->id);
+            $nameRule->ignore($company->id);
+            $shortNameRule->ignore($company->id);
+        }
+
         return [
+            'logo' => [
+                // 'required',
+                'string',
+                'max:' . config('length.max_string'),
+            ],
+            'cover_img' => [
+                // 'required',
+                'string',
+                'max:' . config('length.max_string'),
+            ],
             'name' => [
                 'required',
                 'string',
                 'max:' . config('length.max_string'),
-                'unique:companies,name,' . $this->id,
+                $nameRule,
             ],
             'short_name' => [
                 'required',
                 'string',
                 'max:' . config('length.max_short_name'),
-                'unique:companies,short_name,' . $this->id,
+                $shortNameRule,
             ],
             'mail_address' => [
                 'required',
                 'string',
                 'email',
                 'max:' . config('length.max_string'),
+                'unique:users,mail_address,' . auth(guard: 'company')->id() . ',id'
             ],
             'telephone' => [
                 'required',
                 'string',
                 'regex:' . config('regex.telephone'),
-                'unique:companies,telephone,' . $this->id,
+                $telephoneRule
             ],
             'city_id' => [
-                'required',
+                // 'required',
                 'exists:cities,id',
             ],
             'address' => [
@@ -61,7 +82,6 @@ class UpdateCompanyRequest extends FormRequest
                 'string',
                 'max:' . config('length.max_string'),
             ],
-            'status' => Rule::in([User::STATUS_ACTIVE, User::STATUS_INACTIVE])
         ];
     }
 }

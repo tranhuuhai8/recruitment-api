@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Admin\Applicant;
+namespace App\Http\Requests\Applicant\Information;
 
 use App\Models\Applicant;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateApplicantRequest extends FormRequest
+class UpdateInfoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,19 @@ class UpdateApplicantRequest extends FormRequest
      */
     public function rules(): array
     {
+        $applicant = Applicant::where('user_id', auth('applicant')->id())->first();
+        $telephoneRule = Rule::unique('applicants', 'telephone');
+        if ($applicant) {
+            $telephoneRule->ignore($applicant->id);
+        }
+
         return [
             'name' => [
                 'required',
+                'string',
+                'max:' . config('length.max_string'),
+            ],
+            'avatar' => [
                 'string',
                 'max:' . config('length.max_string'),
             ],
@@ -34,8 +44,8 @@ class UpdateApplicantRequest extends FormRequest
                 'string',
                 'email',
                 'max:' . config('length.max_string'),
+                'unique:users,mail_address,' . auth(guard: 'applicant')->id() . ',id'
             ],
-            'status' => Rule::in([Applicant::STATUS_ACTIVE, Applicant::STATUS_INACTIVE]),
             'gender' => Rule::in([Applicant::GENDER_MALE, Applicant::GENDER_FEMALE, Applicant::GENDER_OTHER]),
             'birthday' => [
                 'required',
@@ -46,7 +56,8 @@ class UpdateApplicantRequest extends FormRequest
                 'required',
                 'string',
                 'regex:' . config('regex.telephone'),
-                'unique:applicants,telephone,' . $this->id,
+                // Rule::unique('applicants', 'telephone')->withoutTrashed()->ignore(auth('applicant')->id())
+                $telephoneRule
             ],
             'address' => [
                 'required',
