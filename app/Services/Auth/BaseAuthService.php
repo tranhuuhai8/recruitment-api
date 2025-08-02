@@ -128,14 +128,18 @@ class BaseAuthService
     /**
      * Method refreshToken
      *
-     * @param $auth $auth [explicite description]
+     * @param mixed $auth [explicite description]
      *
      * @return array
      */
     public function refreshToken($auth): array
     {
         try {
-            return $this->respondWithToken(JWTAuth::parseToken()->refresh(), $auth);
+            $token = JWTAuth::parseToken()->refresh();
+            $user = JWTAuth::setToken($token)->toUser();
+            $auth->setUser($user);
+            
+            return $this->respondWithToken($token, $auth);
         } catch (JWTException $e) {
             return ResponseHelper::sendError(trans('auth.token_failed'), ResponseHelper::STATUS_CODE_UNAUTHORIZED);
         }
