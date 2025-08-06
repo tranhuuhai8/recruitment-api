@@ -160,9 +160,12 @@ return [
 
     'attributes' => [
         'name' => 'name',
+        'short_name' => 'Short name',
+        'description' => 'Description',
         'mail_address' => 'Email',
         'telephone' => 'Number phone',
         'gender' => 'Gender',
         'birthday' => 'Date of birth',
+        'city_id' => 'City',
     ],
 ];

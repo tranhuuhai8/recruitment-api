@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Company;
 
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Company\Information\UpdateInfoRequest;
 use App\Services\Company\AuthService;
 use Illuminate\Http\JsonResponse;
 
@@ -79,6 +80,19 @@ class AuthController extends BaseController
     }
 
     /**
+     * Method update
+     *
+     * @param UpdateInfoRequest $request [explicite description]
+     *
+     * @return JsonResponse
+     */
+    public function update(UpdateInfoRequest $request): JsonResponse
+    {
+        $data = $this->authService->update($request->only($this->getFieldsUpdate()));
+        return $this->sendResponse($data, 'update');
+    }
+
+    /**
      * logout
      *
      * @return JsonResponse
@@ -99,6 +113,27 @@ class AuthController extends BaseController
         return [
             'mail_address',
             'password',
+        ];
+    }
+
+    /**
+     * Method getFieldsUpdate
+     *
+     * @return array
+     */
+    public function getFieldsUpdate(): array
+    {
+        return [
+            'logo',
+            'cover_img',
+            'name',
+            'short_name',
+            'mail_address',
+            'telephone',
+            'city_id',
+            'address',
+            'website',
+            'description',
         ];
     }
 }
