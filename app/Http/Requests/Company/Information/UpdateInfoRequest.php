@@ -70,7 +70,7 @@ class UpdateInfoRequest extends FormRequest
                 $telephoneRule
             ],
             'city_id' => [
-                // 'required',
+                'required',
                 'exists:cities,id',
             ],
             'address' => [
@@ -79,7 +79,6 @@ class UpdateInfoRequest extends FormRequest
                 'max:' . config('length.max_string'),
             ],
             'website' => [
-                'string',
                 'max:' . config('length.max_string'),
             ],
         ];
