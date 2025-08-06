@@ -108,6 +108,21 @@ class BaseAuthService
     }
 
     /**
+     * Method updateEmail
+     *
+     * @param string $mail_address [explicite description]
+     * @param int $id [explicite description]
+     *
+     * @return bool
+     */
+    public function updateEmail(string $mail_address, int $id): bool|array
+    {
+        return User::find($id)->update([
+            'mail_address' => $mail_address,
+        ]);
+    }
+
+    /**
      * Method respondWithToken
      *
      * @param $token
@@ -138,7 +153,7 @@ class BaseAuthService
             $token = JWTAuth::parseToken()->refresh();
             $user = JWTAuth::setToken($token)->toUser();
             $auth->setUser($user);
-            
+
             return $this->respondWithToken($token, $auth);
         } catch (JWTException $e) {
             return ResponseHelper::sendError(trans('auth.token_failed'), ResponseHelper::STATUS_CODE_UNAUTHORIZED);

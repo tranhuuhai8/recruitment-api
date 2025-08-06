@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Applicant;
 
+use App\Http\Requests\Applicant\Information\UpdateInfoRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Services\Applicant\AuthService;
@@ -79,6 +80,19 @@ class AuthController extends BaseController
     }
 
     /**
+     * Method update
+     *
+     * @param UpdateInfoRequest $request [explicite description]
+     *
+     * @return JsonResponse
+     */
+    public function update(UpdateInfoRequest $request): JsonResponse
+    {
+        $data = $this->authService->update($request->only($this->getFieldsUpdate()));
+        return $this->sendResponse($data, 'update');
+    }
+
+    /**
      * logout
      *
      * @return JsonResponse
@@ -99,6 +113,25 @@ class AuthController extends BaseController
         return [
             'mail_address',
             'password',
+        ];
+    }
+
+    /**
+     * Method getFieldsUpdate
+     *
+     * @return array
+     */
+    public function getFieldsUpdate(): array
+    {
+        return [
+            'name',
+            'avatar',
+            'gender',
+            'birthday',
+            'mail_address',
+            'telephone',
+            'address',
+            'description',
         ];
     }
 }
