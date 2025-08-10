@@ -119,9 +119,16 @@ return [
         'short_name' => 'Tên viết tắt',
         'description' => 'Mô tả',
         'mail_address' => 'Địa chỉ email',
+        'password' => 'Mật khẩu',
         'telephone' => 'Số điện thoại',
         'gender' => 'Giới tính',
         'birthday' => 'Ngày sinh',
         'city_id' => 'Thành phố',
+    ],
+
+    'custom' => [
+        'password' => [
+            'regex' => 'Mật khẩu phải đủ mạnh (bao gồm ít nhất 8 ký tự, chữ viết hoa, viết thường, số và ký tự đặc biệt).',
+        ],
     ],
 ];

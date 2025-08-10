@@ -163,9 +163,16 @@ return [
         'short_name' => 'Short name',
         'description' => 'Description',
         'mail_address' => 'Email',
+        'password' => 'Password',
         'telephone' => 'Number phone',
         'gender' => 'Gender',
         'birthday' => 'Date of birth',
         'city_id' => 'City',
+    ],
+
+    'custom' => [
+        'password' => [
+            'regex' => 'The password must be strong (include at least 8 characters, uppercase letters, lowercase letters, numbers, and special characters).',
+        ],
     ],
 ];

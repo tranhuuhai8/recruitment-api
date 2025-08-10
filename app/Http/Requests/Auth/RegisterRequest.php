@@ -34,7 +34,8 @@ class RegisterRequest extends FormRequest
                 'string',
                 'min:' . config('length.min_string'),
                 'max:' . config('length.max_string'),
-                'confirmed'
+                'confirmed',
+                'regex:' . config('regex.password'),
             ],
         ];
     }
