@@ -20,6 +20,7 @@ class JobCategoryService extends BaseService
     protected $filterables = [
         'status' => 'filterByStatus',
         'type' => 'filterByType',
+        'parent_id' => 'filterByParent',
     ];
 
     /**
@@ -55,13 +56,31 @@ class JobCategoryService extends BaseService
     }
 
     /**
+     * Method filterByParent
+     *
+     * @param Eloquent $query [explicite description]
+     * @param array $filter [explicite description]
+     *
+     * @return Eloquent
+     */
+    public function filterByParent(Eloquent $query, array $filter): Eloquent|QueryBuilder
+    {
+        $data = (array) json_decode($filter['data'], true);
+        if (!count($data)) {
+            return $query;
+        }
+
+        return $query->whereIn('parent_id', $data);
+    }
+
+    /**
      * makeNewQuery
      *
      * @return Eloquent | QueryBuilder
      */
     public function makeNewQuery(): Eloquent | QueryBuilder
     {
-        return JobCategory::query();
+        return JobCategory::with('parent');
     }
 
     /**

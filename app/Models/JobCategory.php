@@ -27,4 +27,9 @@ class JobCategory extends Model
         'status',
         'parent_id'
     ];
+
+    public function parent()
+    {
+        return $this->belongsTo(JobCategory::class, 'parent_id');
+    }
 }
