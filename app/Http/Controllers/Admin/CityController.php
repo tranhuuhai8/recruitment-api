@@ -80,7 +80,8 @@ class CityController extends BaseController
         return [
             'name',
             'description',
-            'status'
+            'status',
+            'parent_id',
         ];
     }
 }

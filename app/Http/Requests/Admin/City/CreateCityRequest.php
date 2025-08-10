@@ -33,7 +33,8 @@ class CreateCityRequest extends FormRequest
                 'string',
                 'max:' . config('length.max_string'),
             ],
-            'status' => Rule::in([City::STATUS_SHOW, City::STATUS_HIDE])
+            'status' => Rule::in([City::STATUS_SHOW, City::STATUS_HIDE]),
+            'parent_id' => 'nullable|exists:cities,id',
         ];
     }
 }
