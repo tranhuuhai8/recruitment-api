@@ -17,19 +17,19 @@ class AccountSeeder extends Seeder
         $dataInsert = [
             [
                 'mail_address' => 'admin@gmail.com',
-                'password' => Hash::make('12345678'),
+                'password' => Hash::make('123456Hh@'),
                 'role' => User::ROLE_ADMIN,
                 'status' => User::STATUS_ACTIVE,
             ],
             [
                 'mail_address' => 'company@gmail.com',
-                'password' => Hash::make('12345678'),
+                'password' => Hash::make('123456Hh@'),
                 'role' => User::ROLE_COMPANY,
                 'status' => User::STATUS_ACTIVE,
             ],
             [
                 'mail_address' => 'applicant@gmail.com',
-                'password' => Hash::make('12345678'),
+                'password' => Hash::make('123456Hh@'),
                 'role' => User::ROLE_APPLICANT,
                 'status' => User::STATUS_ACTIVE,
             ],
