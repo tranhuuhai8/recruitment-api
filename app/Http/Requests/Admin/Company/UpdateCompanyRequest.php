@@ -58,7 +58,6 @@ class UpdateCompanyRequest extends FormRequest
                 'max:' . config('length.max_string'),
             ],
             'website' => [
-                'string',
                 'max:' . config('length.max_string'),
             ],
             'status' => Rule::in([User::STATUS_ACTIVE, User::STATUS_INACTIVE])
