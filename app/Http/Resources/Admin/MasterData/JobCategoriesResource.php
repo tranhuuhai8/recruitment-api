@@ -17,6 +17,8 @@ class JobCategoriesResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'parent' => $this->parent,
+            'parent_id' => $this->parent_id,
             'description' => $this->description,
             'status' => $this->status,
             'type' => $this->type,

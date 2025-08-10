@@ -31,4 +31,17 @@ class CityController extends Controller
         $data = $this->cityService::getInstance()->data(...$this->getParamRequest($request));
         return $this->sendSuccessResponse(new CityCollection($data));
     }
+
+    /**
+     * Method listParent
+     *
+     * @param Request $request [explicite description]
+     *
+     * @return JsonResponse
+     */
+    public function listParent(Request $request): JsonResponse
+    {
+        $data = $this->cityService->dataParent($this->getParamRequest($request));
+        return $this->sendSuccessResponse(new CityCollection($data));
+    }
 }

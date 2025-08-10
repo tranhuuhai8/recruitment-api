@@ -120,7 +120,9 @@ Route::group(
     function () {
         Route::group(['as' => 'masterData.', 'prefix' => 'master-data'], function () {
             Route::get('/cities', [HomeCityController::class, 'list'])->name('cities');
+            Route::get('/cities-parent', [HomeCityController::class, 'listParent'])->name('cities_parent');
             Route::get('/job-categories', [HomeJobCategoryController::class, 'list'])->name('job_categories');
+            Route::get('/job-categories-parent', [HomeJobCategoryController::class, 'listParent'])->name('job_categories_parent');
         });
     }
 );

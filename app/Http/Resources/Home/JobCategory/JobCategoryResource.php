@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Admin\MasterData;
+namespace App\Http\Resources\Home\JobCategory;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CitiesResource extends JsonResource
+class JobCategoryResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,10 +17,9 @@ class CitiesResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'parent' => $this->parent,
-            'parent_id' => $this->parent_id,
             'description' => $this->description,
             'status' => $this->status,
+            'parent_id' => $this->parent_id,
         ];
     }
 }

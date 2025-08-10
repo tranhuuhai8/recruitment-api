@@ -35,7 +35,7 @@ class CreateJobCategoryRequest extends FormRequest
             ],
             'status' => Rule::in([JobCategory::STATUS_SHOW, JobCategory::STATUS_HIDE]),
             'type' => Rule::in([JobCategory::TYPE_DEFAULT, JobCategory::TYPE_CUSTOMIZE]),
-            'parent_id' => 'nullable|exist:job_categories,id',
+            'parent_id' => 'nullable|exists:job_categories,id',
         ];
     }
 }

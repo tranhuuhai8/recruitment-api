@@ -18,7 +18,8 @@ class CityService extends BaseService
     protected $searchables = ['name', 'description'];
 
     protected $filterables = [
-        'status' => 'filterByStatus'
+        'status' => 'filterByStatus',
+        'parent_id' => 'filterByParent',
     ];
 
     /**
@@ -38,13 +39,31 @@ class CityService extends BaseService
     }
 
     /**
+     * Method filterByParent
+     *
+     * @param Eloquent $query [explicite description]
+     * @param array $filter [explicite description]
+     *
+     * @return Eloquent
+     */
+    public function filterByParent(Eloquent $query, array $filter): Eloquent|QueryBuilder
+    {
+        $data = (array) json_decode($filter['data'], true);
+        if (!count($data)) {
+            return $query;
+        }
+
+        return $query->whereIn('parent_id', $data);
+    }
+
+    /**
      * makeNewQuery
      *
      * @return Eloquent | QueryBuilder
      */
     public function makeNewQuery(): Eloquent|QueryBuilder
     {
-        return City::query();
+        return City::with('parent');
     }
 
     /**

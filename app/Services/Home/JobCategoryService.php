@@ -5,6 +5,7 @@ namespace App\Services\Home;
 use App\Models\JobCategory;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Builder as Eloquent;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class JobCategoryService extends BaseService
@@ -23,5 +24,22 @@ class JobCategoryService extends BaseService
     public function makeNewQuery(): Eloquent | QueryBuilder
     {
         return JobCategory::query()->where('status', JobCategory::STATUS_SHOW);
+    }
+
+    /**
+     * Method dataParent
+     *
+     * @param array $request [explicite description]
+     *
+     * @return Eloquent
+     */
+    public function dataParent(array $request): Collection
+    {
+        $this->query = JobCategory::query()->where([
+            'status' => JobCategory::STATUS_SHOW,
+            'parent_id' => null,
+        ]);
+
+        return $this->data(...$request);
     }
 }

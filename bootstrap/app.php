@@ -48,7 +48,7 @@ return Application::configure(basePath: dirname(__DIR__))
         });
         $exceptions->render(function (\Throwable $e, $request) {
             return response()->json([
-                'message' => 'Có lỗi xảy ra'
+                'messages' => 'Có lỗi xảy ra'
             ], 500);
         });
     })->create();
