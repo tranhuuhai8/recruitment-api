@@ -22,6 +22,12 @@ class City extends Model
     protected $fillable = [
         'name',
         'description',
-        'status'
+        'status',
+        'parent_id',
     ];
+
+    public function parent()
+    {
+        return $this->belongsTo(City::class, 'parent_id');
+    }
 }

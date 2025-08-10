@@ -5,6 +5,7 @@ namespace App\Services\Home;
 use App\Models\City;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Builder as Eloquent;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class CityService extends BaseService
@@ -23,5 +24,22 @@ class CityService extends BaseService
     public function makeNewQuery(): Eloquent|QueryBuilder
     {
         return City::query()->where('status', City::STATUS_SHOW);
+    }
+
+    /**
+     * Method dataParent
+     *
+     * @param array $request [explicite description]
+     *
+     * @return Eloquent
+     */
+    public function dataParent(array $request): Collection
+    {
+        $this->query = City::query()->where([
+            'status' => City::STATUS_SHOW,
+            'parent_id' => null,
+        ]);
+
+        return $this->data(...$request);
     }
 }
