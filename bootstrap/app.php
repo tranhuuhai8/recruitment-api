@@ -4,8 +4,10 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\Cors;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -46,10 +48,14 @@ return Application::configure(basePath: dirname(__DIR__))
                 'errors' => $errors
             ], $e->status);
         });
+        $exceptions->render(function (AuthenticationException $e, $request) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        });
         $exceptions->render(function (\Throwable $e, $request) {
-            return response()->json([
-                'except' => $e->getMessage(),
-                'messages' => 'Có lỗi xảy ra'
-            ], 500);
+            if ($e instanceof HttpExceptionInterface && $e->getStatusCode() === 401) {
+                return null;
+            }
+
+            return response()->json(['message' => 'Có lỗi xảy ra'], 500);
         });
     })->create();
