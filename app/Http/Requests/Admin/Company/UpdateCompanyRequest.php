@@ -28,25 +28,26 @@ class UpdateCompanyRequest extends FormRequest
                 'required',
                 'string',
                 'max:' . config('length.max_string'),
-                'unique:companies,name,' . $this->id,
+                'unique:companies,name,' . $this->id . ',user_id',
             ],
             'short_name' => [
                 'required',
                 'string',
                 'max:' . config('length.max_short_name'),
-                'unique:companies,short_name,' . $this->id,
+                'unique:companies,short_name,' . $this->id . ',user_id',
             ],
             'mail_address' => [
                 'required',
                 'string',
                 'email',
                 'max:' . config('length.max_string'),
+                Rule::unique('users')->ignore($this->id)->whereNull('deleted_at'),
             ],
             'telephone' => [
                 'required',
                 'string',
                 'regex:' . config('regex.telephone'),
-                'unique:companies,telephone,' . $this->id,
+                'unique:companies,telephone,' . $this->id . ',user_id',
             ],
             'city_id' => [
                 'required',
@@ -60,7 +61,7 @@ class UpdateCompanyRequest extends FormRequest
             'website' => [
                 'max:' . config('length.max_string'),
             ],
-            'status' => Rule::in([User::STATUS_ACTIVE, User::STATUS_INACTIVE])
+            'status' => Rule::in([User::STATUS_ACTIVE, User::STATUS_UNVERIFIED, User::STATUS_LOCKED])
         ];
     }
 }

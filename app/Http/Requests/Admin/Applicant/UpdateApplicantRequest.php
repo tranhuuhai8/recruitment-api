@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin\Applicant;
 
 use App\Models\Applicant;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -34,8 +35,9 @@ class UpdateApplicantRequest extends FormRequest
                 'string',
                 'email',
                 'max:' . config('length.max_string'),
+                Rule::unique('users')->ignore($this->id)->whereNull('deleted_at'),
             ],
-            'status' => Rule::in([Applicant::STATUS_ACTIVE, Applicant::STATUS_INACTIVE]),
+            'status' => Rule::in([User::STATUS_ACTIVE, User::STATUS_UNVERIFIED, User::STATUS_LOCKED]),
             'gender' => Rule::in([Applicant::GENDER_MALE, Applicant::GENDER_FEMALE, Applicant::GENDER_OTHER]),
             'birthday' => [
                 'required',
@@ -46,7 +48,7 @@ class UpdateApplicantRequest extends FormRequest
                 'required',
                 'string',
                 'regex:' . config('regex.telephone'),
-                'unique:applicants,telephone,' . $this->id,
+                'unique:applicants,telephone,' . $this->id . ',user_id',
             ],
             'address' => [
                 'required',

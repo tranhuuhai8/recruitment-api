@@ -24,6 +24,7 @@ return [
     'register_failed' => 'Đăng ký mới không thành công.',
     'email_error' => 'Email không tồn tại',
     'not_active' => 'Tài khoản của bạn chưa được xác thực. Vui lòng kiểm tra email để xác thực!',
+    'locked' => 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên để mở khóa!',
     'mail' => [
         'register' => [
             'mail_address' => 'Email',
