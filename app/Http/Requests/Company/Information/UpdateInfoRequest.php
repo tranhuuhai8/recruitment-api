@@ -61,7 +61,7 @@ class UpdateInfoRequest extends FormRequest
                 'string',
                 'email',
                 'max:' . config('length.max_string'),
-                'unique:users,mail_address,' . auth(guard: 'company')->id() . ',id'
+                'unique:users,mail_address,' . auth('company')->id() . ',id,deleted_at,NULL',
             ],
             'telephone' => [
                 'required',

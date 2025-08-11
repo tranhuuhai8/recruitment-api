@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\Applicant\UpdateApplicantRequest;
-use App\Http\Resources\Admin\Applicant\ApplicantsCollection;
 use App\Services\Admin\ApplicantService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -30,7 +29,7 @@ class ApplicantController extends BaseController
     public function list(Request $request): JsonResponse
     {
         $data = $this->applicantService::getInstance()->data(...$this->getParamRequest($request));
-        return $this->sendSuccessResponse(new ApplicantsCollection($data));
+        return $this->sendSuccessResponse($data);
     }
 
     /**

@@ -44,7 +44,7 @@ class UpdateInfoRequest extends FormRequest
                 'string',
                 'email',
                 'max:' . config('length.max_string'),
-                'unique:users,mail_address,' . auth(guard: 'applicant')->id() . ',id'
+                'unique:users,mail_address,' . auth('applicant')->id() . ',id,deleted_at,NULL',
             ],
             'gender' => Rule::in([Applicant::GENDER_MALE, Applicant::GENDER_FEMALE, Applicant::GENDER_OTHER]),
             'birthday' => [
