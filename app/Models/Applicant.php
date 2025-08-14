@@ -12,8 +12,6 @@ class Applicant extends Model
     use HasFactory;
     use SoftDeletes;
 
-    public const STATUS_ACTIVE = 1;
-    public const STATUS_INACTIVE = 2;
     public const GENDER_MALE = 1;
     public const GENDER_FEMALE = 2;
     public const GENDER_OTHER = 3;

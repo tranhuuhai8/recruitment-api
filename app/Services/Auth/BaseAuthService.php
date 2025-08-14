@@ -42,8 +42,12 @@ class BaseAuthService
                 return ['message' => trans('auth.login_failed')];
             }
 
-            if ($user->status === User::STATUS_INACTIVE) {
+            if ($user->status === User::STATUS_UNVERIFIED) {
                 return ['message' => trans('auth.not_active')];
+            }
+
+            if ($user->status === User::STATUS_LOCKED) {
+                return ['message' => trans('auth.locked')];
             }
 
             $token = $auth->login($user);
@@ -69,7 +73,7 @@ class BaseAuthService
                 'mail_address' => $data['mail_address'],
                 'password' => Hash::make($data['password']),
                 'role' => $role,
-                'status' => User::STATUS_INACTIVE,
+                'status' => User::STATUS_UNVERIFIED,
                 'token_verify' => Hash::make($data['mail_address']),
             ]);
 
