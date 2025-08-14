@@ -24,6 +24,7 @@ return [
     'register_failed' => 'New registration failed.',
     'email_error' => 'Email does not exist',
     'not_active' => 'Your account is not verified. Please check your email to verify!',
+    'locked' => 'Your account has been locked. Please contact the administrator to unlock it!',
     'mail' => [
         'register' => [
             'mail_address' => 'Email',

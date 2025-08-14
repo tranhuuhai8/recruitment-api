@@ -18,7 +18,11 @@ class ApplicantService extends BaseService
         'name' => 'name',
     ];
 
-    protected $searchables = ['name', 'telephone', 'description'];
+    protected $searchables = [
+        'name' => 'applicants.name',
+        'telephone' => 'applicants.telephone',
+        'mail_address' => 'users.mail_address',
+    ];
 
     protected $filterables = [
         'status' => 'filterByStatus',
@@ -38,7 +42,7 @@ class ApplicantService extends BaseService
             return $query;
         }
 
-        return $query->whereRelation('user', 'status', +$filter['data']);
+        return $query->where('status', +$filter['data']);
     }
 
     /**
@@ -64,20 +68,39 @@ class ApplicantService extends BaseService
      */
     public function makeNewQuery(): Eloquent|QueryBuilder
     {
-        return Applicant::with('user');
+        return User::leftJoin('applicants', 'users.id', 'applicants.user_id')
+            ->where('users.role', User::ROLE_APPLICANT)
+            ->selectRaw($this->getSelectRaw());
+    }
+
+    /**
+     * Method getSelectRaw
+     *
+     * @return string
+     */
+    protected function getSelectRaw(): string
+    {
+        return implode(', ', [
+            'users.id',
+            'users.status',
+            'users.mail_address',
+            'applicants.name',
+            'applicants.gender',
+            'applicants.telephone',
+        ]);
     }
 
     /**
      * Method detail
      *
-     * @param int $id
+     * @param int $id [explicite description]
      *
-     * @return Applicant | array
+     * @return Applicant | User | array
      */
-    public function detail(int $id): Applicant | array
+    public function detail(int $id): Applicant|User|array
     {
         try {
-            $applicant = Applicant::with('user')->find($id);
+            $applicant = Applicant::with('user')->where('user_id', $id)->first() ?: User::find($id);
             if (!$applicant) {
                 return ResponseHelper::notFound();
             }
@@ -96,20 +119,24 @@ class ApplicantService extends BaseService
      *
      * @return bool | array
      */
-    public function update(array $data, int $id): bool | array
+    public function update(array $data, int $id): bool|array
     {
         try {
             DB::beginTransaction();
-            $applicant = Applicant::find($id);
-            if (!$applicant) {
+            $user = User::find($id);
+            if (!$user) {
                 return ResponseHelper::notFound();
             }
 
-            User::find($applicant->user_id)->update([
+            User::find($id)->update([
                 'status' => $data['status'],
                 'mail_address' => $data['mail_address'],
             ]);
-            $applicant->update($data);
+            Applicant::upsert(
+                $this->makeDataUpsert($id, $data),
+                ['user_id'],
+                ['name', 'avatar', 'gender', 'birthday', 'telephone', 'address', 'description']
+            );
 
             DB::commit();
             return true;
@@ -117,5 +144,27 @@ class ApplicantService extends BaseService
             DB::rollBack();
             throw new Exception($e->getMessage());
         }
+    }
+
+    /**
+     * Method makeDataUpsert
+     *
+     * @param int $id [explicite description]
+     * @param array $data [explicite description]
+     *
+     * @return array
+     */
+    public function makeDataUpsert(int $id, array $data): array
+    {
+        return [
+            'user_id' => $id,
+            'name' => data_get($data, 'name'),
+            'avatar' => data_get($data, 'avatar'),
+            'gender' => data_get($data, 'gender'),
+            'birthday' => data_get($data, 'birthday'),
+            'address' => data_get($data, 'address'),
+            'telephone' => data_get($data, 'telephone'),
+            'description' => data_get($data, 'description'),
+        ];
     }
 }

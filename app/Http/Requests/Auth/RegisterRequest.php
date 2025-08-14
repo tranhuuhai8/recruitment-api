@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class RegisterRequest extends FormRequest
 {
@@ -26,16 +27,16 @@ class RegisterRequest extends FormRequest
                 'required',
                 'string',
                 'email',
-                'unique:users',
                 'max:' . config('length.max_string'),
+                Rule::unique('users')->whereNull('deleted_at'),
             ],
             'password' => [
                 'required',
                 'string',
                 'min:' . config('length.min_string'),
                 'max:' . config('length.max_string'),
-                'confirmed',
                 'regex:' . config('regex.password'),
+                'confirmed',
             ],
         ];
     }

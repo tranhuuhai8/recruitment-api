@@ -19,10 +19,10 @@ class CompanyService extends BaseService
     ];
 
     protected $searchables = [
-        'name',
-        'short_name',
-        'telephone',
-        'description'
+        'name' => 'companies.name',
+        'short_name' => 'companies.short_name',
+        'telephone' => 'companies.telephone',
+        'mail_address' => 'users.mail_address',
     ];
 
     protected $filterables = [
@@ -42,7 +42,7 @@ class CompanyService extends BaseService
             return $query;
         }
 
-        return $query->whereRelation('user', 'status', +$filter['data']);
+        return $query->where('status', +$filter['data']);
     }
 
     /**
@@ -52,7 +52,26 @@ class CompanyService extends BaseService
      */
     public function makeNewQuery(): Eloquent|QueryBuilder
     {
-        return Company::with('user');
+        return User::leftJoin('companies', 'users.id', 'companies.user_id')
+            ->where('users.role', User::ROLE_COMPANY)
+            ->selectRaw($this->getSelectRaw());
+    }
+
+    /**
+     * Method getSelectRaw
+     *
+     * @return string
+     */
+    protected function getSelectRaw(): string
+    {
+        return implode(', ', [
+            'users.id',
+            'users.status',
+            'users.mail_address',
+            'companies.name',
+            'companies.short_name',
+            'companies.telephone',
+        ]);
     }
 
     /**
@@ -60,12 +79,12 @@ class CompanyService extends BaseService
      *
      * @param int $id
      *
-     * @return Company
+     * @return Company | User | array
      */
-    public function detail(int $id): Company | array
+    public function detail(int $id): Company|User|array
     {
         try {
-            $company = Company::with('user')->find($id);
+            $company = Company::with('user')->where('user_id', $id)->first() ?: User::find($id);
             if (!$company) {
                 return ResponseHelper::notFound();
             }
@@ -84,20 +103,24 @@ class CompanyService extends BaseService
      *
      * @return bool | array
      */
-    public function update(array $data, int $id): bool | array
+    public function update(array $data, int $id): bool|array
     {
         try {
             DB::beginTransaction();
-            $company = Company::find($id);
-            if (!$company) {
+            $user = User::find($id);
+            if (!$user) {
                 return ResponseHelper::notFound();
             }
 
-            User::find($company->user_id)->update([
+            User::find($id)->update([
                 'status' => $data['status'],
                 'mail_address' => $data['mail_address'],
             ]);
-            $company->update($data);
+            Company::upsert(
+                $this->makeDataUpsert($id, $data),
+                ['user_id'],
+                ['logo', 'cover_img', 'name', 'short_name', 'city_id', 'website', 'telephone', 'address', 'description']
+            );
 
             DB::commit();
             return true;
@@ -105,5 +128,29 @@ class CompanyService extends BaseService
             DB::rollBack();
             throw new Exception($e->getMessage());
         }
+    }
+
+    /**
+     * Method makeDataUpsert
+     *
+     * @param int $id [explicite description]
+     * @param array $data [explicite description]
+     *
+     * @return array
+     */
+    public function makeDataUpsert(int $id, array $data): array
+    {
+        return [
+            'user_id' => $id,
+            'logo' => data_get($data, 'logo'),
+            'cover_img' => data_get($data, 'cover_img'),
+            'name' => data_get($data, 'name'),
+            'short_name' => data_get($data, 'short_name'),
+            'telephone' => data_get($data, 'telephone'),
+            'city_id' => data_get($data, 'city_id'),
+            'address' => data_get($data, 'address'),
+            'website' => data_get($data, 'website'),
+            'description' => data_get($data, 'description'),
+        ];
     }
 }
