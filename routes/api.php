@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\ApplicantController;
 use App\Http\Controllers\Admin\JobCategoryController;
 use App\Http\Controllers\Applicant\AuthController as ApplicantAuthController;
+use App\Http\Controllers\Base\UploadController;
 use App\Http\Controllers\Company\AuthController as CompanyAuthController;
 use App\Http\Controllers\Home\CityController as HomeCityController;
 use App\Http\Controllers\Home\JobCategoryController as HomeJobCategoryController;
@@ -126,3 +127,15 @@ Route::group(
         });
     }
 );
+
+Route::group(
+    [
+        'as' => 'upload.',
+        'prefix' => 'upload',
+    ],
+    function () {
+        Route::post('/image', [UploadController::class, 'uploadImg'])->name('image');
+    }
+);
+
+

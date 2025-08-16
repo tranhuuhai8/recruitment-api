@@ -159,6 +159,8 @@ return [
     'uuid' => 'The :attribute field must be a valid UUID.',
 
     'attributes' => [
+        'logo' => 'Logo',
+        'cover_img' => 'Cover image',
         'name' => 'name',
         'short_name' => 'Short name',
         'description' => 'Description',

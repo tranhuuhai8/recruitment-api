@@ -67,6 +67,8 @@ class CompanyController extends BaseController
     public function getFields(): array
     {
         return [
+            'logo',
+            'cover_img',
             'name',
             'short_name',
             'mail_address',

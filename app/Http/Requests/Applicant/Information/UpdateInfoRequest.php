@@ -36,6 +36,7 @@ class UpdateInfoRequest extends FormRequest
                 'max:' . config('length.max_string'),
             ],
             'avatar' => [
+                'required',
                 'string',
                 'max:' . config('length.max_string'),
             ],
