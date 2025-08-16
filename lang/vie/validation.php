@@ -115,6 +115,8 @@ return [
     'url'                  => ':attribute phải có định dạng URL hợp lệ',
 
     'attributes' => [
+        'logo' => 'Ảnh đại diện',
+        'cover_img' => 'Ảnh bìa',
         'name' => 'Tên',
         'short_name' => 'Tên viết tắt',
         'description' => 'Mô tả',
