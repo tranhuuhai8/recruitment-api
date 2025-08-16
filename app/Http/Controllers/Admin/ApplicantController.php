@@ -67,6 +67,7 @@ class ApplicantController extends BaseController
     public function getFields(): array
     {
         return [
+            'avatar',
             'name',
             'gender',
             'birthday',

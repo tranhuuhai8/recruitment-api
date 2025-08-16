@@ -35,12 +35,12 @@ class UpdateInfoRequest extends FormRequest
 
         return [
             'logo' => [
-                // 'required',
+                'required',
                 'string',
                 'max:' . config('length.max_string'),
             ],
             'cover_img' => [
-                // 'required',
+                'required',
                 'string',
                 'max:' . config('length.max_string'),
             ],
