@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\ApplicantController;
 use App\Http\Controllers\Admin\JobCategoryController;
 use App\Http\Controllers\Applicant\AuthController as ApplicantAuthController;
+use App\Http\Controllers\Base\AuthController as BaseAuthController;
 use App\Http\Controllers\Base\UploadController;
 use App\Http\Controllers\Company\AuthController as CompanyAuthController;
 use App\Http\Controllers\Home\CityController as HomeCityController;
@@ -30,14 +31,19 @@ Route::group(['as' => 'auth.', 'prefix' => 'auth'], function () {
         Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
         Route::post('/logout', action: [AuthController::class, 'logout'])->name('logout');
         Route::get('/me', [AuthController::class, 'me'])->name('me');
+        Route::post('/change-password', [AuthController::class, 'changePassword'])->name('change_password');
     });
 
+    Route::post('/forgot-password', [BaseAuthController::class, 'forgotPassword'])->name('forgot_password');
+    Route::post('/reset-password/{token}', [BaseAuthController::class, 'resetPassword'])->name('reset_password');
+    
     Route::group(['as' => 'company.', 'prefix' => 'company'], function () {
         Route::post('/login', [CompanyAuthController::class, 'login'])->name('login');
         Route::post('/refresh', [CompanyAuthController::class, 'refresh'])->name('refresh');
         Route::post('/register', [CompanyAuthController::class, 'register'])->name('register');
         Route::post('/logout', [CompanyAuthController::class, 'logout'])->name('logout');
         Route::get('/me', [CompanyAuthController::class, 'me'])->name('me');
+        Route::post('/change-password', [CompanyAuthController::class, 'changePassword'])->name('change_password');
     });
 
     Route::group(['as' => 'applicant.', 'prefix' => 'applicant'], function () {
@@ -46,6 +52,7 @@ Route::group(['as' => 'auth.', 'prefix' => 'auth'], function () {
         Route::post('/register', [ApplicantAuthController::class, 'register'])->name('register');
         Route::post('/logout', [ApplicantAuthController::class, 'logout'])->name('logout');
         Route::get('/me', [ApplicantAuthController::class, 'me'])->name('me');
+        Route::post('/change-password', [ApplicantAuthController::class, 'changePassword'])->name('change_password');
     });
 });
 

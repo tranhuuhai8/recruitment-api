@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Mail\MailForgotPassword;
 use App\Mail\MailRegisterAccount;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Mail\Mailable;
@@ -35,7 +36,7 @@ class SendMailAuth implements ShouldQueue
      */
     public function handle(): void
     {
-        Mail::to($this->data->mail_address)->queue($this->getMailable());
+        Mail::to(data_get($this->data, 'mail_address'))->queue($this->getMailable());
     }
 
     /**
@@ -47,6 +48,8 @@ class SendMailAuth implements ShouldQueue
     {
         if ($this->type === 'register-account') {
             return new MailRegisterAccount($this->data);
+        } elseif ($this->type === 'forgot-password') {
+            return new MailForgotPassword($this->data);
         }
 
         return new MailRegisterAccount($this->data);
