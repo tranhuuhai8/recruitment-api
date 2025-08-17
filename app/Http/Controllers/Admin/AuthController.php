@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\Auth\ChangePasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Services\Admin\AuthService;
 use Illuminate\Http\JsonResponse;
@@ -59,6 +60,24 @@ class AuthController extends BaseController
     {
         $admin = $this->authService->me();
         return $this->sendSuccessResponse($admin);
+    }
+
+    /**
+     * Method changePassword
+     *
+     * @param ChangePasswordRequest $request [explicite description]
+     *
+     * @return void
+     */
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    {
+        $data = $this->authService->changePassword($request->only([
+            'old_password',
+            'password',
+        ]));
+
+
+        return $this->sendResponse($data);
     }
 
     /**

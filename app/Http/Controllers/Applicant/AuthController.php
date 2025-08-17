@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Applicant;
 
 use App\Http\Requests\Applicant\Information\UpdateInfoRequest;
+use App\Http\Requests\Auth\ChangePasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Services\Applicant\AuthService;
@@ -77,6 +78,24 @@ class AuthController extends BaseController
     {
         $applicant = $this->authService->me();
         return $this->sendSuccessResponse($applicant);
+    }
+
+    /**
+     * Method changePassword
+     *
+     * @param ChangePasswordRequest $request [explicite description]
+     *
+     * @return void
+     */
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    {
+        $data = $this->authService->changePassword($request->only([
+            'old_password',
+            'password',
+        ]));
+
+
+        return $this->sendResponse($data);
     }
 
     /**

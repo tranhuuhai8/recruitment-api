@@ -15,7 +15,7 @@ return [
 
     'unauthenticated' => 'Authentication is required. Please login.',
     'token_failed' => 'The token is invalid.',
-    'password' => 'Incorrect password.',
+    'password_incorrect' => 'Incorrect password.',
     'logout_success' => 'Login out successfully.',
     'login_success' => 'Login in successfully.',
     'login_failed' => 'Your email address or password is incorrect.',
@@ -25,10 +25,14 @@ return [
     'email_error' => 'Email does not exist',
     'not_active' => 'Your account is not verified. Please check your email to verify!',
     'locked' => 'Your account has been locked. Please contact the administrator to unlock it!',
+    'reset_password_failed' => 'The password reset link has expired. Please request a new one.',
     'mail' => [
         'register' => [
             'mail_address' => 'Email',
             'text_verify' => 'Please click here to verify your account and log in!',
+        ],
+        'forgot_password' => [
+            'text' => 'Please open this link to perform the new password update!',
         ],
     ],
 ];

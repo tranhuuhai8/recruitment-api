@@ -4,10 +4,13 @@ namespace App\Services\Auth;
 
 use App\Helpers\ResponseHelper;
 use App\Jobs\SendMailAuth;
+use App\Models\PasswordResetToken;
 use Exception;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -53,6 +56,100 @@ class BaseAuthService
             $token = $auth->login($user);
             return $this->respondWithToken($token, $auth);
         } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    /**
+     * Method changePassword
+     *
+     * @param mixed $auth $auth [explicite description]
+     * @param array $data [explicite description]
+     *
+     * @return array | bool
+     */
+    public function changePassword($auth, array $data): array|bool
+    {
+        try {
+            $user = User::find($auth->user()?->id);
+            if (!Hash::check($data['old_password'], $user->password)) {
+                return ['message' => trans('auth.password_incorrect')];
+            }
+
+            $user->update(['password' => $data['password']]);
+
+            return true;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    /**
+     * Method forgotPassword
+     *
+     * @param string $email [explicite description]
+     *
+     * @return array|bool
+     */
+    public function forgotPassword(string $email): array|bool
+    {
+        try {
+            $user = User::where('mail_address', $email)->first();
+            if (!$user) {
+                return ResponseHelper::notFound();
+            }
+
+            DB::beginTransaction();
+            $token = Str::random(config('length.token'));
+            PasswordResetToken::where('mail_address', $email)->delete();
+            PasswordResetToken::insert([
+                'mail_address' => $email,
+                'token' => Hash::make($token),
+                'created_at' => Carbon::now(),
+            ]);
+
+            SendMailAuth::dispatch('forgot-password', [
+                'mail_address' => $email,
+                'token' => $token,
+            ]);
+            DB::commit();
+
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    /**
+     * Method resetPassword
+     *
+     * @param string $token [explicite description]
+     * @param array $data [explicite description]
+     *
+     * @return array | bool
+     */
+    public function resetPassword(string $token, array $data): array|bool
+    {
+        try {
+            DB::beginTransaction();
+            $record = PasswordResetToken::where('mail_address', $data['mail_address'])->first();
+            if (
+                !$record ||
+                !Hash::check($token, $record?->token) ||
+                Carbon::parse($record?->created_at)->addMinutes(config('length.expire_time_reset_password'))->isPast()
+            ) {
+                return ResponseHelper::notFound(trans('auth.reset_password_failed'));
+            }
+
+            User::where('mail_address', $data['mail_address'])
+                ->update(['password' => Hash::make($data['password'])]);
+            PasswordResetToken::where('mail_address', $data['mail_address'])->delete();
+
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
             throw new Exception($e->getMessage());
         }
     }

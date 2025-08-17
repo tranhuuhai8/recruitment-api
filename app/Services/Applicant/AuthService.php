@@ -42,7 +42,7 @@ class AuthService extends BaseService
      *
      * @param array $data [explicite description]
      *
-     * @return bool
+     * @return bool|array
      */
     public function update(array $data): bool|array
     {
@@ -98,6 +98,18 @@ class AuthService extends BaseService
     public function attemptLogin($request): array
     {
         return BaseAuthService::getInstance()->login($this->auth, $request, User::ROLE_APPLICANT);
+    }
+
+    /**
+     * Method changePassword
+     *
+     * @param array $data [explicite description]
+     *
+     * @return array | bool
+     */
+    public function changePassword(array $data): array | bool
+    {
+        return BaseAuthService::getInstance()->changePassword($this->auth, $data);
     }
 
     /**
