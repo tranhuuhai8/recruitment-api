@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Http\Controllers\Home;
+
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Home\Company\CompanyCollection;
+use App\Services\Home\CompanyService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
+class CompanyController extends Controller
+{
+    protected $companyService;
+
+    /**
+     * CompanyController constructor.
+     */
+    public function __construct(CompanyService $companyService)
+    {
+        $this->companyService = $companyService;
+    }
+
+    /**
+     * list
+     *
+     * @param  Request $request
+     * @return JsonResponse
+     */
+    public function list(Request $request): JsonResponse
+    {
+        Log::info($this->getParamRequest($request));
+
+        $data = $this->companyService::getInstance()->data(...$this->getParamRequest($request));
+        return $this->sendSuccessResponse(new CompanyCollection($data));
+    }
+}
