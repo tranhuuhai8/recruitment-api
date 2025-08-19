@@ -103,6 +103,19 @@ class AuthService extends BaseService
     }
 
     /**
+     * Method changePassword
+     *
+     * @param array $data [explicite description]
+     * @param int $userId [explicite description]
+     *
+     * @return void
+     */
+    public function changePassword(array $data): array | bool
+    {
+        return BaseAuthService::getInstance()->changePassword($this->auth, data: $data);
+    }
+
+    /**
      * Method verifyEmail
      *
      * @param string $token

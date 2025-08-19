@@ -53,7 +53,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
-    'url_home' => env('APP_URL_HOME', 'http://localhost:3024/auth/login'),
+    'url_home' => env('APP_URL_HOME', 'http://localhost:3024'),
 
     /*
     |--------------------------------------------------------------------------

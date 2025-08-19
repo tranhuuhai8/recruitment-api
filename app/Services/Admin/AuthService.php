@@ -42,6 +42,17 @@ class AuthService extends BaseService
     }
 
     /**
+     * changePassword
+     *
+     * @param  array $data
+     * @return array | bool
+     */
+    public function changePassword(array $data): array | bool
+    {
+        return BaseAuthService::getInstance()->changePassword($this->auth, $data);
+    }
+
+    /**
      * Method logout
      *
      * @return void
