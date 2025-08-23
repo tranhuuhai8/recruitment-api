@@ -10,6 +10,7 @@ use App\Http\Controllers\Base\AuthController as BaseAuthController;
 use App\Http\Controllers\Base\UploadController;
 use App\Http\Controllers\Company\AuthController as CompanyAuthController;
 use App\Http\Controllers\Home\CityController as HomeCityController;
+use App\Http\Controllers\Home\CompanyController as HomeCompanyController;
 use App\Http\Controllers\Home\JobCategoryController as HomeJobCategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -120,6 +121,7 @@ Route::group(
     }
 );
 
+// route home
 Route::group(
     [
         'as' => 'home.',
@@ -131,6 +133,10 @@ Route::group(
             Route::get('/cities-parent', [HomeCityController::class, 'listParent'])->name('cities_parent');
             Route::get('/job-categories', [HomeJobCategoryController::class, 'list'])->name('job_categories');
             Route::get('/job-categories-parent', [HomeJobCategoryController::class, 'listParent'])->name('job_categories_parent');
+        });
+
+        Route::group(['as' => 'company.', 'prefix' => 'company'], function () {
+            Route::get('/', [HomeCompanyController::class, 'list'])->name('list');
         });
     }
 );
