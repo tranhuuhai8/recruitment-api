@@ -92,6 +92,10 @@ class JobCategoryService extends BaseService
     public function store(array $data): JobCategory | array
     {
         try {
+            if ($this->validateCategoryName($data)) {
+                return ResponseHelper::sendError(trans('response.data_exist'));
+            }
+
             return JobCategory::create($data);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -111,6 +115,10 @@ class JobCategoryService extends BaseService
             $jobCategory = JobCategory::find($id);
             if (!$jobCategory) {
                 return ResponseHelper::notFound();
+            }
+
+            if ($this->validateCategoryName($data, $id)) {
+                return ResponseHelper::sendError(trans('response.data_exist'));
             }
 
             return $jobCategory->update($data);
@@ -137,5 +145,31 @@ class JobCategoryService extends BaseService
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+    }
+
+    /**
+     * Method validateCategoryName
+     *
+     * @param array $data [explicite description]
+     * @param $id $id [explicite description]
+     *
+     * @return bool
+     */
+    public function validateCategoryName(array $data, $id = null): bool
+    {
+        $name = mb_strtolower($data['name']);
+        $parentId = $data['parent_id'] ?? null;
+
+        return JobCategory::query()
+            ->whereRaw('LOWER(name) = ?', [$name])
+            ->when($parentId, function ($q) use ($parentId) {
+                $q->where('parent_id', $parentId);
+            }, function ($q) {
+                $q->whereNull('parent_id');
+            })
+            ->when($id, function ($q) use ($id) {
+                $q->where('id', '!=', $id);
+            })
+            ->exists();
     }
 }
