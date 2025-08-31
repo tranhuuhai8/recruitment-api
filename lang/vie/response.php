@@ -9,4 +9,5 @@ return [
     'delete_success' => 'Đã xóa.',
     'login_success' => 'Đăng nhập thành công.',
     'data_not_found' => 'Dữ liệu không tồn tại',
+    'data_exist' => 'Dữ liệu đã tồn tại',
 ];

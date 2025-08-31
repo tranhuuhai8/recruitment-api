@@ -75,6 +75,10 @@ class CityService extends BaseService
     public function store(array $data): City|array
     {
         try {
+            if ($this->validateCityName($data)) {
+                return ResponseHelper::sendError(trans('response.data_exist'));
+            }
+
             return City::create($data);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -94,6 +98,10 @@ class CityService extends BaseService
             $city = City::find($id);
             if (!$city) {
                 return ResponseHelper::notFound();
+            }
+
+            if ($this->validateCityName($data, $id)) {
+                return ResponseHelper::sendError(trans('response.data_exist'));
             }
 
             return $city->update($data);
@@ -120,5 +128,31 @@ class CityService extends BaseService
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+    }
+
+    /**
+     * Method validateCityName
+     *
+     * @param array $data [explicite description]
+     * @param $id $id [explicite description]
+     *
+     * @return bool
+     */
+    public function validateCityName(array $data, $id = null): bool
+    {
+        $name = mb_strtolower($data['name']);
+        $parentId = $data['parent_id'] ?? null;
+
+        return City::query()
+            ->whereRaw('LOWER(name) = ?', [$name])
+            ->when($parentId, function ($q) use ($parentId) {
+                $q->where('parent_id', $parentId);
+            }, function ($q) {
+                $q->whereNull('parent_id');
+            })
+            ->when($id, function ($q) use ($id) {
+                $q->where('id', '!=', $id);
+            })
+            ->exists();
     }
 }
