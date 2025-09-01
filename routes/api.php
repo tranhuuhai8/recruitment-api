@@ -9,6 +9,7 @@ use App\Http\Controllers\Applicant\AuthController as ApplicantAuthController;
 use App\Http\Controllers\Base\AuthController as BaseAuthController;
 use App\Http\Controllers\Base\UploadController;
 use App\Http\Controllers\Company\AuthController as CompanyAuthController;
+use App\Http\Controllers\Company\JobController;
 use App\Http\Controllers\Home\CityController as HomeCityController;
 use App\Http\Controllers\Home\CompanyController as HomeCompanyController;
 use App\Http\Controllers\Home\JobCategoryController as HomeJobCategoryController;
@@ -118,6 +119,10 @@ Route::group(
     ],
     function () {
         Route::put('/update', [CompanyAuthController::class, 'update'])->name('update');
+
+        Route::group(['as' => 'job.', 'prefix' => 'job'], function () {
+            Route::get('/', [JobController::class, 'list'])->name('list');
+        });
     }
 );
 
