@@ -29,8 +29,6 @@ class CompanyController extends Controller
      */
     public function list(Request $request): JsonResponse
     {
-        Log::info($this->getParamRequest($request));
-
         $data = $this->companyService::getInstance()->data(...$this->getParamRequest($request));
         return $this->sendSuccessResponse(new CompanyCollection($data));
     }
