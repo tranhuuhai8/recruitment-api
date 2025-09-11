@@ -20,7 +20,7 @@ class JobResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'title' => $this->title,
             'type' => $this->type,
             'status' => $this->status,
             'start_date' => DateHelper::parseOnlyDate($this->start_date),
