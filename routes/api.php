@@ -38,7 +38,7 @@ Route::group(['as' => 'auth.', 'prefix' => 'auth'], function () {
 
     Route::post('/forgot-password', [BaseAuthController::class, 'forgotPassword'])->name('forgot_password');
     Route::post('/reset-password/{token}', [BaseAuthController::class, 'resetPassword'])->name('reset_password');
-    
+
     Route::group(['as' => 'company.', 'prefix' => 'company'], function () {
         Route::post('/login', [CompanyAuthController::class, 'login'])->name('login');
         Route::post('/refresh', [CompanyAuthController::class, 'refresh'])->name('refresh');
@@ -122,6 +122,10 @@ Route::group(
 
         Route::group(['as' => 'job.', 'prefix' => 'job'], function () {
             Route::get('/', [JobController::class, 'list'])->name('list');
+            Route::get('/{id}', [JobController::class, 'detail'])->name('detail');
+            Route::put('/{id}', [JobController::class, 'update'])->name('update');
+            Route::post('/', [JobController::class, 'store'])->name('store');
+            Route::delete('{id}', [JobController::class, 'delete'])->name('delete');
         });
     }
 );

@@ -15,6 +15,10 @@ class Job extends Model
     public const TYPE_FULLTIME = 1;
     public const TYPE_PART_TIME = 2;
 
+    public const SALARY_TYPE_NET = 1;
+    public const SALARY_TYPE_GROSS = 2;
+    public const SALARY_TYPE_EXCHANGE = 3;
+
     public const STATUS_DRAFT = 1;
     public const STATUS_OPEN = 2;
     public const STATUS_CLOSED = 3;
@@ -26,17 +30,17 @@ class Job extends Model
      */
     protected $fillable = [
         'company_id',
-        'name',
+        'title',
         'banner',
         'number_of_recruitment',
         'job_category_id',
         'city_id',
-        'address_detail',
         'start_date',
         'end_date',
+        'salary_min',
+        'salary_max',
+        'salary_type',
         'description',
-        'request_detail',
-        'contact_detail',
         'type',
         'status',
     ];

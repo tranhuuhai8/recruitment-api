@@ -126,6 +126,8 @@ return [
         'gender' => 'Giới tính',
         'birthday' => 'Ngày sinh',
         'city_id' => 'Thành phố',
+        'salary_min' => 'Lương tối thiểu',
+        'salary_max' => 'Lương tối đa',
     ],
 
     'custom' => [

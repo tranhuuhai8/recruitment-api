@@ -170,6 +170,8 @@ return [
         'gender' => 'Gender',
         'birthday' => 'Date of birth',
         'city_id' => 'City',
+        'salary_min' => 'Salary min',
+        'salary_max' => 'Salary max',
     ],
 
     'custom' => [
