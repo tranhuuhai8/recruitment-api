@@ -38,7 +38,13 @@ class BaseAuthService
     public function login($auth, array $request, int $role): array
     {
         try {
-            $user = User::where('mail_address', $request['mail_address'])->first();
+            $relation = $role === User::ROLE_COMPANY ? 'company' : ($role === User::ROLE_APPLICANT ? 'applicant' : '');
+
+            $user = User::query()
+                ->when($relation, function ($query) use ($relation) {
+                    $query->with($relation);
+                })
+                ->where('mail_address', $request['mail_address'])->first();
             $password = $request['password'];
 
             if (!$user || $user->role !== $role || !Hash::check($password, $user->password)) {
@@ -253,6 +259,10 @@ class BaseAuthService
         try {
             $token = JWTAuth::parseToken()->refresh();
             $user = JWTAuth::setToken($token)->toUser();
+            if ($user->role !== User::ROLE_ADMIN) {
+                $user->load($user->role === User::ROLE_COMPANY ? 'company' : 'applicant');
+            }
+
             $auth->setUser($user);
 
             return $this->respondWithToken($token, $auth);

@@ -32,7 +32,7 @@ class AuthService extends BaseService
     public function me(): User|null
     {
         return User::query()
-            ->with(['company'])
+            ->with('company')
             ->where('id', $this->auth->id())
             ->first();
     }
