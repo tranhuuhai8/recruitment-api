@@ -34,16 +34,6 @@ class UpdateInfoRequest extends FormRequest
         }
 
         return [
-            'logo' => [
-                'required',
-                'string',
-                'max:' . config('length.max_string'),
-            ],
-            'cover_img' => [
-                'required',
-                'string',
-                'max:' . config('length.max_string'),
-            ],
             'name' => [
                 'required',
                 'string',
