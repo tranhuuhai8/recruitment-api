@@ -8,6 +8,7 @@ use App\Http\Resources\Admin\MasterData\CitiesCollection;
 use App\Services\Admin\CityService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class CityController extends BaseController
 {
@@ -30,7 +31,12 @@ class CityController extends BaseController
      */
     public function list(Request $request): JsonResponse
     {
-        $data = $this->cityService::getInstance()->data(...$this->getParamRequest($request));
+        $params = $this->getParamRequest($request);
+        $cacheKey = 'admin_cities' . md5(json_encode($params));
+        $data = Cache::remember($cacheKey, config('cache.ttl'), function () use ($params) {
+            return $this->cityService::getInstance()->data(...$params);
+        });
+
         return $this->sendSuccessResponse(new CitiesCollection($data));
     }
 

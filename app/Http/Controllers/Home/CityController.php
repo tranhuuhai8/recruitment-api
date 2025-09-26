@@ -7,6 +7,7 @@ use App\Http\Resources\Home\City\CityCollection;
 use App\Services\Home\CityService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class CityController extends Controller
 {
@@ -28,7 +29,12 @@ class CityController extends Controller
      */
     public function list(Request $request): JsonResponse
     {
-        $data = $this->cityService::getInstance()->data(...$this->getParamRequest($request));
+        $params = $this->getParamRequest($request);
+        $cacheKey = 'home_cities_' . md5(json_encode($params));
+        $data = Cache::remember($cacheKey, config('cache.ttl'), function () use ($params) {
+            return $this->cityService::getInstance()->data(...$params);
+        });
+
         return $this->sendSuccessResponse(new CityCollection($data));
     }
 
@@ -41,7 +47,13 @@ class CityController extends Controller
      */
     public function listParent(Request $request): JsonResponse
     {
-        $data = $this->cityService->dataParent($this->getParamRequest($request));
+        $params = $this->getParamRequest($request);
+
+        $cacheKey = 'home_cities_parent_' . md5(json_encode($params));
+        $data = Cache::remember($cacheKey, config('cache.ttl'), function () use ($params) {
+            return $this->cityService->dataParent($params);
+        });
+
         return $this->sendSuccessResponse(new CityCollection($data));
     }
 }
