@@ -33,6 +33,7 @@ class CreateJobCategoryRequest extends FormRequest
             'description' => [
                 'string',
                 'max:' . config('length.max_string'),
+                'regex:' . config('regex.no_special_chars_des'),
             ],
             'status' => Rule::in([JobCategory::STATUS_SHOW, JobCategory::STATUS_HIDE]),
             'type' => Rule::in([JobCategory::TYPE_DEFAULT, JobCategory::TYPE_CUSTOMIZE]),
