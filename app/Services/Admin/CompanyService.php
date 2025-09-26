@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\BaseService;
 use Exception;
 use Illuminate\Database\Eloquent\Builder as Eloquent;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
 
@@ -55,6 +56,22 @@ class CompanyService extends BaseService
         return User::leftJoin('companies', 'users.id', 'companies.user_id')
             ->where('users.role', User::ROLE_COMPANY)
             ->selectRaw($this->getSelectRaw());
+    }
+
+    /**
+     * Method listCompany
+     *
+     * @param array $request [explicite description]
+     *
+     * @return Collection
+     */
+    public function listCompany(array $request): Collection
+    {
+        $this->query = Company::query()
+            ->whereRelation('user', 'status', User::STATUS_ACTIVE)
+            ->selectRaw('id, name');
+
+        return $this->data(...$request);
     }
 
     /**
