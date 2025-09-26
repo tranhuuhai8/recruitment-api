@@ -33,6 +33,7 @@ class UpdateCityRequest extends FormRequest
             'description' => [
                 'string',
                 'max:' . config('length.max_string'),
+                'regex:' . config('regex.no_special_chars_des'),
             ],
             'status' => Rule::in([City::STATUS_SHOW, City::STATUS_HIDE]),
             'parent_id' => 'nullable|exists:cities,id',

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 
 class City extends Model
 {
@@ -25,6 +26,21 @@ class City extends Model
         'status',
         'parent_id',
     ];
+
+    protected static function booted()
+    {
+        static::created(function () {
+            Cache::flush();
+        });
+
+        static::updated(function () {
+            Cache::flush();
+        });
+
+        static::deleted(function () {
+            Cache::flush();
+        });
+    }
 
     public function parent()
     {

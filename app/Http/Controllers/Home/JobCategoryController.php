@@ -7,6 +7,7 @@ use App\Http\Resources\Home\JobCategory\JobCategoryCollection;
 use App\Services\Home\JobCategoryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class JobCategoryController extends Controller
 {
@@ -28,7 +29,11 @@ class JobCategoryController extends Controller
      */
     public function list(Request $request): JsonResponse
     {
-        $data = $this->jobCategoryService::getInstance()->data(...$this->getParamRequest($request));
+        $params = $this->getParamRequest($request);
+        $cacheKey = 'home_categories_' . md5(json_encode($params));
+        $data = Cache::remember($cacheKey, config('cache.ttl'), function () use ($params) {
+            return $this->jobCategoryService::getInstance()->data(...$params);
+        });
         return $this->sendSuccessResponse(new JobCategoryCollection($data));
     }
 
@@ -41,7 +46,11 @@ class JobCategoryController extends Controller
      */
     public function listParent(Request $request): JsonResponse
     {
-        $data = $this->jobCategoryService->dataParent($this->getParamRequest($request));
+        $params = $this->getParamRequest($request);
+        $cacheKey = 'home_categories_parent_' . md5(json_encode($params));
+        $data = Cache::remember($cacheKey, config('cache.ttl'), function () use ($params) {
+            return $this->jobCategoryService->dataParent($params);
+        });
         return $this->sendSuccessResponse(new JobCategoryCollection($data));
     }
 }
