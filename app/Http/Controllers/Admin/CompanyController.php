@@ -33,6 +33,18 @@ class CompanyController extends BaseController
     }
 
     /**
+     * listCompany
+     *
+     * @param  Request $request
+     * @return JsonResponse
+     */
+    public function listCompany(Request $request): JsonResponse
+    {
+        $data = $this->companyService->listCompany($this->getParamRequest($request));
+        return $this->sendResponse($data);
+    }
+
+    /**
      * Method detail
      *
      * @param int $id
