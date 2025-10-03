@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\ApplicantController;
 use App\Http\Controllers\Admin\JobCategoryController;
+use App\Http\Controllers\Admin\JobController as AdminJobController;
 use App\Http\Controllers\Applicant\AuthController as ApplicantAuthController;
 use App\Http\Controllers\Base\AuthController as BaseAuthController;
 use App\Http\Controllers\Base\UploadController;
@@ -68,6 +69,7 @@ Route::group(
     function () {
         Route::group(['as' => 'company.', 'prefix' => 'company'], function () {
             Route::get('/', [CompanyController::class, 'list'])->name('list');
+            Route::get('/get-select', [CompanyController::class, 'listCompany'])->name('get_select');
             Route::get('/{id}', [CompanyController::class, 'detail'])->name('detail');
             Route::put('/{id}', [CompanyController::class, 'update'])->name('update');
             Route::delete('{id}', [CompanyController::class, 'delete'])->name('delete');
@@ -78,6 +80,11 @@ Route::group(
             Route::get('/{id}', [ApplicantController::class, 'detail'])->name('detail');
             Route::put('/{id}', [ApplicantController::class, 'update'])->name('update');
             Route::delete('{id}', [ApplicantController::class, 'delete'])->name('delete');
+        });
+
+        Route::group(['as' => 'job.', 'prefix' => 'job'], function () {
+            Route::get('/', [AdminJobController::class, 'list'])->name('list');
+            Route::delete('{id}', [AdminJobController::class, 'delete'])->name('delete');
         });
 
         Route::group(['as' => 'master_data.', 'prefix' => 'master-data'], function () {

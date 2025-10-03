@@ -17,14 +17,13 @@ class JobService extends BaseService
         'title' => 'title',
     ];
 
-    protected $searchables = ['name'];
+    protected $searchables = ['title'];
 
     protected $filterables = [
         'status' => 'filterByStatus',
         'type' => 'filterByType',
         'city_id' => 'filterByCity',
         'job_category_id' => 'filterByJobCategory',
-        'number_of_recruitment' => 'filterByNumberOfRecruitment',
         'start_date' => 'filterByStartDate',
         'end_date' => 'filterByEndDate',
     ];
