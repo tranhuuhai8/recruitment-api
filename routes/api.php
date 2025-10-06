@@ -14,6 +14,7 @@ use App\Http\Controllers\Company\JobController;
 use App\Http\Controllers\Home\CityController as HomeCityController;
 use App\Http\Controllers\Home\CompanyController as HomeCompanyController;
 use App\Http\Controllers\Home\JobCategoryController as HomeJobCategoryController;
+use App\Http\Controllers\Home\JobController as HomeJobController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -154,6 +155,8 @@ Route::group(
         Route::group(['as' => 'company.', 'prefix' => 'company'], function () {
             Route::get('/', [HomeCompanyController::class, 'list'])->name('list');
         });
+
+        Route::get('/jobs', [HomeJobController::class, 'list'])->name('list');
     }
 );
 
