@@ -106,7 +106,6 @@ class JobController extends BaseController
             'end_date',
             'city_id',
             'job_category_id',
-            'salary_type',
             'status',
             'type'
         ];

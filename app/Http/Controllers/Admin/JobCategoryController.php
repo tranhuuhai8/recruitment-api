@@ -8,7 +8,8 @@ use App\Http\Resources\Admin\MasterData\JobCategoriesCollection;
 use App\Services\Admin\JobCategoryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
+
+// use Illuminate\Support\Facades\Cache;
 
 class JobCategoryController extends BaseController
 {
@@ -32,10 +33,12 @@ class JobCategoryController extends BaseController
     public function list(Request $request): JsonResponse
     {
         $params = $this->getParamRequest($request);
-        $cacheKey = 'admin_categories' . md5(json_encode($params));
-        $data = Cache::remember($cacheKey, config('cache.ttl'), function () use ($params) {
-            return $this->jobCategoryService::getInstance()->data(...$params);
-        });
+        // $cacheKey = 'admin_categories' . md5(json_encode($params));
+        // $data = Cache::remember($cacheKey, config('cache.ttl'), function () use ($params) {
+        //     return $this->jobCategoryService::getInstance()->data(...$params);
+        // });
+
+        $data = $this->jobCategoryService::getInstance()->data(...$params);
 
         return $this->sendSuccessResponse(new JobCategoriesCollection($data));
     }
