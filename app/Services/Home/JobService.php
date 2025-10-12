@@ -2,20 +2,20 @@
 
 namespace App\Services\Home;
 
-use App\Models\Company;
-use App\Models\User;
+use App\Models\Job;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Builder as Eloquent;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
-class CompanyService extends BaseService
+class JobService extends BaseService
 {
     use HomeTrait;
 
-    protected $searchables = ['name', 'short_name', 'telephone'];
+    protected $searchables = ['title'];
 
     protected $filterables = [
         'city_id' => 'filterByCity',
+        'job_category_id' => 'filterByJobCategory',
     ];
 
     /**
@@ -25,11 +25,8 @@ class CompanyService extends BaseService
      */
     public function makeNewQuery(): Eloquent|QueryBuilder
     {
-        return Company::query()
-            ->with('city.parent')
-            ->withCount('jobs')
-            ->whereRelation('user', 'status', User::STATUS_ACTIVE)
-            ->orderByDesc('jobs_count')
-            ->take(Company::TOP_COMPANY);
+        return Job::with(['company', 'city.parent', 'jobCategory.parent'])
+            ->where('status', Job::STATUS_OPEN)
+            ->orderByDesc('end_date');
     }
 }

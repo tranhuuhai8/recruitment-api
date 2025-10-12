@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Cache;
 
 class JobCategory extends Model
@@ -47,5 +48,15 @@ class JobCategory extends Model
     public function parent()
     {
         return $this->belongsTo(JobCategory::class, 'parent_id');
+    }
+
+    /**
+     * Method jobs
+     *
+     * @return HasMany
+     */
+    public function jobs(): HasMany
+    {
+        return $this->hasMany(Job::class, 'job_category_id');
     }
 }
