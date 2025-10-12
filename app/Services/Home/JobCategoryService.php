@@ -21,7 +21,7 @@ class JobCategoryService extends BaseService
      *
      * @return Eloquent | QueryBuilder
      */
-    public function makeNewQuery(): Eloquent | QueryBuilder
+    public function makeNewQuery(): Eloquent|QueryBuilder
     {
         return JobCategory::query()->where('status', JobCategory::STATUS_SHOW);
     }
@@ -35,10 +35,23 @@ class JobCategoryService extends BaseService
      */
     public function dataParent(array $request): Collection
     {
-        $this->query = JobCategory::query()->where([
-            'status' => JobCategory::STATUS_SHOW,
-            'parent_id' => null,
-        ]);
+        $this->query = JobCategory::query()
+            ->select('job_categories.*')
+            ->selectRaw('
+                (
+                    SELECT COUNT(*)
+                    FROM jobs 
+                    WHERE jobs.job_category_id = job_categories.id
+                    OR jobs.job_category_id IN (
+                            SELECT id FROM job_categories AS child 
+                            WHERE child.parent_id = job_categories.id
+                        )
+                ) as total_jobs
+            ')
+            ->where([
+                'status' => JobCategory::STATUS_SHOW,
+                'parent_id' => null,
+            ]);
 
         return $this->data(...$request);
     }

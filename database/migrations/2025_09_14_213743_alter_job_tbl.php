@@ -19,7 +19,6 @@ return new class extends Migration {
             $table->dropColumn('contact_detail');
             $table->integer('salary_min')->nullable()->after('end_date');
             $table->integer('salary_max')->nullable()->after('salary_min');
-            $table->tinyInteger('salary_type')->nullable()->default(3)->after('salary_max')->comment('1: Net | 2: Gross | 3: Exchange');
         });
 
         Schema::dropIfExists('job_images');
@@ -40,7 +39,6 @@ return new class extends Migration {
             $table->string('contact_detail');
             $table->dropColumn('salary_min');
             $table->dropColumn('salary_max');
-            $table->dropColumn('salary_type');
         });
 
         Schema::create('job_images', function (Blueprint $table) {
