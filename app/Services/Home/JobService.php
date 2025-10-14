@@ -15,6 +15,7 @@ class JobService extends BaseService
 
     protected $filterables = [
         'city_id' => 'filterByCity',
+        'company_id' => 'filterByCompany',
         'job_category_id' => 'filterByJobCategory',
     ];
 
