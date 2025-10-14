@@ -154,9 +154,12 @@ Route::group(
 
         Route::group(['as' => 'company.', 'prefix' => 'company'], function () {
             Route::get('/', [HomeCompanyController::class, 'list'])->name('list');
+            Route::get('/{id}', [HomeCompanyController::class, 'detail'])->name('detail');
         });
 
-        Route::get('/jobs', [HomeJobController::class, 'list'])->name('list');
+        Route::group(['as' => 'job.', 'prefix' => 'job'], function () {
+            Route::get('/', [HomeJobController::class, 'list'])->name('list');
+        });
     }
 );
 

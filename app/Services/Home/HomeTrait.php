@@ -28,6 +28,23 @@ trait HomeTrait
     }
 
     /**
+     * Method filterByCompany
+     *
+     * @param Eloquent $query [explicite description]
+     * @param array $filter [explicite description]
+     *
+     * @return Eloquent
+     */
+    public function filterByCompany(Eloquent $query, array $filter): Eloquent|QueryBuilder
+    {
+        if (!isset($filter['data']) || !$filter['data']) {
+            return $query;
+        }
+
+        return $query->where('company_id', +$filter['data']);
+    }
+
+    /**
      * Method filterByJobCategory
      *
      * @param Eloquent $query [explicite description]

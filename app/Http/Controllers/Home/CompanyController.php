@@ -31,4 +31,17 @@ class CompanyController extends Controller
         $data = $this->companyService::getInstance()->data(...$this->getParamRequest($request));
         return $this->sendSuccessResponse(new CompanyCollection($data));
     }
+
+    /**
+     * Method detail
+     *
+     * @param int $id [explicite description]
+     *
+     * @return JsonResponse
+     */
+    public function detail(int $id): JsonResponse
+    {
+        $data = $this->companyService->detail($id);
+        return $this->sendResponse($data);
+    }
 }
