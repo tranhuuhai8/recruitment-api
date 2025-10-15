@@ -34,7 +34,7 @@ class CreateJobRequest extends FormRequest
                 'exists:companies,id',
             ],
             'description' => ['required'],
-            'number_of_recruitment' => ['integer','nullable'],
+            'number_of_recruitment' => ['required','integer'],
             'salary_min' => ['integer', 'nullable', 'lt:salary_max'],
             'salary_max' => [
                 'integer',

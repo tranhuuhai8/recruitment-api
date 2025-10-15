@@ -13,8 +13,6 @@ class Company extends Model
     use HasFactory;
     use SoftDeletes;
 
-    public const TOP_COMPANY = 10;
-
     /**
      * The attributes that are mass assignable.
      *

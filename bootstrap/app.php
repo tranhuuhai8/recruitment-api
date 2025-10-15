@@ -56,6 +56,9 @@ return Application::configure(basePath: dirname(__DIR__))
                 return null;
             }
 
-            return response()->json(['message' => 'Có lỗi xảy ra'], 500);
+            return response()->json([
+                'message' => 'Có lỗi xảy ra',
+                'status_code' => 500
+            ], 500);
         });
     })->create();
