@@ -13,7 +13,6 @@ return new class extends Migration {
         Schema::table('jobs', function (Blueprint $table) {
             $table->renameColumn('name', 'title');
             $table->string('banner')->nullable(true)->change();
-            $table->integer('number_of_recruitment')->nullable(true)->change();
             $table->dropColumn('address_detail');
             $table->dropColumn('request_detail');
             $table->dropColumn('contact_detail');
@@ -33,7 +32,6 @@ return new class extends Migration {
         Schema::table('jobs', function (Blueprint $table) {
             $table->renameColumn('title', 'name');
             $table->string('banner')->nullable(false)->change();
-            $table->string('number_of_recruitment')->nullable(false)->change();
             $table->string('address_detail');
             $table->string('request_detail');
             $table->string('contact_detail');
