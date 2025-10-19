@@ -31,4 +31,17 @@ class JobController extends Controller
         $data = $this->jobService::getInstance()->data(...$this->getParamRequest($request));
         return $this->sendSuccessResponse(new JobCollection($data));
     }
+
+    /**
+     * Method detail
+     *
+     * @param int $id [explicite description]
+     *
+     * @return JsonResponse
+     */
+    public function detail(int $id): JsonResponse
+    {
+        $data = $this->jobService->detail($id);
+        return $this->sendResponse($data);
+    }
 }
