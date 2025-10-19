@@ -31,8 +31,7 @@ class CompanyService extends BaseService
             ->with('city.parent')
             ->withCount('jobs')
             ->whereRelation('user', 'status', User::STATUS_ACTIVE)
-            ->orderByDesc('jobs_count')
-            ->take(Company::TOP_COMPANY);
+            ->orderByDesc('jobs_count');
     }
 
     /**
