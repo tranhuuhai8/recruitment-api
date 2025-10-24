@@ -11,7 +11,7 @@ class UploadService
      * Method uploadImg
      *
      * @param Request $request [explicite description]
-     * @param $disk $disk [explicite description]
+     * @param string $disk [explicite description]
      *
      * @return array
      */
@@ -23,6 +23,27 @@ class UploadService
         return [
             'url' => Storage::disk($disk)->url($filePath),
             'file_path' => $filePath,
+        ];
+    }
+
+    /**
+     * Method uploadPdf
+     *
+     * @param Request $request [explicite description]
+     * @param string $disk [explicite description]
+     *
+     * @return array
+     */
+    public function uploadPdf(Request $request, $disk = 'public'): array
+    {
+        $file = $request->file('file');
+        $filePath = $file->store('pdfs', $disk);
+
+        return [
+            'size' => $file->getSize(),
+            'name' => $file->getClientOriginalName(),
+            'url' => Storage::disk($disk)->url($filePath),
+            'path' => $filePath,
         ];
     }
 }

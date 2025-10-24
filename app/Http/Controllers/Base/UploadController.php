@@ -24,11 +24,24 @@ class UploadController extends Controller
      *
      * @param Request $request [explicite description]
      *
-     * @return void
+     * @return JsonResponse
      */
     public function uploadImg(Request $request): JsonResponse
     {
         $data = $this->uploadService->uploadImg($request);
+        return $this->sendResponse($data);
+    }
+
+    /**
+     * Method uploadPdf
+     *
+     * @param Request $request [explicite description]
+     *
+     * @return JsonResponse
+     */
+    public function uploadPdf(Request $request): JsonResponse
+    {
+        $data = $this->uploadService->uploadPdf($request);
         return $this->sendResponse($data);
     }
 }
