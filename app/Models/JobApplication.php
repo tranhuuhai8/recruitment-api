@@ -12,8 +12,16 @@ class JobApplication extends Model
     use SoftDeletes;
 
     public const STATUS_PENDING = 1;
-    public const STATUS_ACCEPTED = 2;
-    public const STATUS_REJECTED = 3;
+    public const STATUS_REVIEWED = 2;
+    public const STATUS_ACCEPTED = 3;
+    public const STATUS_REJECTED = 4;
+
+    public const STATUSES = [
+        self::STATUS_PENDING,
+        self::STATUS_REVIEWED,
+        self::STATUS_ACCEPTED,
+        self::STATUS_REJECTED,
+    ];
 
     /**
      * The attributes that are mass assignable.
@@ -23,9 +31,13 @@ class JobApplication extends Model
     protected $fillable = [
         'applicant_id',
         'job_id',
-        'file',
-        'title',
-        'description',
+        'file_name',
+        'file_path',
+        'application_file_id',
+        'cover_letter',
+        'guest_name',
+        'guest_email',
+        'guest_telephone',
         'status',
     ];
 }
