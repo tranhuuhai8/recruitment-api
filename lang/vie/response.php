@@ -10,4 +10,7 @@ return [
     'login_success' => 'Đăng nhập thành công.',
     'data_not_found' => 'Dữ liệu không tồn tại',
     'data_exist' => 'Dữ liệu đã tồn tại',
+    'job' => [
+        'apply_success' => 'Gửi thông tin ứng tuyển thành công',
+    ]
 ];
