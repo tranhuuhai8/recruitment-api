@@ -159,7 +159,9 @@ Route::group(
 
         Route::group(['as' => 'job.', 'prefix' => 'job'], function () {
             Route::get('/', [HomeJobController::class, 'list'])->name('list');
+            Route::get('/get-cv', [HomeJobController::class, 'getCv'])->name('getCv')->middleware(['auth:applicant', 'is-applicant']);
             Route::get('/{id}', [HomeJobController::class, 'detail'])->name('detail');
+            Route::post('/apply', [HomeJobController::class, 'apply'])->name('apply');
         });
     }
 );
@@ -171,6 +173,7 @@ Route::group(
     ],
     function () {
         Route::post('/image', [UploadController::class, 'uploadImg'])->name('image');
+        Route::post('/pdf', [UploadController::class, 'uploadPdf'])->name('pdf');
     }
 );
 
