@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Company;
 use App\Http\Requests\Company\Job\CreateJobRequest;
 use App\Http\Requests\Company\Job\UpdateJobRequest;
 use App\Http\Resources\Company\Job\JobCollection;
+use App\Http\Resources\Company\Job\JobDetailResource;
 use App\Services\Company\JobService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -107,7 +108,8 @@ class JobController extends BaseController
             'city_id',
             'job_category_id',
             'status',
-            'type'
+            'type',
+            'notify_frequency',
         ];
     }
 }

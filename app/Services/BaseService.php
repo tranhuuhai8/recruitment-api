@@ -21,6 +21,8 @@ abstract class BaseService
      */
     protected $searchables = [];
 
+    protected $searchableRelations = false;
+
     /**
      * [ column1, column2 ]
      *
@@ -84,12 +86,33 @@ abstract class BaseService
         $query->where(
             function ($q) use ($content) {
                 foreach ($this->searchables as $searchable) {
-                    $q->orWhere($searchable, 'like', $content);
+                    if ($this->searchableRelations && str_contains($searchable, '.')) {
+                        $segments = explode('.', $searchable);
+                        $column = array_pop($segments);
+                        $relation = implode('.', $segments);
+
+                        $q->orWhereHas($relation, function (Builder $subQuery) use ($column, $content) {
+                            $subQuery->where($column, 'like', $content);
+                        });
+                    } else {
+                        $q->orWhere($searchable, 'like', $content);
+                    }
                 }
             }
         );
 
         return $query;
+    }
+
+    protected function applyRelationSearch(Builder $query, string $searchable, string $content): void
+    {
+        $segments = explode('.', $searchable);
+        $column = array_pop($segments); // Cột cuối cùng (VD: 'name')
+        $relation = implode('.', $segments); // Chuỗi quan hệ (VD: 'applicant.user')
+
+        $query->orWhereHas($relation, function (Builder $subQuery) use ($column, $content) {
+            $subQuery->where($column, 'like', $content);
+        });
     }
 
     protected function applyFilterToQuery($filters, $query)

@@ -12,5 +12,6 @@ return [
     'data_exist' => 'Dữ liệu đã tồn tại',
     'job' => [
         'apply_success' => 'Gửi thông tin ứng tuyển thành công',
+        'applied' => 'Bạn đã ứng tuyển công việc này rồi!',
     ]
 ];
