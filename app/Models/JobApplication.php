@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class JobApplication extends Model
@@ -40,4 +41,34 @@ class JobApplication extends Model
         'guest_telephone',
         'status',
     ];
+
+    /**
+     * Method job
+     *
+     * @return BelongsTo
+     */
+    public function job(): BelongsTo
+    {
+        return $this->belongsTo(Job::class);
+    }
+
+    /**
+     * Method applicant
+     *
+     * @return BelongsTo
+     */
+    public function applicant(): BelongsTo
+    {
+        return $this->belongsTo(Applicant::class);
+    }
+
+    /**
+     * Method applicationFile
+     *
+     * @return BelongsTo
+     */
+    public function applicationFile(): BelongsTo
+    {
+        return $this->belongsTo(ApplicationFile::class);
+    }
 }

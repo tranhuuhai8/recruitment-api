@@ -10,6 +10,7 @@ use App\Http\Controllers\Applicant\AuthController as ApplicantAuthController;
 use App\Http\Controllers\Base\AuthController as BaseAuthController;
 use App\Http\Controllers\Base\UploadController;
 use App\Http\Controllers\Company\AuthController as CompanyAuthController;
+use App\Http\Controllers\Company\JobApplicationController;
 use App\Http\Controllers\Company\JobController;
 use App\Http\Controllers\Home\CityController as HomeCityController;
 use App\Http\Controllers\Home\CompanyController as HomeCompanyController;
@@ -134,6 +135,12 @@ Route::group(
             Route::put('/{id}', [JobController::class, 'update'])->name('update');
             Route::post('/', [JobController::class, 'store'])->name('store');
             Route::delete('{id}', [JobController::class, 'delete'])->name('delete');
+        });
+
+        Route::group(['as' => 'jobApply.', 'prefix' => 'job-apply'], function () {
+            Route::get('/', [JobApplicationController::class, 'list'])->name('list');
+            Route::put('/{id}', [JobApplicationController::class, 'update'])->name('update');
+            Route::delete('{id}', [JobApplicationController::class, 'delete'])->name('delete');
         });
     }
 );

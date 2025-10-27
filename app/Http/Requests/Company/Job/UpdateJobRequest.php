@@ -50,8 +50,9 @@ class UpdateJobRequest extends FormRequest
             ],
             'city_id' => ['required', 'exists:cities,id',],
             'job_category_id' => ['required', 'exists:job_categories,id',],
-            'status' => Rule::in([Job::STATUS_DRAFT, Job::STATUS_OPEN, Job::STATUS_CLOSED]),
-            'type' => Rule::in([Job::TYPE_FULLTIME, Job::TYPE_PART_TIME])
+            'status' => Rule::in(Job::JOB_STATUSES),
+            'type' => Rule::in(Job::JOB_TYPES),
+            'notify_frequency' => Rule::in(Job::JOB_NOTIFY),
         ];
     }
 }
