@@ -29,12 +29,14 @@ class UpdateCompanyRequest extends FormRequest
                 'string',
                 'max:' . config('length.max_string'),
                 'unique:companies,name,' . $this->id . ',user_id',
+                'regex:' . config('regex.no_special_chars'),
             ],
             'short_name' => [
                 'required',
                 'string',
                 'max:' . config('length.max_short_name'),
                 'unique:companies,short_name,' . $this->id . ',user_id',
+                'regex:' . config('regex.no_special_chars'),
             ],
             'mail_address' => [
                 'required',
@@ -57,9 +59,11 @@ class UpdateCompanyRequest extends FormRequest
                 'required',
                 'string',
                 'max:' . config('length.max_string'),
+                'regex:' . config('regex.no_special_chars_des'),
             ],
             'website' => [
                 'max:' . config('length.max_string'),
+                'regex:' . config('regex.website'),
             ],
             'status' => Rule::in([User::STATUS_ACTIVE, User::STATUS_UNVERIFIED, User::STATUS_LOCKED])
         ];
