@@ -39,12 +39,14 @@ class UpdateInfoRequest extends FormRequest
                 'string',
                 'max:' . config('length.max_string'),
                 $nameRule,
+                'regex:' . config('regex.no_special_chars'),
             ],
             'short_name' => [
                 'required',
                 'string',
                 'max:' . config('length.max_short_name'),
                 $shortNameRule,
+                'regex:' . config('regex.no_special_chars'),
             ],
             'mail_address' => [
                 'required',
@@ -67,9 +69,11 @@ class UpdateInfoRequest extends FormRequest
                 'required',
                 'string',
                 'max:' . config('length.max_string'),
+                'regex:' . config('regex.no_special_chars_des'),
             ],
             'website' => [
                 'max:' . config('length.max_string'),
+                'regex:' . config('regex.website'),
             ],
         ];
     }

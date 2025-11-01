@@ -29,6 +29,7 @@ class UpdateApplicantRequest extends FormRequest
                 'required',
                 'string',
                 'max:' . config('length.max_string'),
+                'regex:' . config('regex.no_special_chars'),
             ],
             'mail_address' => [
                 'required',
@@ -54,6 +55,7 @@ class UpdateApplicantRequest extends FormRequest
                 'required',
                 'string',
                 'max:' . config('length.max_string'),
+                'regex:' . config('regex.no_special_chars_des'),
             ],
             'description' => [
                 'max:' . config('length.max_string'),
