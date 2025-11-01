@@ -34,6 +34,7 @@ class UpdateInfoRequest extends FormRequest
                 'required',
                 'string',
                 'max:' . config('length.max_string'),
+                'regex:' . config('regex.no_special_chars'),
             ],
             'avatar' => [
                 'required',
@@ -64,6 +65,7 @@ class UpdateInfoRequest extends FormRequest
                 'required',
                 'string',
                 'max:' . config('length.max_string'),
+                'regex:' . config('regex.no_special_chars_des'),
             ],
             'description' => [
                 'max:' . config('length.max_string'),
