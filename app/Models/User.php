@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -78,12 +79,22 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function applicant()
+    /**
+     * Method applicant
+     *
+     * @return HasOne
+     */
+    public function applicant(): HasOne
     {
         return $this->hasOne(Applicant::class);
     }
 
-    public function company()
+    /**
+     * Method company
+     *
+     * @return HasOne
+     */
+    public function company(): HasOne
     {
         return $this->hasOne(Company::class);
     }

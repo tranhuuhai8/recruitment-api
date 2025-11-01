@@ -53,7 +53,8 @@ class CompanyService extends BaseService
      */
     public function makeNewQuery(): Eloquent|QueryBuilder
     {
-        return User::leftJoin('companies', 'users.id', 'companies.user_id')
+        return User::query()
+            ->leftJoin('companies', 'users.id', 'companies.user_id')
             ->where('users.role', User::ROLE_COMPANY)
             ->selectRaw($this->getSelectRaw());
     }

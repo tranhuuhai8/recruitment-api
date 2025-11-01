@@ -5,16 +5,26 @@ namespace App\Helpers;
 class CommonHelper
 {
     /**
-     * randomNumber
+     * Method makeDataJobApplication
      *
-     * @param  int  $min
-     * @param  int  $max
-     * @param  int  $number
-     * @param  bool $flag
-     * @return string
+     * @param $data [explicite description]
+     *
+     * @return array
      */
-    public static function randomNumber(int $min, int $max, int $number, $flag = true): string
+    public static function makeDataJobApplication($data): array
     {
-        return $flag ? (string) rand($min, $max) : str_pad(rand($min, $max), $number, '0', STR_PAD_LEFT);
+        $newData = [];
+        foreach ($data as $item) {
+            $newData[] = [
+                'name' => $item->applicant?->name ?? $item->guest_name,
+                'email' => $item->applicant?->user?->mail_address ?? $item->guest_email,
+                'telephone' => $item->applicant?->telephone ?? $item->guest_telephone,
+                'file_name' => $item->applicationFile?->file_name ?? $item->file_name,
+                'file_path' => $item->applicationFile?->file_path ?? $item->file_path,
+                'created_at' => $item->created_at->format('d/m/Y H:i'),
+            ];
+        }
+
+        return $newData;
     }
 }

@@ -50,7 +50,7 @@ class JobService extends BaseService
     public function detail(int $id): Job|array
     {
         try {
-            $job = Job::find($id);
+            $job = Job::with('city')->find($id);
             if (!$job) {
                 return ResponseHelper::notFound();
             }
