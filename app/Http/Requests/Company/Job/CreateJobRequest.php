@@ -34,7 +34,7 @@ class CreateJobRequest extends FormRequest
                 'exists:companies,id',
             ],
             'description' => ['required'],
-            'number_of_recruitment' => ['required','integer'],
+            'number_of_recruitment' => ['required', 'integer'],
             'salary_min' => ['integer', 'nullable', 'lt:salary_max'],
             'salary_max' => [
                 'integer',
@@ -52,10 +52,11 @@ class CreateJobRequest extends FormRequest
                 'date_format:Y-m-d',
                 'after:start_date',
             ],
-            'city_id' => ['required','exists:cities,id',],
-            'job_category_id' => ['required','exists:job_categories,id',],
-            'status' => Rule::in([Job::STATUS_DRAFT, Job::STATUS_OPEN, Job::STATUS_CLOSED]),
-            'type' => Rule::in([Job::TYPE_FULLTIME, Job::TYPE_PART_TIME])
+            'city_id' => ['required', 'exists:cities,id',],
+            'job_category_id' => ['required', 'exists:job_categories,id',],
+            'status' => Rule::in(Job::JOB_STATUSES),
+            'type' => Rule::in(Job::JOB_TYPES),
+            'notify_frequency' => Rule::in(Job::JOB_NOTIFY),
         ];
     }
 }

@@ -71,7 +71,28 @@ class JobService extends BaseService
     {
         try {
             DB::beginTransaction();
-            if (data_get($data, 'applicant_id')) {
+            $isApplicant = data_get($data, 'applicant_id');
+
+            $isApplied = JobApplication::query()
+                ->where('job_id', $data['job_id'])
+                ->where(function ($q) use ($data, $isApplicant) {
+                    if ($isApplicant) {
+                        $q->where('applicant_id', $data['applicant_id']);
+                    } else {
+                        $q->whereNull('applicant_id')
+                            ->where(function ($sub) use ($data) {
+                                $sub->where('guest_email', $data['guest_email'])
+                                    ->orWhere('guest_telephone', $data['guest_telephone']);
+                            });
+                    }
+                })
+                ->first();
+
+            if ($isApplied) {
+                return ResponseHelper::sendError(trans('response.job.applied'));
+            }
+
+            if ($isApplicant) {
                 if ($data['source_cv'] == 'upload') {
                     unset($data['application_file_id']);
                 }
@@ -103,7 +124,7 @@ class JobService extends BaseService
      *
      * @return ApplicationFile | int
      */
-    public function createApplicationFile(array $data): ApplicationFile | int
+    public function createApplicationFile(array $data): ApplicationFile|int
     {
         if (data_get($data, 'application_file_id')) {
             return $data['application_file_id'];
@@ -119,7 +140,7 @@ class JobService extends BaseService
      *
      * @return Collection | null
      */
-    public function getCv(): Collection | null
+    public function getCv(): Collection|null
     {
         try {
             $user = auth('applicant')?->user();
