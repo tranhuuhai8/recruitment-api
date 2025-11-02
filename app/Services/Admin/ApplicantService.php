@@ -16,6 +16,7 @@ class ApplicantService extends BaseService
     protected $orderables = [
         'id' => 'id',
         'name' => 'name',
+        'telephone' => 'telephone',
     ];
 
     protected $searchables = [
@@ -84,9 +85,12 @@ class ApplicantService extends BaseService
             'users.id',
             'users.status',
             'users.mail_address',
+            'applicants.avatar',
             'applicants.name',
             'applicants.gender',
             'applicants.telephone',
+            'applicants.birthday',
+            'applicants.address',
         ]);
     }
 
