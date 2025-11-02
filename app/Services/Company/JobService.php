@@ -14,7 +14,10 @@ class JobService extends BaseService
     use CompanyTrait;
 
     protected $orderables = [
+        'id' => 'id',
         'title' => 'title',
+        'start_date' => 'start_date',
+        'end_date' => 'end_date',
     ];
 
     protected $searchables = ['title'];
