@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Thông báo ứng tuyển - {{ $jobData->title }}</title>
+    <title>Thông báo ứng tuyển - {{ $jobData['title'] }}</title>
     <style>
         .container {
             max-width: 100%;
@@ -75,10 +75,10 @@
     <div class="container">
         <div class="header">📨 Thông báo ứng tuyển mới</div>
         <div class="content">
-            <p>Kính gửi <strong>{{ $jobData->company?->name }}</strong>,</p>
-            @if (count($jobApplication))
-                <p>Trong thời gian từ ngày {{ $jobData->last_sent_notify?->format('d/m/Y') ?? $jobData->created_at?->format('d/m/Y') }} đến nay, hệ thống đã nhận được các hồ sơ ứng tuyển cho vị trí:</p>
-                <div class="job-title">{{ $jobData->title }}</div>
+            <p>Kính gửi <strong>{{ $jobData['company_name'] }}</strong>,</p>
+            @if (count((array) $jobApplications))
+                <p>Trong thời gian từ ngày {{ $jobData['last_sent_notify'] ?? $jobData['created_at'] }} đến nay, hệ thống đã nhận được các hồ sơ ứng tuyển cho vị trí:</p>
+                <div class="job-title">{{ $jobData['title'] }}</div>
                 <table>
                     <thead>
                         <tr>
@@ -97,12 +97,12 @@
                         @endforeach
                     </tbody>
                 </table>
+                <p style="margin-top: 20px;">Xin vui lòng đăng nhập hệ thống để xem chi tiết và phản hồi ứng viên.</p>
             @else
-                <div class="job-title">{{ $jobData->title }}</div>
-                <p>Trong thời gian từ ngày {{ $jobData->last_sent_notify?->format('d/m/Y') ?? $jobData->created_at?->format('d/m/Y') }} đến nay, hệ thống không ghi nhận hồ sơ ứng tuyển mới cho vị trí tuyển dụng trên của công ty.</p>
+                <div class="job-title">{{ $jobData['title'] }}</div>
+                <p>Trong thời gian từ ngày {{ $jobData['last_sent_notify'] ?? $jobData['created_at'] }} đến nay, hệ thống không ghi nhận hồ sơ ứng tuyển mới cho vị trí tuyển dụng trên của công ty.</p>
                 <p>Hãy tiếp tục theo dõi và cập nhật tin tuyển dụng để thu hút thêm ứng viên phù hợp.</p>
             @endif
-            <p style="margin-top: 20px;">Xin vui lòng đăng nhập hệ thống để xem chi tiết và phản hồi ứng viên.</p>
         </div>
         <div class="footer">
             Đây là email tự động, vui lòng không phản hồi.

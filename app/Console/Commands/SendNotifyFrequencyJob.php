@@ -57,7 +57,7 @@ class SendNotifyFrequencyJob extends Command
                             $jobIds[] = $job->id;
 
                             SendMailNotifyJob::dispatch(
-                                $job,
+                                $this->makeDataJob($job),
                                 $job->company?->user?->mail_address,
                                 CommonHelper::makeDataJobApplication($applications)
                             );
@@ -72,5 +72,21 @@ class SendNotifyFrequencyJob extends Command
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
+    }
+    
+    /**
+     * makeDataJob
+     *
+     * @param  $job
+     * @return array
+     */
+    protected function makeDataJob($job): array
+    {
+        return [
+            'title' => $job->title,
+            'last_sent_notify' => $job->last_sent_notify->format('d/m/Y'),
+            'created_at' => $job->created_at->format('d/m/Y'),
+            'company_name' => $job->company?->name ?? '',
+        ];
     }
 }
