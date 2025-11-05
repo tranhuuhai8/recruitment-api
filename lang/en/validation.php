@@ -95,6 +95,7 @@ return [
         'file' => 'The :attribute field must not be greater than :max kilobytes.',
         'numeric' => 'The :attribute field must not be greater than :max.',
         'string' => 'The :attribute field must not be greater than :max characters.',
+        'total_file_upload' => 'The total number of uploaded files must not exceed :max files.',
     ],
     'max_digits' => 'The :attribute field must not have more than :max digits.',
     'mimes' => 'The :attribute field must be a file of type: :values.',
