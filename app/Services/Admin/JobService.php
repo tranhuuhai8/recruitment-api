@@ -14,7 +14,10 @@ class JobService extends BaseService
     use JobTrait;
 
     protected $orderables = [
+        'id' => 'id',
         'title' => 'title',
+        'start_date' => 'start_date',
+        'end_date' => 'end_date',
     ];
 
     protected $searchables = ['title'];
@@ -34,7 +37,7 @@ class JobService extends BaseService
      */
     public function makeNewQuery(): Eloquent|QueryBuilder
     {
-        return Job::with('company');
+        return Job::with(['company', 'city.parent', 'jobCategory.parent']);
     }
 
     /**

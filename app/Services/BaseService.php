@@ -104,17 +104,6 @@ abstract class BaseService
         return $query;
     }
 
-    protected function applyRelationSearch(Builder $query, string $searchable, string $content): void
-    {
-        $segments = explode('.', $searchable);
-        $column = array_pop($segments); // Cột cuối cùng (VD: 'name')
-        $relation = implode('.', $segments); // Chuỗi quan hệ (VD: 'applicant.user')
-
-        $query->orWhereHas($relation, function (Builder $subQuery) use ($column, $content) {
-            $subQuery->where($column, 'like', $content);
-        });
-    }
-
     protected function applyFilterToQuery($filters, $query)
     {
         if (!is_array($filters)) {

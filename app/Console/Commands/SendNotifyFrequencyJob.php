@@ -68,7 +68,7 @@ class SendNotifyFrequencyJob extends Command
                         ->whereIn('id', $jobIds)
                         ->update(['last_sent_notify' => now()]);
                 });
-                Log::info('SendNotifyFrequencyJob executed successfully.');
+            Log::info('SendNotifyFrequencyJob executed successfully.');
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }

@@ -15,15 +15,21 @@ class JobResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $city = $this->city;
+        $jobCategory = $this->jobCategory;
+
         return [
             'id' => $this->id,
             'title' => $this->title,
             'type' => $this->type,
+            'number_of_recruitment' => $this->number_of_recruitment,
             'status' => $this->status,
             'company' => $this->company,
             'company_id' => $this->company_id,
             'start_date' => DateHelper::parseOnlyDate($this->start_date),
             'end_date' => DateHelper::parseOnlyDate($this->end_date),
+            'city_name' => $city->parent ? $city->parent->name : $city->name,
+            'category_name' => $jobCategory->parent ? $jobCategory->parent->name : $jobCategory->name,
         ];
     }
 }
