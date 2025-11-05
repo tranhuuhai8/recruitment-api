@@ -17,6 +17,7 @@ class CompanyService extends BaseService
     protected $orderables = [
         'id' => 'id',
         'name' => 'name',
+        'telephone' => 'telephone',
     ];
 
     protected $searchables = [
@@ -86,9 +87,11 @@ class CompanyService extends BaseService
             'users.id',
             'users.status',
             'users.mail_address',
+            'companies.id as company_id',
             'companies.name',
             'companies.short_name',
             'companies.telephone',
+            'companies.logo',
         ]);
     }
 

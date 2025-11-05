@@ -12,6 +12,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 class JobCategoryService extends BaseService
 {
     protected $orderables = [
+        'id' => 'id',
         'name' => 'name',
     ];
 
