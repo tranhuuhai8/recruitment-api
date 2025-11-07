@@ -79,6 +79,7 @@ return [
         'file'    => ':attribute phải nhỏ hơn hoặc bằng :max KB',
         'string'  => ':attribute phải ít hơn hoặc bằng :max ký tự',
         'array'   => ':attribute không được vượt quá :max phần tử',
+        'total_file_upload' => 'Tổng số tệp tải lên không được vượt quá :max tập tin',
     ],
     'mimes'                => ':attribute phải là tệp kiểu :values',
     'mimetypes'            => ':attribute phải là tệp kiểu :values',
