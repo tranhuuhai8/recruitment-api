@@ -71,13 +71,13 @@ class JobService extends BaseService
     {
         try {
             DB::beginTransaction();
-            $isApplicant = data_get($data, 'applicant_id');
+            $applicantId = data_get($data, 'applicant_id');
 
             $isApplied = JobApplication::query()
                 ->where('job_id', $data['job_id'])
-                ->where(function ($q) use ($data, $isApplicant) {
-                    if ($isApplicant) {
-                        $q->where('applicant_id', $data['applicant_id']);
+                ->where(function ($q) use ($data, $applicantId) {
+                    if ($applicantId) {
+                        $q->where('applicant_id', $applicantId);
                     } else {
                         $q->whereNull('applicant_id')
                             ->where(function ($sub) use ($data) {
@@ -92,11 +92,22 @@ class JobService extends BaseService
                 return ResponseHelper::sendError(trans('response.job.applied'));
             }
 
-            if ($isApplicant) {
-                if ($data['source_cv'] == 'upload') {
-                    unset($data['application_file_id']);
+            if ($data['source_cv'] == 'upload') {
+                $totalFileUploaded = ApplicationFile::query()
+                    ->where('applicant_id', $applicantId)
+                    ->count();
+
+                if ($totalFileUploaded === config('length.max_file_upload')) {
+                    return ResponseHelper::sendError(trans('response.job.max_file'));
                 }
+
+                unset($data['application_file_id']);
+            }
+
+
+            if ($applicantId) {
                 $data['application_file_id'] = $this->createApplicationFile($data);
+                $data['order'] = $totalFileUploaded + 1;
                 unset(
                     $data['file_name'],
                     $data['file_path'],
@@ -122,12 +133,12 @@ class JobService extends BaseService
      *
      * @param array $data [explicite description]
      *
-     * @return ApplicationFile | int
+     * @return int
      */
-    public function createApplicationFile(array $data): ApplicationFile|int
+    public function createApplicationFile(array $data): int
     {
         if (data_get($data, 'application_file_id')) {
-            return $data['application_file_id'];
+            return (int) $data['application_file_id'];
         }
 
         $applicationFile = ApplicationFile::create($this->makeDataApplicationFile($data));
@@ -164,6 +175,7 @@ class JobService extends BaseService
     protected function makeDataApplicationFile(array $data): array
     {
         return [
+            'order' => data_get($data, 'order'),
             'applicant_id' => data_get($data, 'applicant_id'),
             'file_name' => data_get($data, 'file_name'),
             'file_path' => data_get($data, 'file_path'),

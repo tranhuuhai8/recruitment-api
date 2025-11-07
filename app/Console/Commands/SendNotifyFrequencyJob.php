@@ -73,7 +73,7 @@ class SendNotifyFrequencyJob extends Command
             Log::error($e->getMessage());
         }
     }
-    
+
     /**
      * makeDataJob
      *
