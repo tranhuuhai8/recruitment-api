@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\ApplicantController;
 use App\Http\Controllers\Admin\JobCategoryController;
 use App\Http\Controllers\Admin\JobController as AdminJobController;
+use App\Http\Controllers\Applicant\ApplyController;
 use App\Http\Controllers\Applicant\AuthController as ApplicantAuthController;
 use App\Http\Controllers\Applicant\FileUploadController;
 use App\Http\Controllers\Base\AuthController as BaseAuthController;
@@ -121,6 +122,10 @@ Route::group(
         Route::group(['as' => 'file-upload.', 'prefix' => 'file-upload'], function () {
             Route::get('/', [FileUploadController::class, 'list'])->name('list');
             Route::put('/upsert', [FileUploadController::class, 'upsert'])->name('upsert');
+        });
+
+        Route::group(['as' => 'applied.', 'prefix' => 'applied'], function () {
+            Route::get('/', [ApplyController::class, 'list'])->name('list');
         });
     }
 );

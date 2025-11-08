@@ -12,7 +12,7 @@ class FileUploadController extends BaseController
     protected $fileUploadService;
 
     /**
-     * JobController constructor.
+     * FileUploadController constructor.
      */
     public function __construct(FileUploadService $fileUploadService)
     {
@@ -31,6 +31,7 @@ class FileUploadController extends BaseController
         $data = $this->fileUploadService->list();
         return $this->sendResponse($data);
     }
+
     /**
      * Method upsert
      *
