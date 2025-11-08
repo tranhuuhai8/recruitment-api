@@ -28,6 +28,7 @@ class JobResource extends JsonResource
             'company_id' => $this->company_id,
             'start_date' => DateHelper::parseOnlyDate($this->start_date),
             'end_date' => DateHelper::parseOnlyDate($this->end_date),
+            'created_at' => DateHelper::parseOnlyDate($this->created_at),
             'city_name' => $city->parent ? $city->parent->name : $city->name,
             'category_name' => $jobCategory->parent ? $jobCategory->parent->name : $jobCategory->name,
         ];
