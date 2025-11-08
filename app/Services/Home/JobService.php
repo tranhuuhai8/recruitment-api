@@ -92,16 +92,15 @@ class JobService extends BaseService
                 return ResponseHelper::sendError(trans('response.job.applied'));
             }
 
-            if ($data['source_cv'] == 'upload') {
-                $totalFileUploaded = ApplicationFile::query()
-                    ->where('applicant_id', $applicantId)
-                    ->count();
+            $totalFileUploaded = ApplicationFile::query()
+                ->where('applicant_id', $applicantId)
+                ->count();
 
+            if ($data['source_cv'] == 'upload') {
+                unset($data['application_file_id']);
                 if ($totalFileUploaded === config('length.max_file_upload')) {
                     return ResponseHelper::sendError(trans('response.job.max_file'));
                 }
-
-                unset($data['application_file_id']);
             }
 
 
