@@ -3,6 +3,7 @@
 namespace App\Services\Company;
 
 use App\Helpers\ResponseHelper;
+use App\Models\Job;
 use App\Models\JobApplication;
 use App\Services\BaseService;
 use Exception;
@@ -108,6 +109,18 @@ class JobApplicationService extends BaseService
             $jobApplication = JobApplication::find($id);
             if (!$jobApplication) {
                 return ResponseHelper::notFound();
+            }
+
+            if ($data['status'] == JobApplication::STATUS_ACCEPTED) {
+                $job = Job::withCount([
+                    'applications as total_approved' => function ($query) {
+                        $query->where('status', JobApplication::STATUS_ACCEPTED);
+                    }
+                ])->find($jobApplication->job_id);
+
+                if ($job->total_approved === $job->number_of_recruitment) {
+                    return ResponseHelper::sendError(trans('response.job.limit_recruitment_reached'));
+                }
             }
 
             return $jobApplication->update($data);
