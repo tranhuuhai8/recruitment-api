@@ -34,7 +34,7 @@ class CreateJobRequest extends FormRequest
                 'required',
                 'exists:companies,id',
             ],
-            'description' => ['required', 'regex:' . config('regex.no_special_chars_des')],
+            'description' => ['required'],
             'number_of_recruitment' => ['required', 'integer'],
             'salary_min' => ['integer', 'nullable', 'lt:salary_max'],
             'salary_max' => [

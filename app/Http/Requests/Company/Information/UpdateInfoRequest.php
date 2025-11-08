@@ -72,6 +72,7 @@ class UpdateInfoRequest extends FormRequest
                 'regex:' . config('regex.no_special_chars_des'),
             ],
             'website' => [
+                'nullable',
                 'max:' . config('length.max_string'),
                 'regex:' . config('regex.website'),
             ],

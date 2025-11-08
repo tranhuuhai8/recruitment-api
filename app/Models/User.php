@@ -18,6 +18,7 @@ class User extends Authenticatable implements JWTSubject
     public const ROLE_ADMIN = 1;
     public const ROLE_COMPANY = 2;
     public const ROLE_APPLICANT = 3;
+
     public const STATUS_ACTIVE = 1;
     public const STATUS_UNVERIFIED = 2;
     public const STATUS_LOCKED = 3;

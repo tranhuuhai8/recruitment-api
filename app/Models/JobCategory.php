@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Cache;
 
 class JobCategory extends Model
 {
@@ -30,22 +30,12 @@ class JobCategory extends Model
         'parent_id'
     ];
 
-    protected static function booted()
-    {
-        static::created(function () {
-            Cache::flush();
-        });
-
-        static::updated(function () {
-            Cache::flush();
-        });
-
-        static::deleted(function () {
-            Cache::flush();
-        });
-    }
-
-    public function parent()
+    /**
+     * parent
+     *
+     * @return BelongsTo
+     */
+    public function parent(): BelongsTo
     {
         return $this->belongsTo(JobCategory::class, 'parent_id');
     }
