@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\ApplicantController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JobCategoryController;
 use App\Http\Controllers\Admin\JobController as AdminJobController;
 use App\Http\Controllers\Applicant\ApplyController;
@@ -71,6 +72,8 @@ Route::group(
         'middleware' => ['auth:admin', 'is-admin']
     ],
     function () {
+        Route::get('/dashboard', [DashboardController::class, 'list'])->name('dashboard.list');
+
         Route::group(['as' => 'company.', 'prefix' => 'company'], function () {
             Route::get('/', [CompanyController::class, 'list'])->name('list');
             Route::get('/get-select', [CompanyController::class, 'listCompany'])->name('get_select');
