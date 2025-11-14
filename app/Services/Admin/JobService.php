@@ -18,6 +18,7 @@ class JobService extends BaseService
         'title' => 'title',
         'start_date' => 'start_date',
         'end_date' => 'end_date',
+        'created_at' => 'created_at',
     ];
 
     protected $searchables = ['title'];

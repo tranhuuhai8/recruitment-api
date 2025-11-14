@@ -12,7 +12,7 @@ class CompanyController extends BaseController
     protected $companyService;
 
     /**
-     * CityController constructor.
+     * CompanyController constructor.
      */
     public function __construct(CompanyService $companyService)
     {
