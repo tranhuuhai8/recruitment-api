@@ -32,7 +32,7 @@ class ResponseHelper
             'message' => $message,
             'errors' => $errors,
             'data' => $data,
-        ]);
+        ], $code);
     }
 
     /**
