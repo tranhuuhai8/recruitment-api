@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -48,15 +49,15 @@ class BaseAuthService
             $password = $request['password'];
 
             if (!$user || $user->role !== $role || !Hash::check($password, $user->password)) {
-                return ['message' => trans('auth.login_failed')];
+                return ResponseHelper::sendError(trans('auth.login_failed'), ResponseHelper::STATUS_CODE_VALIDATE_ERROR);
             }
 
             if ($user->status === User::STATUS_UNVERIFIED) {
-                return ['message' => trans('auth.not_active')];
+                return ResponseHelper::sendError(trans('auth.not_active'), ResponseHelper::STATUS_CODE_VALIDATE_ERROR);
             }
 
             if ($user->status === User::STATUS_LOCKED) {
-                return ['message' => trans('auth.locked')];
+                return ResponseHelper::sendError(trans('auth.locked'), ResponseHelper::STATUS_CODE_VALIDATE_ERROR);
             }
 
             $token = $auth->login($user);
