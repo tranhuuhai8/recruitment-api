@@ -6,10 +6,11 @@ return [
     'list_success' => 'Thành công.',
     'create_success' => 'Tạo mới thành công.',
     'update_success' => 'Cập nhật thành công.',
-    'delete_success' => 'Đã xóa.',
+    'delete_success' => 'Xóa thành công',
     'login_success' => 'Đăng nhập thành công.',
     'data_not_found' => 'Dữ liệu không tồn tại',
     'data_exist' => 'Dữ liệu đã tồn tại',
+    'data_used' => 'Dữ liệu này đã được sử dụng, vui lòng không thực hiện thao tác xóa',
     'job' => [
         'apply_success' => 'Gửi thông tin ứng tuyển thành công',
         'applied' => 'Bạn đã ứng tuyển công việc này rồi!',

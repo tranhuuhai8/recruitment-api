@@ -120,9 +120,13 @@ class CityService extends BaseService
     public function delete(int $id): bool|array
     {
         try {
-            $city = City::find($id);
+            $city = City::with(['jobs', 'companies', 'child'])->find($id);
             if (!$city) {
                 return ResponseHelper::notFound();
+            }
+
+            if ($city->child->count() || $city->jobs->count() || $city->companies->count()) {
+                return ResponseHelper::sendError(trans('response.data_used'));
             }
 
             return $city->delete();
@@ -135,7 +139,7 @@ class CityService extends BaseService
      * Method validateCityName
      *
      * @param array $data [explicite description]
-     * @param $id $id [explicite description]
+     * @param $id [explicite description]
      *
      * @return bool
      */

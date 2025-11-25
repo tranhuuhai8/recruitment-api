@@ -32,7 +32,7 @@ class UpsertApplicationFileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'files' => ['required', 'array', 'max:' . config('length.max_file_upload')],
+            'files' => ['array', 'max:' . config('length.max_file_upload')],
             'files.*.file_name' => [
                 'required',
                 'string',

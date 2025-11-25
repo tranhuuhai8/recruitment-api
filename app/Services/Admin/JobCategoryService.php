@@ -137,9 +137,13 @@ class JobCategoryService extends BaseService
     public function delete(int $id): bool | array
     {
         try {
-            $jobCategory = JobCategory::find($id);
+            $jobCategory = JobCategory::with(['jobs', 'child'])->find($id);
             if (!$jobCategory) {
                 return ResponseHelper::notFound();
+            }
+
+            if ($jobCategory->child->count() || $jobCategory->jobs->count()) {
+                return ResponseHelper::sendError(trans('response.data_used'));
             }
 
             return $jobCategory->delete();

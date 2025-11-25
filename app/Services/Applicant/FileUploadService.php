@@ -3,6 +3,7 @@
 namespace App\Services\Applicant;
 
 use App\Helpers\ResponseHelper;
+use App\Helpers\StorageHelper;
 use App\Models\ApplicationFile;
 use App\Services\BaseService;
 use Exception;
@@ -61,7 +62,7 @@ class FileUploadService extends BaseService
             $existingIds = ApplicationFile::where('applicant_id', $applicantId)->pluck('id')->toArray();
             $idsToDelete = array_diff($existingIds, $incomingIds);
             if (count($idsToDelete)) {
-                ApplicationFile::query()->whereIn('id', $idsToDelete)->delete();
+                $this->deleteFile($idsToDelete);
             }
 
             ApplicationFile::upsert(
@@ -85,6 +86,24 @@ class FileUploadService extends BaseService
             DB::rollBack();
             throw new Exception($e->getMessage());
         }
+    }
+
+    /**
+     * deleteFile
+     *
+     * @param  array $ids
+     * @return void
+     */
+    protected function deleteFile(array $ids)
+    {
+        $files = ApplicationFile::whereIn('id', $ids)->get();
+        foreach ($files as $file) {
+            if ($file->file_path) {
+                StorageHelper::deleteFileByPath($file->file_path);
+            }
+        }
+
+        ApplicationFile::whereIn('id', $ids)->forceDelete();
     }
 
     /**
