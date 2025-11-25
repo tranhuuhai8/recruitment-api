@@ -31,7 +31,7 @@ class ResponseHelper
         if ($code < 100 || $code > 599) {
             $code = self::STATUS_CODE_SERVER_ERROR;
         }
-        
+
         return response()->json([
             'status_code' => $code,
             'message' => $message,
