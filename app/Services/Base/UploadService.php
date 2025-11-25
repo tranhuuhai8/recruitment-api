@@ -7,21 +7,27 @@ use Illuminate\Support\Facades\Storage;
 
 class UploadService
 {
+    protected string $disk;
+
+    public function __construct()
+    {
+        $this->disk = Storage::getDefaultDriver();
+    }
+
     /**
      * Method uploadImg
      *
      * @param Request $request [explicite description]
-     * @param string $disk [explicite description]
      *
      * @return array
      */
-    public function uploadImg(Request $request, $disk = 'public'): array
+    public function uploadImg(Request $request): array
     {
         $file = $request->file('file');
-        $filePath = $file->store('attachments', $disk);
+        $filePath = $file->store('attachments', $this->disk);
 
         return [
-            'url' => Storage::disk($disk)->url($filePath),
+            'url' => Storage::disk($this->disk)->url($filePath),
             'file_path' => $filePath,
         ];
     }
@@ -34,15 +40,15 @@ class UploadService
      *
      * @return array
      */
-    public function uploadPdf(Request $request, $disk = 'public'): array
+    public function uploadPdf(Request $request): array
     {
         $file = $request->file('file');
-        $filePath = $file->store('pdfs', $disk);
+        $filePath = $file->store('pdfs', $this->disk);
 
         return [
             'size' => $file->getSize(),
             'name' => $file->getClientOriginalName(),
-            'url' => Storage::disk($disk)->url($filePath),
+            'url' => Storage::disk($this->disk)->url($filePath),
             'path' => $filePath,
         ];
     }
