@@ -28,9 +28,8 @@ class UpdateJobRequest extends FormRequest
                 'required',
                 'string',
                 'max:' . config('length.max_string'),
-                'regex:' . config('regex.no_special_chars_des'),
             ],
-            'description' => ['required', 'regex:' . config('regex.no_special_chars_des')],
+            'description' => ['required'],
             'number_of_recruitment' => ['integer', 'nullable'],
             'salary_min' => ['integer', 'nullable'],
             'salary_max' => [

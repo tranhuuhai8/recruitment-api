@@ -28,7 +28,6 @@ class CreateJobRequest extends FormRequest
                 'required',
                 'string',
                 'max:' . config('length.max_string'),
-                'regex:' . config('regex.no_special_chars_des'),
             ],
             'company_id' => [
                 'required',

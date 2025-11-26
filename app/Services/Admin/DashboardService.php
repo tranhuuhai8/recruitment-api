@@ -50,7 +50,6 @@ class DashboardService extends BaseService
         $users = User::query()
             ->selectRaw('role, COUNT(*) as total')
             ->where('role', '<>', User::ROLE_ADMIN)
-            ->where('status', User::STATUS_ACTIVE)
             ->groupBy('role')
             ->pluck('total', 'role');
 
