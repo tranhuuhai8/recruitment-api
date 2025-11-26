@@ -9,7 +9,7 @@
         "aws/aws-sdk-php": "^3.363",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
-        "league/flysystem-aws-s3-v3": "*",
+        "league/flysystem-aws-s3-v3": "^3.30",
         "tymon/jwt-auth": "^2.2"
     },
     "require-dev": {

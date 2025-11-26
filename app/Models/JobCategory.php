@@ -41,6 +41,16 @@ class JobCategory extends Model
     }
 
     /**
+     * Method child
+     *
+     * @return HasMany
+     */
+    public function child(): HasMany
+    {
+        return $this->hasMany(JobCategory::class, 'parent_id');
+    }
+
+    /**
      * Method jobs
      *
      * @return HasMany

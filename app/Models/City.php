@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Cache;
 
 class City extends Model
 {
@@ -27,23 +27,38 @@ class City extends Model
         'parent_id',
     ];
 
-    protected static function booted()
-    {
-        static::created(function () {
-            Cache::flush();
-        });
-
-        static::updated(function () {
-            Cache::flush();
-        });
-
-        static::deleted(function () {
-            Cache::flush();
-        });
-    }
-
     public function parent()
     {
         return $this->belongsTo(City::class, 'parent_id');
+    }
+
+    /**
+     * Method child
+     *
+     * @return HasMany
+     */
+    public function child(): HasMany
+    {
+        return $this->hasMany(City::class, 'parent_id');
+    }
+
+    /**
+     * Method jobs
+     *
+     * @return HasMany
+     */
+    public function jobs(): HasMany
+    {
+        return $this->hasMany(Job::class, 'city_id');
+    }
+
+    /**
+     * Method companies
+     *
+     * @return HasMany
+     */
+    public function companies(): HasMany
+    {
+        return $this->hasMany(Company::class, 'city_id');
     }
 }
