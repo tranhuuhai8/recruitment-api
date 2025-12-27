@@ -52,6 +52,9 @@ return Application::configure(basePath: dirname(__DIR__))
             return response()->json(['message' => 'Unauthenticated.'], 401);
         });
         $exceptions->render(function (\Throwable $e, $request) {
+            if ($request->is('api/documentation')) {
+                throw $e;
+            }
             if ($e instanceof HttpExceptionInterface && $e->getStatusCode() === 401) {
                 return null;
             }
