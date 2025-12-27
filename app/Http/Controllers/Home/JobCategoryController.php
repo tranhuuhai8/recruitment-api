@@ -8,6 +8,7 @@ use App\Services\Home\JobCategoryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use OpenApi\Annotations as OA;
 
 class JobCategoryController extends Controller
 {
@@ -26,6 +27,17 @@ class JobCategoryController extends Controller
      *
      * @param  Request $request
      * @return JsonResponse
+     *
+     * @OA\Get(
+     *     path="/api/home/master-data/job-categories",
+     *     summary="Danh sách danh mục công việc",
+     *     tags={"Home - Master Data"},
+     *     @OA\Parameter(name="search", in="query", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="orders", in="query", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="filters", in="query", @OA\Schema(type="string")),
+     *     @OA\Response(response=200, description="Thành công")
+     * )
      */
     public function list(Request $request): JsonResponse
     {
@@ -44,6 +56,15 @@ class JobCategoryController extends Controller
      * @param Request $request [explicite description]
      *
      * @return JsonResponse
+     *
+     * @OA\Get(
+     *     path="/api/home/master-data/job-categories-parent",
+     *     summary="Danh sách danh mục công việc cha",
+     *     tags={"Home - Master Data"},
+     *     @OA\Parameter(name="search", in="query", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Thành công")
+     * )
      */
     public function listParent(Request $request): JsonResponse
     {

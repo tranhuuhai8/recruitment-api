@@ -7,6 +7,7 @@ use App\Http\Resources\Home\City\CityCollection;
 use App\Services\Home\CityService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use OpenApi\Annotations as OA;
 
 // use Illuminate\Support\Facades\Cache;
 
@@ -27,6 +28,17 @@ class CityController extends Controller
      *
      * @param  Request $request
      * @return JsonResponse
+     *
+     * @OA\Get(
+     *     path="/api/home/master-data/cities",
+     *     summary="Danh sách thành phố",
+     *     tags={"Home - Master Data"},
+     *     @OA\Parameter(name="search", in="query", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="orders", in="query", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="filters", in="query", @OA\Schema(type="string")),
+     *     @OA\Response(response=200, description="Thành công")
+     * )
      */
     public function list(Request $request): JsonResponse
     {
@@ -46,6 +58,15 @@ class CityController extends Controller
      * @param Request $request [explicite description]
      *
      * @return JsonResponse
+     *
+     * @OA\Get(
+     *     path="/api/home/master-data/cities-parent",
+     *     summary="Danh sách thành phố cha",
+     *     tags={"Home - Master Data"},
+     *     @OA\Parameter(name="search", in="query", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Thành công")
+     * )
      */
     public function listParent(Request $request): JsonResponse
     {
