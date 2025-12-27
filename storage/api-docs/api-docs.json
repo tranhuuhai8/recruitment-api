@@ -1,0 +1,1578 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Recruitment API",
+        "description": "API documentation for Recruitment system",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000",
+            "description": "Local server"
+        }
+    ],
+    "paths": {
+        "/api/auth/admin/login": {
+            "post": {
+                "tags": [
+                    "Admin Authentication"
+                ],
+                "summary": "Đăng nhập admin",
+                "description": "API đăng nhập cho tài khoản admin",
+                "operationId": "6a1410334d358b96f3d30733ef36efb0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mail_address",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "mail_address": {
+                                        "description": "Email đăng nhập",
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "admin@gmail.com"
+                                    },
+                                    "password": {
+                                        "description": "Mật khẩu",
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "123456Hh@"
+                                    },
+                                    "token": {
+                                        "description": "Token (tùy chọn)",
+                                        "type": "string",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Đăng nhập thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Đăng nhập thành công"
+                                        },
+                                        "errors": {
+                                            "type": "null",
+                                            "example": null
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "me": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "mail_address": {
+                                                            "type": "string",
+                                                            "example": "admin@gmail.com"
+                                                        },
+                                                        "role": {
+                                                            "description": "1: Admin, 2: Company, 3: Applicant",
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "status": {
+                                                            "description": "1: Active, 2: Unverified, 3: Locked",
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "email_verified_at": {
+                                                            "type": "string",
+                                                            "format": "date-time",
+                                                            "nullable": true
+                                                        },
+                                                        "created_at": {
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        },
+                                                        "updated_at": {
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "access_token": {
+                                                    "type": "string",
+                                                    "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "bearer"
+                                                },
+                                                "expires_in": {
+                                                    "description": "Thời gian hết hạn token (giây)",
+                                                    "type": "integer",
+                                                    "example": 3600
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Lỗi xác thực",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 422
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Thông tin đăng nhập không chính xác"
+                                        },
+                                        "errors": {
+                                            "type": "null",
+                                            "example": null
+                                        },
+                                        "data": {
+                                            "type": "null",
+                                            "example": null
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Lỗi request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 400
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Validation error"
+                                        },
+                                        "errors": {
+                                            "description": "Object chứa các lỗi validation, key là tên field, value là mảng các thông báo lỗi",
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "type": "null",
+                                            "example": null
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/admin/refresh": {
+            "post": {
+                "tags": [
+                    "Admin Authentication"
+                ],
+                "summary": "Làm mới token admin",
+                "description": "API làm mới access token cho admin",
+                "operationId": "06c81e11606ee73e0266497750dea146",
+                "responses": {
+                    "200": {
+                        "description": "Làm mới token thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "errors": {
+                                            "type": "null",
+                                            "example": null
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "me": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "mail_address": {
+                                                            "type": "string",
+                                                            "example": "admin@gmail.com"
+                                                        },
+                                                        "role": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "access_token": {
+                                                    "type": "string",
+                                                    "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "bearer"
+                                                },
+                                                "expires_in": {
+                                                    "type": "integer",
+                                                    "example": 3600
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 401
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/admin/me": {
+            "get": {
+                "tags": [
+                    "Admin Authentication"
+                ],
+                "summary": "Lấy thông tin admin hiện tại",
+                "description": "API lấy thông tin admin đang đăng nhập",
+                "operationId": "ba07178762baf0d1c3ad0c97cdc6fcc4",
+                "responses": {
+                    "200": {
+                        "description": "Thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "mail_address": {
+                                                    "type": "string",
+                                                    "example": "admin@gmail.com"
+                                                },
+                                                "role": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "status": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "email_verified_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "nullable": true
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/admin/change-password": {
+            "post": {
+                "tags": [
+                    "Admin Authentication"
+                ],
+                "summary": "Đổi mật khẩu admin",
+                "description": "API đổi mật khẩu cho tài khoản admin",
+                "operationId": "acff5457971b28102e1d9539c6f48384",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "old_password",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "old_password": {
+                                        "description": "Mật khẩu cũ",
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "123456Hh@"
+                                    },
+                                    "password": {
+                                        "description": "Mật khẩu mới",
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "NewPass123@"
+                                    },
+                                    "password_confirmation": {
+                                        "description": "Xác nhận mật khẩu mới",
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "NewPass123@"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Đổi mật khẩu thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Lỗi validation hoặc mật khẩu cũ không đúng"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/admin/logout": {
+            "post": {
+                "tags": [
+                    "Admin Authentication"
+                ],
+                "summary": "Đăng xuất admin",
+                "description": "API đăng xuất tài khoản admin",
+                "operationId": "5013a033b0be168680ee76a06edabc50",
+                "responses": {
+                    "200": {
+                        "description": "Đăng xuất thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Đăng xuất thành công"
+                                        },
+                                        "data": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/applicant/login": {
+            "post": {
+                "tags": [
+                    "Applicant Authentication"
+                ],
+                "summary": "Đăng nhập applicant",
+                "description": "login",
+                "operationId": "99561059ba2e2e2e024d21c538aa9d50",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mail_address",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "mail_address": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "applicant@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "123456Hh@"
+                                    },
+                                    "token": {
+                                        "description": "Token verify email (tùy chọn)",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "422": {
+                        "description": "Lỗi xác thực"
+                    },
+                    "400": {
+                        "description": "Lỗi validation"
+                    }
+                }
+            }
+        },
+        "/api/auth/applicant/refresh": {
+            "post": {
+                "tags": [
+                    "Applicant Authentication"
+                ],
+                "summary": "Làm mới token applicant",
+                "description": "Method refresh",
+                "operationId": "d6b39e3b37291feb757ce47d723e6143",
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/applicant/register": {
+            "post": {
+                "tags": [
+                    "Applicant Authentication"
+                ],
+                "summary": "Đăng ký applicant",
+                "description": "register",
+                "operationId": "87fb56d760754a66a99da69a0f7729cc",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mail_address",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "mail_address": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "applicant@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "123456Hh@"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "123456Hh@"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "422": {
+                        "description": "Lỗi validation"
+                    }
+                }
+            }
+        },
+        "/api/auth/applicant/me": {
+            "get": {
+                "tags": [
+                    "Applicant Authentication"
+                ],
+                "summary": "Lấy thông tin applicant hiện tại",
+                "description": "me",
+                "operationId": "c064165e7b21df2cb3203b6d56bbfda2",
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/applicant/change-password": {
+            "post": {
+                "tags": [
+                    "Applicant Authentication"
+                ],
+                "summary": "Đổi mật khẩu applicant",
+                "description": "Method changePassword",
+                "operationId": "4dbb19bccf3ce6b8423d7b722ffe0a0c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "old_password",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "old_password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "400": {
+                        "description": "Lỗi validation"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/applicant/logout": {
+            "post": {
+                "tags": [
+                    "Applicant Authentication"
+                ],
+                "summary": "Đăng xuất applicant",
+                "description": "logout",
+                "operationId": "42adad3a25d8e6df49cb11681ff1585b",
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/forgot-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Quên mật khẩu",
+                "description": "API gửi email reset mật khẩu",
+                "operationId": "1c662981cefd33a817b78ed144f44559",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mail_address"
+                                ],
+                                "properties": {
+                                    "mail_address": {
+                                        "description": "Email đăng ký",
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@gmail.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Gửi email thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Email không tồn tại"
+                    }
+                }
+            }
+        },
+        "/api/auth/reset-password/{token}": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Đặt lại mật khẩu",
+                "description": "API đặt lại mật khẩu bằng token từ email",
+                "operationId": "1e3454614ce388eef7157dab62378363",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "path",
+                        "description": "Token reset password từ email",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "abc123xyz"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mail_address",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "mail_address": {
+                                        "description": "Email đăng ký",
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@gmail.com"
+                                    },
+                                    "password": {
+                                        "description": "Mật khẩu mới",
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "NewPass123@"
+                                    },
+                                    "password_confirmation": {
+                                        "description": "Xác nhận mật khẩu mới",
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "NewPass123@"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Đặt lại mật khẩu thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "data": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Token không hợp lệ hoặc đã hết hạn"
+                    }
+                }
+            }
+        },
+        "/api/auth/company/login": {
+            "post": {
+                "tags": [
+                    "Company Authentication"
+                ],
+                "summary": "Đăng nhập company",
+                "description": "API đăng nhập cho tài khoản company",
+                "operationId": "62aa749074fc64170f97101480ea19c0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mail_address",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "mail_address": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "company@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "123456Hh@"
+                                    },
+                                    "token": {
+                                        "description": "Token verify email (tùy chọn)",
+                                        "type": "string",
+                                        "example": ""
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Đăng nhập thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Đăng nhập thành công"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "me": {
+                                                    "type": "object"
+                                                },
+                                                "access_token": {
+                                                    "type": "string",
+                                                    "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "bearer"
+                                                },
+                                                "expires_in": {
+                                                    "type": "integer",
+                                                    "example": 3600
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Lỗi xác thực"
+                    },
+                    "400": {
+                        "description": "Lỗi validation"
+                    }
+                }
+            }
+        },
+        "/api/auth/company/refresh": {
+            "post": {
+                "tags": [
+                    "Company Authentication"
+                ],
+                "summary": "Làm mới token company",
+                "description": "Method refresh",
+                "operationId": "331bd9cbc048cc5db6a1048bc83b55e1",
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/company/register": {
+            "post": {
+                "tags": [
+                    "Company Authentication"
+                ],
+                "summary": "Đăng ký company",
+                "description": "API đăng ký tài khoản company mới",
+                "operationId": "43a2812b97d37528ac3c50dc61dcec93",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mail_address",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "mail_address": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "company@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "123456Hh@"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "123456Hh@"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Đăng ký thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status_code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Đăng ký thành công"
+                                        },
+                                        "data": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Lỗi validation"
+                    }
+                }
+            }
+        },
+        "/api/auth/company/me": {
+            "get": {
+                "tags": [
+                    "Company Authentication"
+                ],
+                "summary": "Lấy thông tin company hiện tại",
+                "description": "me",
+                "operationId": "948a638c648fc31a99ff87fe7937b6c4",
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/company/change-password": {
+            "post": {
+                "tags": [
+                    "Company Authentication"
+                ],
+                "summary": "Đổi mật khẩu company",
+                "description": "Method changePassword",
+                "operationId": "361f7397402ec22aef7dc7799acaa12a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "old_password",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "old_password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "400": {
+                        "description": "Lỗi validation"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/company/logout": {
+            "post": {
+                "tags": [
+                    "Company Authentication"
+                ],
+                "summary": "Đăng xuất company",
+                "description": "logout",
+                "operationId": "c3606268c6b3c505727417ac1de5674a",
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/home/master-data/cities": {
+            "get": {
+                "tags": [
+                    "Home - Master Data"
+                ],
+                "summary": "Danh sách thành phố",
+                "description": "list",
+                "operationId": "f38fc10d2606c90e5d5f615eb712ae30",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "orders",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filters",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    }
+                }
+            }
+        },
+        "/api/home/master-data/cities-parent": {
+            "get": {
+                "tags": [
+                    "Home - Master Data"
+                ],
+                "summary": "Danh sách thành phố cha",
+                "description": "Method listParent",
+                "operationId": "0115b207b084d2e0ff711e7907011e51",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    }
+                }
+            }
+        },
+        "/api/home/company": {
+            "get": {
+                "tags": [
+                    "Home - Company"
+                ],
+                "summary": "Danh sách công ty",
+                "description": "list",
+                "operationId": "890ba8ee11d025cbf123c7da8dab9606",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "orders",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filters",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    }
+                }
+            }
+        },
+        "/api/home/company/{id}": {
+            "get": {
+                "tags": [
+                    "Home - Company"
+                ],
+                "summary": "Chi tiết công ty",
+                "description": "Method detail",
+                "operationId": "58116089e3334cac8c19b41a76fb700b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "[explicite description]",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy"
+                    }
+                }
+            }
+        },
+        "/api/home/master-data/job-categories": {
+            "get": {
+                "tags": [
+                    "Home - Master Data"
+                ],
+                "summary": "Danh sách danh mục công việc",
+                "description": "list",
+                "operationId": "b9c6ad661fed4e4331a3622903e329f7",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "orders",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filters",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    }
+                }
+            }
+        },
+        "/api/home/master-data/job-categories-parent": {
+            "get": {
+                "tags": [
+                    "Home - Master Data"
+                ],
+                "summary": "Danh sách danh mục công việc cha",
+                "description": "Method listParent",
+                "operationId": "6fff3905a3a9cf7424edde1d412a9178",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    }
+                }
+            }
+        },
+        "/api/home/job": {
+            "get": {
+                "tags": [
+                    "Home - Job"
+                ],
+                "summary": "Danh sách công việc",
+                "description": "list",
+                "operationId": "e5fa2fecbefb1ce0b5271e2d0db40708",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "orders",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filters",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    }
+                }
+            }
+        },
+        "/api/home/job/{id}": {
+            "get": {
+                "tags": [
+                    "Home - Job"
+                ],
+                "summary": "Chi tiết công việc",
+                "description": "Method detail",
+                "operationId": "87c24efc9d6df3b7b73719b7397338f6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "[explicite description]",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy"
+                    }
+                }
+            }
+        },
+        "/api/home/job/apply": {
+            "post": {
+                "tags": [
+                    "Home - Job"
+                ],
+                "summary": "Ứng tuyển công việc",
+                "description": "Method apply",
+                "operationId": "99708acbcfa241c7bc9087919f9b89d3",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "job_id",
+                                    "cover_letter"
+                                ],
+                                "properties": {
+                                    "job_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "applicant_id": {
+                                        "type": "integer",
+                                        "example": 1,
+                                        "nullable": true
+                                    },
+                                    "application_file_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "file_name": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "file_path": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "file_size": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "cover_letter": {
+                                        "type": "string",
+                                        "example": "Tôi muốn ứng tuyển..."
+                                    },
+                                    "guest_name": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "guest_email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "nullable": true
+                                    },
+                                    "guest_telephone": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "source_cv": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ứng tuyển thành công"
+                    },
+                    "422": {
+                        "description": "Lỗi validation"
+                    }
+                }
+            }
+        },
+        "/api/home/job/get-cv": {
+            "get": {
+                "tags": [
+                    "Home - Job"
+                ],
+                "summary": "Lấy danh sách CV của applicant",
+                "description": "Method getCv",
+                "operationId": "ef581a76531d84d2e86ef28c3f896861",
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Admin Authentication",
+            "description": "Admin Authentication"
+        },
+        {
+            "name": "Applicant Authentication",
+            "description": "Applicant Authentication"
+        },
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        },
+        {
+            "name": "Company Authentication",
+            "description": "Company Authentication"
+        },
+        {
+            "name": "Home - Master Data",
+            "description": "Home - Master Data"
+        },
+        {
+            "name": "Home - Company",
+            "description": "Home - Company"
+        },
+        {
+            "name": "Home - Job",
+            "description": "Home - Job"
+        }
+    ]
+}

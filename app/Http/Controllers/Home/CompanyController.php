@@ -7,6 +7,7 @@ use App\Http\Resources\Home\Company\CompanyCollection;
 use App\Services\Home\CompanyService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use OpenApi\Annotations as OA;
 
 class CompanyController extends Controller
 {
@@ -25,6 +26,17 @@ class CompanyController extends Controller
      *
      * @param  Request $request
      * @return JsonResponse
+     *
+     * @OA\Get(
+     *     path="/api/home/company",
+     *     summary="Danh sách công ty",
+     *     tags={"Home - Company"},
+     *     @OA\Parameter(name="search", in="query", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="orders", in="query", @OA\Schema(type="string")),
+     *     @OA\Parameter(name="filters", in="query", @OA\Schema(type="string")),
+     *     @OA\Response(response=200, description="Thành công")
+     * )
      */
     public function list(Request $request): JsonResponse
     {
@@ -38,6 +50,15 @@ class CompanyController extends Controller
      * @param int $id [explicite description]
      *
      * @return JsonResponse
+     *
+     * @OA\Get(
+     *     path="/api/home/company/{id}",
+     *     summary="Chi tiết công ty",
+     *     tags={"Home - Company"},
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="Thành công"),
+     *     @OA\Response(response=404, description="Không tìm thấy")
+     * )
      */
     public function detail(int $id): JsonResponse
     {
