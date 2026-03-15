@@ -32,7 +32,7 @@ class FileUploadService extends BaseService
     public function list(): Collection
     {
         return ApplicationFile::query()
-            ->where('applicant_id', auth('applicant')->user()?->applicant?->id)
+            ->where('applicant_id', auth('api')->user()?->applicant?->id)
             ->orderBy('order')
             ->get();
     }
@@ -49,7 +49,7 @@ class FileUploadService extends BaseService
         try {
             DB::beginTransaction();
             $maxFileUpload = config('length.max_file_upload');
-            $applicantId = auth('applicant')->user()?->applicant?->id;
+            $applicantId = auth('api')->user()?->applicant?->id;
             $totalFileUploaded = ApplicationFile::query()
                 ->where('applicant_id', $applicantId)
                 ->count();

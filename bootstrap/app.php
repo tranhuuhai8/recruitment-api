@@ -25,9 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
             App\Http\Middleware\LogRequest::class,
         ]);
         $middleware->alias([
-            'is-admin' => \App\Http\Middleware\IsAdmin::class,
-            'is-company' => \App\Http\Middleware\IsCompany::class,
-            'is-applicant' => \App\Http\Middleware\IsApplicant::class,
+            'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);
         $middleware->append(Cors::class);
     })

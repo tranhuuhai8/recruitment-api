@@ -6,5 +6,5 @@ use App\Http\Controllers\Controller;
 
 class BaseController extends Controller
 {
-    protected $guard = 'applicant';
+    protected $guard = 'api';
 }
