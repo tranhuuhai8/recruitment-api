@@ -23,7 +23,7 @@ class UpdateInfoRequest extends FormRequest
      */
     public function rules(): array
     {
-        $applicant = Applicant::where('user_id', auth('applicant')->id())->first();
+        $applicant = Applicant::where('user_id', auth('api')->id())->first();
         $telephoneRule = Rule::unique('applicants', 'telephone');
         if ($applicant) {
             $telephoneRule->ignore($applicant->id);
@@ -46,7 +46,7 @@ class UpdateInfoRequest extends FormRequest
                 'string',
                 'email',
                 'max:' . config('length.max_string'),
-                'unique:users,mail_address,' . auth('applicant')->id() . ',id,deleted_at,NULL',
+                'unique:users,mail_address,' . auth('api')->id() . ',id,deleted_at,NULL',
             ],
             'gender' => Rule::in([Applicant::GENDER_MALE, Applicant::GENDER_FEMALE, Applicant::GENDER_OTHER]),
             'birthday' => [
@@ -58,7 +58,7 @@ class UpdateInfoRequest extends FormRequest
                 'required',
                 'string',
                 'regex:' . config('regex.telephone'),
-                // Rule::unique('applicants', 'telephone')->withoutTrashed()->ignore(auth('applicant')->id())
+                // Rule::unique('applicants', 'telephone')->withoutTrashed()->ignore(auth('api')->id())
                 $telephoneRule
             ],
             'address' => [
