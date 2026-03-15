@@ -91,9 +91,15 @@ class JobApplicationService extends BaseService
      */
     public function makeNewQuery(): Eloquent|QueryBuilder
     {
+        $companyId = auth('api')->user()?->company?->id;
+
+        if (!$companyId) {
+            return JobApplication::query()->whereRaw('1 = 0');
+        }
+
         return JobApplication::query()
             ->with(['applicant.user', 'applicationFile', 'job'])
-            ->whereRelation('job', 'company_id', auth('company')->user()?->company?->id);
+            ->whereRelation('job', 'company_id', $companyId);
     }
 
     /**
