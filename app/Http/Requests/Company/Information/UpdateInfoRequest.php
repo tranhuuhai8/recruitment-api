@@ -23,7 +23,7 @@ class UpdateInfoRequest extends FormRequest
      */
     public function rules(): array
     {
-        $company = Company::where('user_id', auth('company')->id())->first();
+        $company = Company::where('user_id', auth('api')->id())->first();
         $telephoneRule = Rule::unique('companies', 'telephone');
         $nameRule = Rule::unique('companies', 'name');
         $shortNameRule = Rule::unique('companies', 'short_name');
@@ -53,7 +53,7 @@ class UpdateInfoRequest extends FormRequest
                 'string',
                 'email',
                 'max:' . config('length.max_string'),
-                'unique:users,mail_address,' . auth('company')->id() . ',id,deleted_at,NULL',
+                'unique:users,mail_address,' . auth('api')->id() . ',id,deleted_at,NULL',
             ],
             'telephone' => [
                 'required',

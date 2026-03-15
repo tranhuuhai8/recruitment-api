@@ -40,7 +40,7 @@ class JobService extends BaseService
     {
         return Job::query()
             ->with(['city.parent', 'jobCategory.parent'])
-            ->whereRelation('company', 'user_id', auth('company')->id());
+            ->whereRelation('company', 'user_id', auth('api')->id());
     }
 
     /**

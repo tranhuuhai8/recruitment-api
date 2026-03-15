@@ -19,6 +19,7 @@ use App\Http\Controllers\Home\CityController as HomeCityController;
 use App\Http\Controllers\Home\CompanyController as HomeCompanyController;
 use App\Http\Controllers\Home\JobCategoryController as HomeJobCategoryController;
 use App\Http\Controllers\Home\JobController as HomeJobController;
+use App\Http\Controllers\Auth\UnifiedAuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,33 +35,24 @@ use Illuminate\Support\Facades\Route;
 
 // route auth
 Route::group(['as' => 'auth.', 'prefix' => 'auth'], function () {
-    Route::group(['as' => 'admin.', 'prefix' => 'admin'], function () {
-        Route::post('/login', [AuthController::class, 'login'])->name('login');
-        Route::post('/refresh', [AuthController::class, 'refresh'])->name('refresh');
-        Route::post('/logout', action: [AuthController::class, 'logout'])->name('logout');
-        Route::get('/me', [AuthController::class, 'me'])->name('me');
-        Route::post('/change-password', [AuthController::class, 'changePassword'])->name('change_password');
+    Route::post('/login', [UnifiedAuthController::class, 'login'])->name('login');
+
+    Route::group(['middleware' => 'auth:api'], function () {
+        Route::post('/refresh', [UnifiedAuthController::class, 'refresh'])->name('refresh');
+        Route::get('/me', [UnifiedAuthController::class, 'me'])->name('me');
+        Route::post('/change-password', [UnifiedAuthController::class, 'changePassword'])->name('change_password');
+        Route::post('/logout', [UnifiedAuthController::class, 'logout'])->name('logout');
     });
 
     Route::post('/forgot-password', [BaseAuthController::class, 'forgotPassword'])->name('forgot_password');
     Route::post('/reset-password/{token}', [BaseAuthController::class, 'resetPassword'])->name('reset_password');
 
     Route::group(['as' => 'company.', 'prefix' => 'company'], function () {
-        Route::post('/login', [CompanyAuthController::class, 'login'])->name('login');
-        Route::post('/refresh', [CompanyAuthController::class, 'refresh'])->name('refresh');
         Route::post('/register', [CompanyAuthController::class, 'register'])->name('register');
-        Route::post('/logout', [CompanyAuthController::class, 'logout'])->name('logout');
-        Route::get('/me', [CompanyAuthController::class, 'me'])->name('me');
-        Route::post('/change-password', [CompanyAuthController::class, 'changePassword'])->name('change_password');
     });
 
     Route::group(['as' => 'applicant.', 'prefix' => 'applicant'], function () {
-        Route::post('/login', [ApplicantAuthController::class, 'login'])->name('login');
-        Route::post('/refresh', [ApplicantAuthController::class, 'refresh'])->name('refresh');
         Route::post('/register', [ApplicantAuthController::class, 'register'])->name('register');
-        Route::post('/logout', [ApplicantAuthController::class, 'logout'])->name('logout');
-        Route::get('/me', [ApplicantAuthController::class, 'me'])->name('me');
-        Route::post('/change-password', [ApplicantAuthController::class, 'changePassword'])->name('change_password');
     });
 });
 
@@ -69,7 +61,7 @@ Route::group(
     [
         'as' => 'admin.',
         'prefix' => 'admin',
-        'middleware' => ['auth:admin', 'is-admin']
+        'middleware' => ['auth:api', 'role:admin']
     ],
     function () {
         Route::get('/dashboard', [DashboardController::class, 'list'])->name('dashboard.list');
@@ -117,7 +109,7 @@ Route::group(
     [
         'as' => 'applicant.',
         'prefix' => 'applicant',
-        'middleware' => ['auth:applicant', 'is-applicant']
+        'middleware' => ['auth:api', 'role:applicant']
     ],
     function () {
         Route::put('/update', [ApplicantAuthController::class, 'update'])->name('update');
@@ -138,7 +130,7 @@ Route::group(
     [
         'as' => 'company.',
         'prefix' => 'company',
-        'middleware' => ['auth:company', 'is-company']
+        'middleware' => ['auth:api', 'role:company']
     ],
     function () {
         Route::put('/update', [CompanyAuthController::class, 'update'])->name('update');
@@ -180,7 +172,7 @@ Route::group(
 
         Route::group(['as' => 'job.', 'prefix' => 'job'], function () {
             Route::get('/', [HomeJobController::class, 'list'])->name('list');
-            Route::get('/get-cv', [HomeJobController::class, 'getCv'])->name('getCv')->middleware(['auth:applicant', 'is-applicant']);
+            Route::get('/get-cv', [HomeJobController::class, 'getCv'])->name('getCv')->middleware(['auth:api', 'role:applicant']);
             Route::get('/{id}', [HomeJobController::class, 'detail'])->name('detail');
             Route::post('/apply', [HomeJobController::class, 'apply'])->name('apply');
         });
@@ -197,5 +189,3 @@ Route::group(
         Route::post('/pdf', [UploadController::class, 'uploadPdf'])->name('pdf');
     }
 );
-
-

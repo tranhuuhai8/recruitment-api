@@ -153,7 +153,7 @@ class JobService extends BaseService
     public function getCv(): Collection|null
     {
         try {
-            $user = auth('applicant')?->user();
+            $user = auth('api')?->user();
             return ApplicationFile::query()
                 ->whereRelation('applicant.user', 'id', $user->id)
                 ->take(ApplicationFile::TAKE_RECENTLY_UPLOADED)
