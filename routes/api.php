@@ -37,8 +37,8 @@ use Illuminate\Support\Facades\Route;
 Route::group(['as' => 'auth.', 'prefix' => 'auth'], function () {
     Route::post('/login', [UnifiedAuthController::class, 'login'])->name('login');
 
+    Route::post('/refresh', [UnifiedAuthController::class, 'refresh'])->name('refresh');
     Route::group(['middleware' => 'auth:api'], function () {
-        Route::post('/refresh', [UnifiedAuthController::class, 'refresh'])->name('refresh');
         Route::get('/me', [UnifiedAuthController::class, 'me'])->name('me');
         Route::post('/change-password', [UnifiedAuthController::class, 'changePassword'])->name('change_password');
         Route::post('/logout', [UnifiedAuthController::class, 'logout'])->name('logout');
