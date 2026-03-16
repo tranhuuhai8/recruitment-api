@@ -10,7 +10,6 @@ use App\Http\Controllers\Admin\JobController as AdminJobController;
 use App\Http\Controllers\Applicant\ApplyController;
 use App\Http\Controllers\Applicant\AuthController as ApplicantAuthController;
 use App\Http\Controllers\Applicant\FileUploadController;
-use App\Http\Controllers\Base\AuthController as BaseAuthController;
 use App\Http\Controllers\Base\UploadController;
 use App\Http\Controllers\Company\AuthController as CompanyAuthController;
 use App\Http\Controllers\Company\JobApplicationController;
@@ -35,17 +34,19 @@ use Illuminate\Support\Facades\Route;
 
 // route auth
 Route::group(['as' => 'auth.', 'prefix' => 'auth'], function () {
+    // public routes
     Route::post('/login', [UnifiedAuthController::class, 'login'])->name('login');
-
     Route::post('/refresh', [UnifiedAuthController::class, 'refresh'])->name('refresh');
+
+    // protected routes
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/me', [UnifiedAuthController::class, 'me'])->name('me');
         Route::post('/change-password', [UnifiedAuthController::class, 'changePassword'])->name('change_password');
         Route::post('/logout', [UnifiedAuthController::class, 'logout'])->name('logout');
     });
 
-    Route::post('/forgot-password', [BaseAuthController::class, 'forgotPassword'])->name('forgot_password');
-    Route::post('/reset-password/{token}', [BaseAuthController::class, 'resetPassword'])->name('reset_password');
+    Route::post('/forgot-password', [UnifiedAuthController::class, 'forgotPassword'])->name('forgot_password');
+    Route::post('/reset-password/{token}', [UnifiedAuthController::class, 'resetPassword'])->name('reset_password');
 
     Route::group(['as' => 'company.', 'prefix' => 'company'], function () {
         Route::post('/register', [CompanyAuthController::class, 'register'])->name('register');
