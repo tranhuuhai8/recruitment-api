@@ -29,25 +29,18 @@ class BaseAuthService
     /**
      * Method login
      *
-     * @param $auth
+     * @param mixed $auth
      * @param array $request
-     * @param int $role
      *
      * @return array
      */
-    public function login($auth, array $request, int $role): array
+    public function login(mixed $auth, array $request): array
     {
         try {
-            $relation = $role === User::ROLE_COMPANY ? 'company' : ($role === User::ROLE_APPLICANT ? 'applicant' : '');
-
-            $user = User::query()
-                ->when($relation, function ($query) use ($relation) {
-                    $query->with($relation);
-                })
-                ->where('mail_address', $request['mail_address'])->first();
+            $user = User::where('mail_address', $request['mail_address'])->first();
             $password = $request['password'];
 
-            if (!$user || $user->role !== $role || !Hash::check($password, $user->password)) {
+            if (!$user || !Hash::check($password, $user->password)) {
                 return ResponseHelper::sendError(
                     trans('auth.login_failed'),
                     ResponseHelper::STATUS_CODE_VALIDATE_ERROR
@@ -78,12 +71,12 @@ class BaseAuthService
     /**
      * Method changePassword
      *
-     * @param mixed $auth $auth [explicite description]
-     * @param array $data [explicite description]
+     * @param mixed $auth
+     * @param array $data
      *
      * @return array | bool
      */
-    public function changePassword($auth, array $data): array|bool
+    public function changePassword(mixed $auth, array $data): array|bool
     {
         try {
             $user = User::find($auth->user()?->id);
@@ -241,15 +234,29 @@ class BaseAuthService
     /**
      * Method respondWithToken
      *
-     * @param $token
-     * @param $auth
+     * @param string $token
+     * @param mixed $auth
      *
      * @return array
      */
-    protected function respondWithToken($token, $auth): array
+    protected function respondWithToken(string $token, mixed $auth): array
     {
+        $user = $auth->user();
+
+        if ($user && $user->role !== User::ROLE_ADMIN) {
+            $user->load($user->role === User::ROLE_COMPANY ? 'company' : 'applicant');
+        }
+
+        $roleString = match ($user?->role) {
+            User::ROLE_ADMIN => 'admin',
+            User::ROLE_COMPANY => 'company',
+            User::ROLE_APPLICANT => 'applicant',
+            default => 'unknown',
+        };
+
         return [
-            'me' => $auth->user(),
+            'me' => $user,
+            'role' => $roleString,
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => $auth->factory()->getTTL() * 60,
@@ -268,9 +275,6 @@ class BaseAuthService
         try {
             $token = JWTAuth::parseToken()->refresh();
             $user = JWTAuth::setToken($token)->toUser();
-            if ($user->role !== User::ROLE_ADMIN) {
-                $user->load($user->role === User::ROLE_COMPANY ? 'company' : 'applicant');
-            }
 
             $auth->setUser($user);
 
@@ -278,5 +282,33 @@ class BaseAuthService
         } catch (JWTException $e) {
             return ResponseHelper::sendError(trans('auth.token_failed'), ResponseHelper::STATUS_CODE_UNAUTHORIZED);
         }
+    }
+
+    /**
+     * Method me
+     *
+     * @param mixed $auth
+     *
+     * @return User|null
+     */
+    public function me(mixed $auth): User|null
+    {
+        $user = $auth->user();
+        if ($user && $user->role !== User::ROLE_ADMIN) {
+            $user->load($user->role === User::ROLE_COMPANY ? 'company' : 'applicant');
+        }
+        return $user;
+    }
+
+    /**
+     * Method logout
+     *
+     * @param mixed $auth
+     *
+     * @return void
+     */
+    public function logout(mixed $auth): void
+    {
+        $auth->logout();
     }
 }
