@@ -32,161 +32,134 @@ use Illuminate\Support\Facades\Route;
 |
  */
 
-// route auth
-Route::group(['as' => 'auth.', 'prefix' => 'auth'], function () {
+// Authentication Routes
+Route::prefix('auth')->name('auth.')->group(function () {
     // public routes
-    Route::post('/login', [UnifiedAuthController::class, 'login'])->name('login');
-    Route::post('/refresh', [UnifiedAuthController::class, 'refresh'])->name('refresh');
+    Route::controller(UnifiedAuthController::class)->group(function () {
+        Route::post('/login', 'login')->name('login');
+        Route::post('/refresh', 'refresh')->name('refresh');
+        Route::post('/forgot-password', 'forgotPassword')->name('forgot_password');
+        Route::post('/reset-password/{token}', 'resetPassword')->name('reset_password');
+    });
 
     // protected routes
-    Route::group(['middleware' => 'auth:api'], function () {
-        Route::get('/me', [UnifiedAuthController::class, 'me'])->name('me');
-        Route::post('/change-password', [UnifiedAuthController::class, 'changePassword'])->name('change_password');
-        Route::post('/logout', [UnifiedAuthController::class, 'logout'])->name('logout');
+    Route::middleware('auth:api')->controller(UnifiedAuthController::class)->group(function () {
+        Route::get('/me', 'me')->name('me');
+        Route::post('/change-password', 'changePassword')->name('change_password');
+        Route::post('/logout', 'logout')->name('logout');
     });
 
-    Route::post('/forgot-password', [UnifiedAuthController::class, 'forgotPassword'])->name('forgot_password');
-    Route::post('/reset-password/{token}', [UnifiedAuthController::class, 'resetPassword'])->name('reset_password');
-
-    Route::group(['as' => 'company.', 'prefix' => 'company'], function () {
-        Route::post('/register', [CompanyAuthController::class, 'register'])->name('register');
+    Route::prefix('company')->name('company.')->controller(CompanyAuthController::class)->group(function () {
+        Route::post('/register', 'register')->name('register');
     });
 
-    Route::group(['as' => 'applicant.', 'prefix' => 'applicant'], function () {
-        Route::post('/register', [ApplicantAuthController::class, 'register'])->name('register');
+    Route::prefix('applicant')->name('applicant.')->controller(ApplicantAuthController::class)->group(function () {
+        Route::post('/register', 'register')->name('register');
     });
 });
 
-// route admin
-Route::group(
-    [
-        'as' => 'admin.',
-        'prefix' => 'admin',
-        'middleware' => ['auth:api', 'role:admin']
-    ],
-    function () {
-        Route::get('/dashboard', [DashboardController::class, 'list'])->name('dashboard.list');
+// Admin Routes
+Route::prefix('admin')->name('admin.')->middleware(['auth:api', 'role:admin'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'list'])->name('dashboard.list');
 
-        Route::group(['as' => 'company.', 'prefix' => 'company'], function () {
-            Route::get('/', [CompanyController::class, 'list'])->name('list');
-            Route::get('/get-select', [CompanyController::class, 'listCompany'])->name('get_select');
-            Route::get('/{id}', [CompanyController::class, 'detail'])->name('detail');
-            Route::put('/{id}', [CompanyController::class, 'update'])->name('update');
-            Route::delete('{id}', [CompanyController::class, 'delete'])->name('delete');
+    Route::prefix('company')->name('company.')->controller(CompanyController::class)->group(function () {
+        Route::get('/', 'list')->name('list');
+        Route::get('/get-select', 'listCompany')->name('get_select');
+        Route::get('/{id}', 'detail')->name('detail');
+        Route::put('/{id}', 'update')->name('update');
+        Route::delete('/{id}', 'delete')->name('delete');
+    });
+
+    Route::prefix('applicant')->name('applicant.')->controller(ApplicantController::class)->group(function () {
+        Route::get('/', 'list')->name('list');
+        Route::get('/{id}', 'detail')->name('detail');
+        Route::put('/{id}', 'update')->name('update');
+        Route::delete('/{id}', 'delete')->name('delete');
+    });
+
+    Route::prefix('job')->name('job.')->controller(AdminJobController::class)->group(function () {
+        Route::get('/', 'list')->name('list');
+        Route::delete('/{id}', 'delete')->name('delete');
+    });
+
+    Route::prefix('master-data')->name('master_data.')->group(function () {
+        Route::prefix('cities')->name('cities.')->controller(CityController::class)->group(function () {
+            Route::get('/', 'list')->name('list');
+            Route::post('/', 'store')->name('store');
+            Route::put('/{id}', 'update')->name('update');
+            Route::delete('/{id}', 'delete')->name('delete');
         });
 
-        Route::group(['as' => 'applicant.', 'prefix' => 'applicant'], function () {
-            Route::get('/', [ApplicantController::class, 'list'])->name('list');
-            Route::get('/{id}', [ApplicantController::class, 'detail'])->name('detail');
-            Route::put('/{id}', [ApplicantController::class, 'update'])->name('update');
-            Route::delete('{id}', [ApplicantController::class, 'delete'])->name('delete');
+        Route::prefix('job-categories')->name('job_categories.')->controller(JobCategoryController::class)->group(function () {
+            Route::get('/', 'list')->name('list');
+            Route::post('/', 'store')->name('store');
+            Route::put('/{id}', 'update')->name('update');
+            Route::delete('/{id}', 'delete')->name('delete');
         });
+    });
+});
 
-        Route::group(['as' => 'job.', 'prefix' => 'job'], function () {
-            Route::get('/', [AdminJobController::class, 'list'])->name('list');
-            Route::delete('{id}', [AdminJobController::class, 'delete'])->name('delete');
+// Applicant Routes
+Route::prefix('applicant')->name('applicant.')->middleware(['auth:api', 'role:applicant'])->group(function () {
+    Route::put('/update', [ApplicantAuthController::class, 'update'])->name('update');
+
+    Route::prefix('file-upload')->name('file-upload.')->controller(FileUploadController::class)->group(function () {
+        Route::get('/', 'list')->name('list');
+        Route::put('/upsert', 'upsert')->name('upsert');
+    });
+
+    Route::prefix('applied')->name('applied.')->controller(ApplyController::class)->group(function () {
+        Route::get('/', 'list')->name('list');
+    });
+});
+
+// Company Routes
+Route::prefix('company')->name('company.')->middleware(['auth:api', 'role:company'])->group(function () {
+    Route::put('/update', [CompanyAuthController::class, 'update'])->name('update');
+
+    Route::prefix('job')->name('job.')->controller(JobController::class)->group(function () {
+        Route::get('/', 'list')->name('list');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{id}', 'detail')->name('detail');
+        Route::put('/{id}', 'update')->name('update');
+        Route::delete('/{id}', 'delete')->name('delete');
+    });
+
+    Route::prefix('job-apply')->name('jobApply.')->controller(JobApplicationController::class)->group(function () {
+        Route::get('/', 'list')->name('list');
+        Route::put('/{id}', 'update')->name('update');
+        Route::delete('/{id}', 'delete')->name('delete');
+    });
+});
+
+// Home Routes
+Route::prefix('home')->name('home.')->group(function () {
+    Route::prefix('master-data')->name('masterData.')->group(function () {
+        Route::controller(HomeCityController::class)->group(function () {
+            Route::get('/cities', 'list')->name('cities');
+            Route::get('/cities-parent', 'listParent')->name('cities_parent');
         });
-
-        Route::group(['as' => 'master_data.', 'prefix' => 'master-data'], function () {
-            Route::group(['as' => 'cities.', 'prefix' => 'cities'], function () {
-                Route::get('/', [CityController::class, 'list'])->name('list');
-                Route::post('/', [CityController::class, 'store'])->name('store');
-                Route::put('/{id}', [CityController::class, 'update'])->name('update');
-                Route::delete('{id}', [CityController::class, 'delete'])->name('delete');
-            });
-
-            Route::group(['as' => 'job_categories.', 'prefix' => 'job-categories'], function () {
-                Route::get('/', [JobCategoryController::class, 'list'])->name('list');
-                Route::post('/', [JobCategoryController::class, 'store'])->name('store');
-                Route::put('/{id}', [JobCategoryController::class, 'update'])->name('update');
-                Route::delete('{id}', [JobCategoryController::class, 'delete'])->name('delete');
-            });
+        Route::controller(HomeJobCategoryController::class)->group(function () {
+            Route::get('/job-categories', 'list')->name('job_categories');
+            Route::get('/job-categories-parent', 'listParent')->name('job_categories_parent');
         });
-    }
-);
+    });
 
-// route applicant
-Route::group(
-    [
-        'as' => 'applicant.',
-        'prefix' => 'applicant',
-        'middleware' => ['auth:api', 'role:applicant']
-    ],
-    function () {
-        Route::put('/update', [ApplicantAuthController::class, 'update'])->name('update');
+    Route::prefix('company')->name('company.')->controller(HomeCompanyController::class)->group(function () {
+        Route::get('/', 'list')->name('list');
+        Route::get('/{id}', 'detail')->name('detail');
+    });
 
-        Route::group(['as' => 'file-upload.', 'prefix' => 'file-upload'], function () {
-            Route::get('/', [FileUploadController::class, 'list'])->name('list');
-            Route::put('/upsert', [FileUploadController::class, 'upsert'])->name('upsert');
-        });
+    Route::prefix('job')->name('job.')->controller(HomeJobController::class)->group(function () {
+        Route::get('/', 'list')->name('list');
+        Route::post('/apply', 'apply')->name('apply');
+        Route::get('/get-cv', 'getCv')->name('getCv')->middleware(['auth:api', 'role:applicant']);
+        Route::get('/{id}', 'detail')->name('detail');
+    });
+});
 
-        Route::group(['as' => 'applied.', 'prefix' => 'applied'], function () {
-            Route::get('/', [ApplyController::class, 'list'])->name('list');
-        });
-    }
-);
-
-// route company
-Route::group(
-    [
-        'as' => 'company.',
-        'prefix' => 'company',
-        'middleware' => ['auth:api', 'role:company']
-    ],
-    function () {
-        Route::put('/update', [CompanyAuthController::class, 'update'])->name('update');
-
-        Route::group(['as' => 'job.', 'prefix' => 'job'], function () {
-            Route::get('/', [JobController::class, 'list'])->name('list');
-            Route::get('/{id}', [JobController::class, 'detail'])->name('detail');
-            Route::put('/{id}', [JobController::class, 'update'])->name('update');
-            Route::post('/', [JobController::class, 'store'])->name('store');
-            Route::delete('{id}', [JobController::class, 'delete'])->name('delete');
-        });
-
-        Route::group(['as' => 'jobApply.', 'prefix' => 'job-apply'], function () {
-            Route::get('/', [JobApplicationController::class, 'list'])->name('list');
-            Route::put('/{id}', [JobApplicationController::class, 'update'])->name('update');
-            Route::delete('{id}', [JobApplicationController::class, 'delete'])->name('delete');
-        });
-    }
-);
-
-// route home
-Route::group(
-    [
-        'as' => 'home.',
-        'prefix' => 'home',
-    ],
-    function () {
-        Route::group(['as' => 'masterData.', 'prefix' => 'master-data'], function () {
-            Route::get('/cities', [HomeCityController::class, 'list'])->name('cities');
-            Route::get('/cities-parent', [HomeCityController::class, 'listParent'])->name('cities_parent');
-            Route::get('/job-categories', [HomeJobCategoryController::class, 'list'])->name('job_categories');
-            Route::get('/job-categories-parent', [HomeJobCategoryController::class, 'listParent'])->name('job_categories_parent');
-        });
-
-        Route::group(['as' => 'company.', 'prefix' => 'company'], function () {
-            Route::get('/', [HomeCompanyController::class, 'list'])->name('list');
-            Route::get('/{id}', [HomeCompanyController::class, 'detail'])->name('detail');
-        });
-
-        Route::group(['as' => 'job.', 'prefix' => 'job'], function () {
-            Route::get('/', [HomeJobController::class, 'list'])->name('list');
-            Route::get('/get-cv', [HomeJobController::class, 'getCv'])->name('getCv')->middleware(['auth:api', 'role:applicant']);
-            Route::get('/{id}', [HomeJobController::class, 'detail'])->name('detail');
-            Route::post('/apply', [HomeJobController::class, 'apply'])->name('apply');
-        });
-    }
-);
-
-Route::group(
-    [
-        'as' => 'upload.',
-        'prefix' => 'upload',
-    ],
-    function () {
-        Route::post('/image', [UploadController::class, 'uploadImg'])->name('image');
-        Route::post('/pdf', [UploadController::class, 'uploadPdf'])->name('pdf');
-    }
-);
+// Upload Routes
+Route::prefix('upload')->name('upload.')->controller(UploadController::class)->group(function () {
+    Route::post('/image', 'uploadImg')->name('image');
+    Route::post('/pdf', 'uploadPdf')->name('pdf');
+});

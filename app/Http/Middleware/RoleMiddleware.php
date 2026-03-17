@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Helpers\ResponseHelper;
 use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
@@ -27,15 +28,24 @@ class RoleMiddleware
         $allowedRoles = array_map(fn ($role) => $roleMap[$role] ?? null, $roles);
 
         if (!$user || !in_array($user->role, $allowedRoles, strict: true)) {
-            return response()->json(['message' => 'Không có quyền truy cập.'], 403);
+            return response()->json(
+                ['message' => trans('auth.permission_denied')],
+                ResponseHelper::STATUS_CODE_FORBIDDEN
+            );
         }
 
         if ($user->status === User::STATUS_UNVERIFIED) {
-            return response()->json(['message' => trans('auth.not_active')], 403);
+            return response()->json(
+                ['message' => trans('auth.not_active')],
+                ResponseHelper::STATUS_CODE_FORBIDDEN
+            );
         }
 
         if ($user->status === User::STATUS_LOCKED) {
-            return response()->json(['message' => trans('auth.locked')], 403);
+            return response()->json(
+                ['message' => trans('auth.locked')],
+                ResponseHelper::STATUS_CODE_FORBIDDEN
+            );
         }
 
         return $next($request);
