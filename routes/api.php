@@ -1,12 +1,14 @@
 <?php
 
-use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\ApplicantController;
+use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JobCategoryController;
 use App\Http\Controllers\Admin\JobController as AdminJobController;
+use App\Http\Controllers\Admin\MailLogController;
+use App\Http\Controllers\Admin\MailTemplateController;
 use App\Http\Controllers\Applicant\ApplyController;
 use App\Http\Controllers\Applicant\AuthController as ApplicantAuthController;
 use App\Http\Controllers\Applicant\FileUploadController;
@@ -80,6 +82,31 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:api', 'role:admin'])->
     Route::prefix('job')->name('job.')->controller(AdminJobController::class)->group(function () {
         Route::get('/', 'list')->name('list');
         Route::delete('/{id}', 'delete')->name('delete');
+    });
+
+    // ── Contact Routes ──────────────────────────────────
+    Route::prefix('contact')->name('contact.')->controller(ContactController::class)->group(function () {
+        Route::get('/', 'list')->name('list');
+        Route::get('/{id}', 'detail')->name('detail');
+        Route::put('/{id}', 'update')->name('update');
+        Route::post('/{id}/reply', 'reply')->name('reply');
+    });
+
+    // ── Mail Template Routes ────────────────────────────
+    Route::prefix('mail-template')->name('mail_template.')->controller(MailTemplateController::class)->group(function () {
+        Route::get('/', 'list')->name('list');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{id}', 'detail')->name('detail');
+        Route::put('/{id}', 'update')->name('update');
+        Route::delete('/{id}', 'delete')->name('delete');
+        Route::get('/{id}/preview', 'preview')->name('preview');
+    });
+
+    // ── Mail Log Routes ─────────────────────────────────
+    Route::prefix('mail-log')->name('mail_log.')->controller(MailLogController::class)->group(function () {
+        Route::get('/', 'list')->name('list');
+        Route::get('/{id}', 'detail')->name('detail');
+        Route::post('/{id}/retry', 'retry')->name('retry');
     });
 
     Route::prefix('master-data')->name('master_data.')->group(function () {
@@ -156,6 +183,9 @@ Route::prefix('home')->name('home.')->group(function () {
         Route::get('/get-cv', 'getCv')->name('getCv')->middleware(['auth:api', 'role:applicant']);
         Route::get('/{id}', 'detail')->name('detail');
     });
+
+    // ── Contact: public form submission ─────────────────
+    Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 });
 
 // Upload Routes
