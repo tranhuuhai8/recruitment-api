@@ -12,6 +12,950 @@
         }
     ],
     "paths": {
+        "/api/admin/contact": {
+            "get": {
+                "tags": [
+                    "Admin - Contact"
+                ],
+                "summary": "Lấy danh sách tin nhắn liên hệ",
+                "operationId": "adminGetContactList",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Tìm kiếm theo tên, email, tiêu đề, nội dung",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Nguyễn Văn A"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Số bản ghi mỗi trang (mặc định 15)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 15
+                        }
+                    },
+                    {
+                        "name": "orders[0][key]",
+                        "in": "query",
+                        "description": "Cột sắp xếp (id, created_at, priority, status)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "created_at"
+                        }
+                    },
+                    {
+                        "name": "orders[0][dir]",
+                        "in": "query",
+                        "description": "Chiều sắp xếp: ascending | descending",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ascending",
+                                "descending"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "filters[0][key]",
+                        "in": "query",
+                        "description": "Khóa lọc: status | priority",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "status"
+                        }
+                    },
+                    {
+                        "name": "filters[0][data]",
+                        "in": "query",
+                        "description": "Giá trị lọc (status: 1=New,2=Read,3=InProgress,4=Resolved,5=Spam | priority: 1=Low,2=Normal,3=High,4=Urgent)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                },
+                                                "per_page": {
+                                                    "type": "integer",
+                                                    "example": 15
+                                                },
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực"
+                    },
+                    "403": {
+                        "description": "Không có quyền truy cập"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Contact"
+                ],
+                "summary": "Tạo tin nhắn liên hệ mới (public - không cần auth)",
+                "operationId": "adminCreateContact",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "full_name",
+                                    "email",
+                                    "title",
+                                    "content"
+                                ],
+                                "properties": {
+                                    "full_name": {
+                                        "type": "string",
+                                        "example": "Nguyễn Văn A"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "0901234567"
+                                    },
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Tôi cần hỗ trợ về tài khoản"
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "example": "Tôi không thể đăng nhập vào hệ thống..."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Gửi tin nhắn thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Gửi tin nhắn thành công."
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation thất bại"
+                    },
+                    "500": {
+                        "description": "Lỗi server"
+                    }
+                }
+            }
+        },
+        "/api/admin/contact/{id}": {
+            "get": {
+                "tags": [
+                    "Admin - Contact"
+                ],
+                "summary": "Xem chi tiết tin nhắn liên hệ (tự động đánh dấu đã đọc)",
+                "operationId": "adminGetContactDetail",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID của contact",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Success"
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Chưa xác thực"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin - Contact"
+                ],
+                "summary": "Cập nhật trạng thái, ưu tiên, ghi chú của tin nhắn",
+                "operationId": "adminUpdateContact",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "status": {
+                                        "description": "1=New,2=Read,3=InProgress,4=Resolved,5=Spam",
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "priority": {
+                                        "description": "1=Low,2=Normal,3=High,4=Urgent",
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "admin_note": {
+                                        "type": "string",
+                                        "example": "Đã liên hệ qua điện thoại, xử lý vào ngày mai."
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cập nhật thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy"
+                    },
+                    "422": {
+                        "description": "Validation thất bại"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin - Contact"
+                ],
+                "summary": "Xóa tin nhắn liên hệ (soft delete)",
+                "operationId": "adminDeleteContact",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Xóa thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/contact/{id}/reply": {
+            "post": {
+                "tags": [
+                    "Admin - Contact"
+                ],
+                "summary": "Phản hồi email cho user (chọn template + tùy chỉnh nội dung)",
+                "operationId": "adminReplyContact",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID của contact",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mail_template_id"
+                                ],
+                                "properties": {
+                                    "mail_template_id": {
+                                        "description": "ID của mail template",
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "subject": {
+                                        "description": "Override tiêu đề template (optional)",
+                                        "type": "string",
+                                        "example": "Phản hồi yêu cầu của bạn"
+                                    },
+                                    "body": {
+                                        "description": "Override nội dung template (optional)",
+                                        "type": "string",
+                                        "example": "<p>Chào bạn, ...</p>"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Đã gửi phản hồi vào queue",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Phản hồi email đã được gửi thành công."
+                                        },
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Lỗi nghiệp vụ (contact spam, template không hợp lệ)"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy"
+                    },
+                    "422": {
+                        "description": "Validation thất bại"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/mail-log": {
+            "get": {
+                "tags": [
+                    "Admin - Mail Log"
+                ],
+                "summary": "Lấy danh sách lịch sử gửi email",
+                "operationId": "adminGetMailLogList",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Tìm kiếm theo email, tên người nhận, tiêu đề",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "user@example.com"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 15
+                        }
+                    },
+                    {
+                        "name": "orders[0][key]",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "created_at"
+                        }
+                    },
+                    {
+                        "name": "orders[0][dir]",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ascending",
+                                "descending"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "filters[0][key]",
+                        "in": "query",
+                        "description": "Khóa lọc: status | contact_id",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "status"
+                        }
+                    },
+                    {
+                        "name": "filters[0][data]",
+                        "in": "query",
+                        "description": "Giá trị lọc (status: 1=Pending,2=Sent,3=Failed,4=Bounced)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "3"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/mail-log/{id}": {
+            "get": {
+                "tags": [
+                    "Admin - Mail Log"
+                ],
+                "summary": "Xem chi tiết mail log (bao gồm nội dung email đã gửi)",
+                "operationId": "adminGetMailLogDetail",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/mail-log/{id}/retry": {
+            "post": {
+                "tags": [
+                    "Admin - Mail Log"
+                ],
+                "summary": "Retry gửi lại email thất bại",
+                "operationId": "adminRetryMailLog",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID của mail log có status=Failed",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 5
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retry thành công, email đã được đưa vào queue",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email đã được thêm vào hàng chờ gửi lại."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Chỉ retry được email có trạng thái Failed"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/mail-template": {
+            "get": {
+                "tags": [
+                    "Admin - Mail Template"
+                ],
+                "summary": "Lấy danh sách mail template",
+                "operationId": "adminGetMailTemplateList",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Tìm kiếm theo tên, code, tiêu đề",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "confirmation"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 15
+                        }
+                    },
+                    {
+                        "name": "orders[0][key]",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "created_at"
+                        }
+                    },
+                    {
+                        "name": "orders[0][dir]",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ascending",
+                                "descending"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "filters[0][key]",
+                        "in": "query",
+                        "description": "Khóa lọc: type | is_active",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "type"
+                        }
+                    },
+                    {
+                        "name": "filters[0][data]",
+                        "in": "query",
+                        "description": "Giá trị lọc (type: 1=Confirmation,2=Reply,3=Notification | is_active: 1=Active,0=Inactive)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "401": {
+                        "description": "Chưa xác thực"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Admin - Mail Template"
+                ],
+                "summary": "Tạo mail template mới",
+                "operationId": "adminCreateMailTemplate",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "code",
+                                    "subject",
+                                    "body",
+                                    "type"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Email xác nhận liên hệ"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "example": "contact_confirmation"
+                                    },
+                                    "subject": {
+                                        "type": "string",
+                                        "example": "Chúng tôi đã nhận được tin nhắn của {{full_name}}"
+                                    },
+                                    "body": {
+                                        "type": "string",
+                                        "example": "<p>Chào {{full_name}}, ...</p>"
+                                    },
+                                    "variables": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "full_name",
+                                            "email",
+                                            "title"
+                                        ]
+                                    },
+                                    "type": {
+                                        "description": "1=Confirmation,2=Reply,3=Notification",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Tạo thành công"
+                    },
+                    "422": {
+                        "description": "Validation thất bại"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/mail-template/{id}": {
+            "get": {
+                "tags": [
+                    "Admin - Mail Template"
+                ],
+                "summary": "Xem chi tiết mail template",
+                "operationId": "adminGetMailTemplateDetail",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Admin - Mail Template"
+                ],
+                "summary": "Cập nhật mail template",
+                "operationId": "adminUpdateMailTemplate",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "subject": {
+                                        "type": "string"
+                                    },
+                                    "body": {
+                                        "type": "string"
+                                    },
+                                    "variables": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": {
+                                        "type": "integer"
+                                    },
+                                    "is_active": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cập nhật thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Admin - Mail Template"
+                ],
+                "summary": "Xóa mail template (soft delete)",
+                "operationId": "adminDeleteMailTemplate",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Xóa thành công"
+                    },
+                    "404": {
+                        "description": "Không tìm thấy"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/admin/mail-template/{id}/preview": {
+            "get": {
+                "tags": [
+                    "Admin - Mail Template"
+                ],
+                "summary": "Preview template với dữ liệu mẫu",
+                "operationId": "adminPreviewMailTemplate",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Preview thành công",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "subject": {
+                                                    "type": "string",
+                                                    "example": "Chào Nguyễn Văn A, ..."
+                                                },
+                                                "body": {
+                                                    "type": "string",
+                                                    "example": "<p>Nội dung đã render...</p>"
+                                                },
+                                                "variables": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Không tìm thấy"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/auth/applicant/register": {
             "post": {
                 "tags": [
@@ -108,7 +1052,7 @@
                                         },
                                         "data": {
                                             "properties": {
-                                                "token": {
+                                                "access_token": {
                                                     "type": "string"
                                                 },
                                                 "token_type": {
@@ -127,7 +1071,7 @@
                                                         "applicant"
                                                     ]
                                                 },
-                                                "user": {
+                                                "me": {
                                                     "type": "object"
                                                 }
                                             },
@@ -158,7 +1102,7 @@
                 "operationId": "unifiedRefresh",
                 "responses": {
                     "200": {
-                        "description": "Làm mới token thành công"
+                        "description": ""
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -278,11 +1222,11 @@
         "/api/auth/forgot-password": {
             "post": {
                 "tags": [
-                    "Authentication"
+                    "Auth"
                 ],
                 "summary": "Quên mật khẩu",
                 "description": "API gửi email reset mật khẩu",
-                "operationId": "1c662981cefd33a817b78ed144f44559",
+                "operationId": "b4d25f02c6f2b5691fce9e45ff9bc416",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -338,11 +1282,11 @@
         "/api/auth/reset-password/{token}": {
             "post": {
                 "tags": [
-                    "Authentication"
+                    "Auth"
                 ],
                 "summary": "Đặt lại mật khẩu",
                 "description": "API đặt lại mật khẩu bằng token từ email",
-                "operationId": "1e3454614ce388eef7157dab62378363",
+                "operationId": "c7ca4ca78e4cf12cd202f85826595937",
                 "parameters": [
                     {
                         "name": "token",
@@ -898,16 +1842,24 @@
     },
     "tags": [
         {
+            "name": "Admin - Contact",
+            "description": "Admin - Contact"
+        },
+        {
+            "name": "Admin - Mail Log",
+            "description": "Admin - Mail Log"
+        },
+        {
+            "name": "Admin - Mail Template",
+            "description": "Admin - Mail Template"
+        },
+        {
             "name": "Applicant Authentication",
             "description": "Applicant Authentication"
         },
         {
             "name": "Auth",
             "description": "Auth"
-        },
-        {
-            "name": "Authentication",
-            "description": "Authentication"
         },
         {
             "name": "Company Authentication",
