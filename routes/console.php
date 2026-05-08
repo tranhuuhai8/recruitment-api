@@ -9,3 +9,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote')->hourly();
 
 Schedule::command('notify:frequency-job')->dailyAt('08:00');
+Schedule::command('notify:saved-job-deadline')->dailyAt('09:00');

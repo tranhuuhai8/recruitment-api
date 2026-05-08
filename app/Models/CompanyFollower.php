@@ -7,21 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class JobFavorite extends Model
+class CompanyFollower extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'applicant_id',
-        'job_id',
-        'note',
-        'deadline_reminded_at',
+        'company_id',
     ];
 
     public function applicant(): BelongsTo
@@ -29,8 +22,9 @@ class JobFavorite extends Model
         return $this->belongsTo(Applicant::class);
     }
 
-    public function job(): BelongsTo
+    public function company(): BelongsTo
     {
-        return $this->belongsTo(Job::class);
+        return $this->belongsTo(Company::class);
     }
 }
+
