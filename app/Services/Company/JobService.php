@@ -3,6 +3,7 @@
 namespace App\Services\Company;
 
 use App\Helpers\ResponseHelper;
+use App\Jobs\SendNewJobToFollowers;
 use App\Models\Job;
 use App\Services\BaseService;
 use Exception;
@@ -73,7 +74,25 @@ class JobService extends BaseService
     public function store(array $data): Job|array
     {
         try {
-            return Job::create($data);
+            $job = Job::create($data);
+
+            // Notify applicants who followed this company (only when job is open)
+            if ($job && (int) $job->status === Job::STATUS_OPEN) {
+                $company = $job->company()->with('user')->first();
+                if ($company) {
+                    $frontendBase = config('app.frontend_url', env('FRONTEND_URL', 'http://localhost:3024'));
+                    $jobUrl = rtrim($frontendBase, '/') . '/page-job/' . $job->id;
+
+                    SendNewJobToFollowers::dispatch(
+                        $company->id,
+                        ['id' => $company->id, 'name' => $company->name],
+                        ['id' => $job->id, 'title' => $job->title, 'end_date' => $job->end_date],
+                        $jobUrl,
+                    );
+                }
+            }
+
+            return $job;
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

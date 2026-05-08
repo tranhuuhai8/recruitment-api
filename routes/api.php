@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\ApplicantController;
 use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\CompanyFollowerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JobCategoryController;
 use App\Http\Controllers\Admin\JobController as AdminJobController;
@@ -11,6 +12,8 @@ use App\Http\Controllers\Admin\MailLogController;
 use App\Http\Controllers\Admin\MailTemplateController;
 use App\Http\Controllers\Applicant\ApplyController;
 use App\Http\Controllers\Applicant\AuthController as ApplicantAuthController;
+use App\Http\Controllers\Applicant\CompanyFollowController;
+use App\Http\Controllers\Applicant\FavoriteController;
 use App\Http\Controllers\Applicant\FileUploadController;
 use App\Http\Controllers\Base\UploadController;
 use App\Http\Controllers\Company\AuthController as CompanyAuthController;
@@ -71,6 +74,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:api', 'role:admin'])->
         Route::put('/{id}', 'update')->name('update');
         Route::delete('/{id}', 'delete')->name('delete');
     });
+
+    // Followed companies (by applicants)
+    Route::get('/company-followers', [CompanyFollowerController::class, 'list'])->name('company_followers.list');
 
     Route::prefix('applicant')->name('applicant.')->controller(ApplicantController::class)->group(function () {
         Route::get('/', 'list')->name('list');
@@ -137,6 +143,18 @@ Route::prefix('applicant')->name('applicant.')->middleware(['auth:api', 'role:ap
 
     Route::prefix('applied')->name('applied.')->controller(ApplyController::class)->group(function () {
         Route::get('/', 'list')->name('list');
+    });
+
+    // Favorites (Saved jobs)
+    Route::prefix('favorites')->name('favorites.')->controller(FavoriteController::class)->group(function () {
+        Route::get('/jobs', 'listJobs')->name('jobs.list');
+        Route::post('/jobs/{jobId}/toggle', 'toggleJob')->name('jobs.toggle');
+    });
+
+    // Follows (Followed companies)
+    Route::prefix('follows')->name('follows.')->controller(CompanyFollowController::class)->group(function () {
+        Route::get('/companies', 'listCompanies')->name('companies.list');
+        Route::post('/companies/{companyId}/toggle', 'toggleCompany')->name('companies.toggle');
     });
 });
 
