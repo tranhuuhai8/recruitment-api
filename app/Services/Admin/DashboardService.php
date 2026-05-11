@@ -75,9 +75,9 @@ class DashboardService extends BaseService
     /**
      * getTopCategory
      *
-     * @return Collection
+     * @return \Illuminate\Support\Collection
      */
-    public function getTopCategory(): Collection
+    public function getTopCategory(): \Illuminate\Support\Collection
     {
         $query = JobCategory::query()
             ->select('job_categories.*')
