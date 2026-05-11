@@ -79,24 +79,28 @@ class DashboardService extends BaseService
      */
     public function getTopCategory(): Collection
     {
-        return JobCategory::query()
+        $query = JobCategory::query()
             ->select('job_categories.*')
             ->selectRaw('
-                (
-                    SELECT COUNT(*)
-                    FROM jobs 
-                    WHERE jobs.job_category_id = job_categories.id
-                    OR jobs.job_category_id IN (
-                            SELECT id FROM job_categories AS child 
-                            WHERE child.parent_id = job_categories.id
-                        )
-                ) as total_jobs
-            ')
+        (
+            SELECT COUNT(*)
+            FROM jobs 
+            WHERE jobs.job_category_id = job_categories.id
+            OR jobs.job_category_id IN (
+                SELECT id
+                FROM job_categories child
+                WHERE child.parent_id = job_categories.id
+            )
+        ) as total_jobs
+    ')
             ->where([
                 'status' => JobCategory::STATUS_SHOW,
                 'parent_id' => null,
-            ])
-            ->having('total_jobs', '>', 0)
+            ]);
+
+        return DB::query()
+            ->fromSub($query, 't')
+            ->where('total_jobs', '>', 0)
             ->orderByDesc('total_jobs')
             ->limit(10)
             ->get();
