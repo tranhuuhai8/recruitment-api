@@ -39,4 +39,3 @@ class CompanyFollowerController extends Controller
         return $this->sendSuccessResponse($data);
     }
 }
-

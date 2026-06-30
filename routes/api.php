@@ -70,9 +70,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:api', 'role:admin'])->
     Route::prefix('company')->name('company.')->controller(CompanyController::class)->group(function () {
         Route::get('/', 'list')->name('list');
         Route::get('/get-select', 'listCompany')->name('get_select');
-        Route::get('/{id}', 'detail')->name('detail');
-        Route::put('/{id}', 'update')->name('update');
-        Route::delete('/{id}', 'delete')->name('delete');
+        Route::get('/{slug}', 'detail')->name('detail');
+        Route::put('/{slug}', 'update')->name('update');
+        Route::delete('/{slug}', 'delete')->name('delete');
     });
 
     // Followed companies (by applicants)
@@ -87,7 +87,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:api', 'role:admin'])->
 
     Route::prefix('job')->name('job.')->controller(AdminJobController::class)->group(function () {
         Route::get('/', 'list')->name('list');
-        Route::delete('/{id}', 'delete')->name('delete');
+        Route::get('/{slug}', 'detail')->name('detail');
+        Route::put('/{slug}', 'update')->name('update');
+        Route::delete('/{slug}', 'delete')->name('delete');
     });
 
     // ── Contact Routes ──────────────────────────────────
@@ -148,13 +150,13 @@ Route::prefix('applicant')->name('applicant.')->middleware(['auth:api', 'role:ap
     // Favorites (Saved jobs)
     Route::prefix('favorites')->name('favorites.')->controller(FavoriteController::class)->group(function () {
         Route::get('/jobs', 'listJobs')->name('jobs.list');
-        Route::post('/jobs/{jobId}/toggle', 'toggleJob')->name('jobs.toggle');
+        Route::post('/jobs/{slug}/toggle', 'toggleJob')->name('jobs.toggle');
     });
 
     // Follows (Followed companies)
     Route::prefix('follows')->name('follows.')->controller(CompanyFollowController::class)->group(function () {
         Route::get('/companies', 'listCompanies')->name('companies.list');
-        Route::post('/companies/{companyId}/toggle', 'toggleCompany')->name('companies.toggle');
+        Route::post('/companies/{slug}/toggle', 'toggleCompany')->name('companies.toggle');
     });
 });
 
@@ -165,9 +167,9 @@ Route::prefix('company')->name('company.')->middleware(['auth:api', 'role:compan
     Route::prefix('job')->name('job.')->controller(JobController::class)->group(function () {
         Route::get('/', 'list')->name('list');
         Route::post('/', 'store')->name('store');
-        Route::get('/{id}', 'detail')->name('detail');
-        Route::put('/{id}', 'update')->name('update');
-        Route::delete('/{id}', 'delete')->name('delete');
+        Route::get('/{slug}', 'detail')->name('detail');
+        Route::put('/{slug}', 'update')->name('update');
+        Route::delete('/{slug}', 'delete')->name('delete');
     });
 
     Route::prefix('job-apply')->name('jobApply.')->controller(JobApplicationController::class)->group(function () {
@@ -192,14 +194,14 @@ Route::prefix('home')->name('home.')->group(function () {
 
     Route::prefix('company')->name('company.')->controller(HomeCompanyController::class)->group(function () {
         Route::get('/', 'list')->name('list');
-        Route::get('/{id}', 'detail')->name('detail');
+        Route::get('/{slug}', 'detail')->name('detail');
     });
 
     Route::prefix('job')->name('job.')->controller(HomeJobController::class)->group(function () {
         Route::get('/', 'list')->name('list');
         Route::post('/apply', 'apply')->name('apply');
         Route::get('/get-cv', 'getCv')->name('getCv')->middleware(['auth:api', 'role:applicant']);
-        Route::get('/{id}', 'detail')->name('detail');
+        Route::get('/{slug}', 'detail')->name('detail');
     });
 
     // ── Contact: public form submission ─────────────────

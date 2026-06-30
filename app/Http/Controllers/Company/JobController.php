@@ -37,13 +37,13 @@ class JobController extends BaseController
     /**
      * Method detail
      *
-     * @param int $id
+     * @param string $slug
      *
      * @return JsonResponse
      */
-    public function detail(int $id): JsonResponse
+    public function detail(string $slug): JsonResponse
     {
-        $data = $this->jobService->detail($id);
+        $data = $this->jobService->detail($slug);
         return $this->sendResponse($data);
     }
 
@@ -51,13 +51,13 @@ class JobController extends BaseController
      * Method update
      *
      * @param UpdateJobRequest $request
-     * @param int $id
+     * @param string $slug
      *
      * @return JsonResponse
      */
-    public function update(UpdateJobRequest $request, int $id): JsonResponse
+    public function update(UpdateJobRequest $request, string $slug): JsonResponse
     {
-        $data = $this->jobService->update($request->only($this->getFields()), $id);
+        $data = $this->jobService->update($request->only($this->getFields()), $slug);
         return $this->sendResponse($data, 'update');
     }
 
@@ -77,13 +77,13 @@ class JobController extends BaseController
     /**
      * Method delete
      *
-     * @param int $id [explicite description]
+     * @param string $slug [explicite description]
      *
      * @return JsonResponse
      */
-    public function delete(int $id): JsonResponse
+    public function delete(string $slug): JsonResponse
     {
-        $data = $this->jobService->delete($id);
+        $data = $this->jobService->delete($slug);
         return $this->sendResponse($data, 'delete');
     }
 

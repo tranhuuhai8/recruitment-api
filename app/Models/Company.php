@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasSlug;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Company extends Model
 {
     use HasFactory;
+    use HasSlug;
     use SoftDeletes;
 
     /**
@@ -25,6 +27,14 @@ class Company extends Model
         'telephone', 'website',
         'address', 'description'
     ];
+
+    /**
+     * The column the slug is derived from.
+     */
+    protected function slugSourceColumn(): string
+    {
+        return 'name';
+    }
 
     /**
      * Method user

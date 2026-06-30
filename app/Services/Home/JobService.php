@@ -40,16 +40,17 @@ class JobService extends BaseService
     /**
      * Method detail
      *
-     * @param int $id [explicite description]
+     * @param string $slug [explicite description]
      *
      * @return Job | array
      */
-    public function detail(int $id): Job|array
+    public function detail(string $slug): Job|array
     {
         try {
             $job = Job::with(['company.city', 'company.user', 'city.parent', 'jobCategory.parent'])
                 ->where('status', Job::STATUS_OPEN)
-                ->find($id);
+                ->where('slug', $slug)
+                ->first();
             if (!$job) {
                 return ResponseHelper::notFound();
             }

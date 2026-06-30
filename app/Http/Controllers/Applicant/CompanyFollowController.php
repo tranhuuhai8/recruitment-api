@@ -32,7 +32,7 @@ class CompanyFollowController extends Controller
         ]);
     }
 
-    public function toggleCompany(int $companyId): JsonResponse
+    public function toggleCompany(string $slug): JsonResponse
     {
         /** @var \App\Models\User $user */
         $user = auth('api')->user();
@@ -42,11 +42,12 @@ class CompanyFollowController extends Controller
             return $this->sendErrorResponse('Applicant not found', null, ResponseHelper::STATUS_CODE_BAD_REQUEST);
         }
 
-        $company = Company::query()->whereNull('deleted_at')->find($companyId);
+        $company = Company::query()->whereNull('deleted_at')->where('slug', $slug)->first();
         if (!$company) {
             return $this->sendErrorResponse('Company not found', null, ResponseHelper::STATUS_CODE_NOT_FOUND);
         }
 
+        $companyId = $company->id;
         $followed = DB::transaction(function () use ($applicant, $companyId) {
             $follow = CompanyFollower::withTrashed()
                 ->where('applicant_id', $applicant->id)
@@ -73,4 +74,3 @@ class CompanyFollowController extends Controller
         return $this->sendSuccessResponse(['followed' => $followed]);
     }
 }
-

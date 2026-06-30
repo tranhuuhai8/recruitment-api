@@ -18,7 +18,8 @@ class MailNewJobToFollower extends Mailable
         protected array $jobData,
         protected array $companyData,
         protected string $jobUrl,
-    ) {}
+    ) {
+    }
 
     public function envelope(): Envelope
     {
@@ -45,4 +46,3 @@ class MailNewJobToFollower extends Mailable
         return [];
     }
 }
-
