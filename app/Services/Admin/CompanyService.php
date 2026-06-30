@@ -88,6 +88,7 @@ class CompanyService extends BaseService
             'users.status',
             'users.mail_address',
             'companies.id as company_id',
+            'companies.slug',
             'companies.name',
             'companies.short_name',
             'companies.telephone',
@@ -98,19 +99,31 @@ class CompanyService extends BaseService
     /**
      * Method detail
      *
-     * @param int $id
+     * A company-role user only gets a `companies` row (and therefore a
+     * slug) once they save their profile for the first time. Until then,
+     * admins still need to be able to open that user to fill it in, so a
+     * purely-numeric "slug" is treated as a fallback user id.
+     *
+     * @param string $slug
      *
      * @return Company | User | array
      */
-    public function detail(int $id): Company|User|array
+    public function detail(string $slug): Company|User|array
     {
         try {
-            $company = Company::with('user')->where('user_id', $id)->first() ?: User::find($id);
-            if (!$company) {
-                return ResponseHelper::notFound();
+            $company = Company::with('user')->where('slug', $slug)->first();
+            if ($company) {
+                return $company;
             }
 
-            return $company;
+            if (ctype_digit($slug)) {
+                $user = User::where('role', User::ROLE_COMPANY)->find($slug);
+                if ($user) {
+                    return $user;
+                }
+            }
+
+            return ResponseHelper::notFound();
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -120,28 +133,36 @@ class CompanyService extends BaseService
      * Method update
      *
      * @param array $data
-     * @param int $id
+     * @param string $slug
      *
      * @return bool | array
      */
-    public function update(array $data, int $id): bool|array
+    public function update(array $data, string $slug): bool|array
     {
         try {
             DB::beginTransaction();
-            $user = User::find($id);
+            $company = Company::where('slug', $slug)->first();
+            $userId = $company?->user_id;
+
+            if (!$company && ctype_digit($slug)) {
+                $userId = (int) $slug;
+            }
+
+            $user = $userId ? User::where('role', User::ROLE_COMPANY)->find($userId) : null;
             if (!$user) {
                 return ResponseHelper::notFound();
             }
 
-            User::find($id)->update([
+            $user->update([
                 'status' => $data['status'],
                 'mail_address' => $data['mail_address'],
             ]);
-            Company::upsert(
-                $this->makeDataUpsert($id, $data),
-                ['user_id'],
-                ['logo', 'cover_img', 'name', 'short_name', 'city_id', 'website', 'telephone', 'address', 'description']
-            );
+
+            if ($company) {
+                $company->update($this->makeDataUpdate($data));
+            } else {
+                Company::create($this->makeDataUpdate($data) + ['user_id' => $userId]);
+            }
 
             DB::commit();
             return true;
@@ -152,17 +173,15 @@ class CompanyService extends BaseService
     }
 
     /**
-     * Method makeDataUpsert
+     * Method makeDataUpdate
      *
-     * @param int $id [explicite description]
      * @param array $data [explicite description]
      *
      * @return array
      */
-    public function makeDataUpsert(int $id, array $data): array
+    public function makeDataUpdate(array $data): array
     {
         return [
-            'user_id' => $id,
             'logo' => data_get($data, 'logo'),
             'cover_img' => data_get($data, 'cover_img'),
             'name' => data_get($data, 'name'),

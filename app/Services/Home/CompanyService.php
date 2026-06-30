@@ -37,16 +37,17 @@ class CompanyService extends BaseService
     /**
      * Method detail
      *
-     * @param int $id [explicite description]
+     * @param string $slug [explicite description]
      *
      * @return Company | array
      */
-    public function detail(int $id): Company|array
+    public function detail(string $slug): Company|array
     {
         try {
             $company = Company::with('user')
                 ->withCount('jobs')
-                ->find($id);
+                ->where('slug', $slug)
+                ->first();
             if (!$company) {
                 return ResponseHelper::notFound();
             }

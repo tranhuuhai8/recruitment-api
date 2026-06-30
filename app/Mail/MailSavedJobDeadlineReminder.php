@@ -17,7 +17,8 @@ class MailSavedJobDeadlineReminder extends Mailable
     public function __construct(
         protected array $jobData,
         protected string $jobUrl,
-    ) {}
+    ) {
+    }
 
     public function envelope(): Envelope
     {
@@ -43,4 +44,3 @@ class MailSavedJobDeadlineReminder extends Mailable
         return [];
     }
 }
-
