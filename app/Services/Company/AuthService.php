@@ -41,11 +41,13 @@ class AuthService extends BaseService
                 return ResponseHelper::notFound();
             }
             BaseAuthService::getInstance()->updateEmail($data['mail_address'], $user->id);
-            Company::upsert(
-                $this->mapDataCompany($data),
-                ['user_id'],
-                ['logo', 'cover_img', 'name', 'short_name', 'city_id', 'website', 'telephone', 'address', 'description']
-            );
+
+            $company = Company::where('user_id', $user->id)->first();
+            if ($company) {
+                $company->update($this->mapDataCompany($data));
+            } else {
+                Company::create($this->mapDataCompany($data));
+            }
 
             DB::commit();
             return true;

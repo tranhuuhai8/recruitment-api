@@ -47,13 +47,13 @@ class CompanyController extends BaseController
     /**
      * Method detail
      *
-     * @param int $id
+     * @param string $slug
      *
      * @return JsonResponse
      */
-    public function detail(int $id): JsonResponse
+    public function detail(string $slug): JsonResponse
     {
-        $data = $this->companyService->detail($id);
+        $data = $this->companyService->detail($slug);
         return $this->sendResponse($data);
     }
 
@@ -61,13 +61,13 @@ class CompanyController extends BaseController
      * Method update
      *
      * @param UpdateCompanyRequest $request
-     * @param int $id
+     * @param string $slug
      *
      * @return JsonResponse
      */
-    public function update(UpdateCompanyRequest $request, int $id): JsonResponse
+    public function update(UpdateCompanyRequest $request, string $slug): JsonResponse
     {
-        $data = $this->companyService->update($request->only($this->getFields()), $id);
+        $data = $this->companyService->update($request->only($this->getFields()), $slug);
         return $this->sendResponse($data, 'update');
     }
 

@@ -18,7 +18,8 @@ class SendNewJobToFollowers implements ShouldQueue
         protected array $companyData,
         protected array $jobData,
         protected string $jobUrl,
-    ) {}
+    ) {
+    }
 
     public function handle(): void
     {
@@ -45,4 +46,3 @@ class SendNewJobToFollowers implements ShouldQueue
         }
     }
 }
-
