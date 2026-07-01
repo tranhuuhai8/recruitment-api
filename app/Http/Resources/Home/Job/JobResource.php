@@ -19,10 +19,12 @@ class JobResource extends JsonResource
 
         return [
             'id' => $this->id,
+            'slug' => $this->slug,
             'title' => $this->title,
             'type' => $this->type,
             'company_logo' => $this->company?->logo,
             'company_name' => $this->company?->name,
+            'company_slug' => $this->company?->slug,
             'salary_min' => $this->salary_min,
             'salary_max' => $this->salary_max,
             'city_name' => $city->parent ? $city->parent->name : $city->name,

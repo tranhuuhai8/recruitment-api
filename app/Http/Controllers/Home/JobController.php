@@ -48,22 +48,22 @@ class JobController extends Controller
     /**
      * Method detail
      *
-     * @param int $id [explicite description]
+     * @param string $slug [explicite description]
      *
      * @return JsonResponse
      *
      * @OA\Get(
-     *     path="/api/home/job/{id}",
+     *     path="/api/home/job/{slug}",
      *     summary="Chi tiết công việc",
      *     tags={"Home - Job"},
-     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\Parameter(name="slug", in="path", required=true, @OA\Schema(type="string")),
      *     @OA\Response(response=200, description="Thành công"),
      *     @OA\Response(response=404, description="Không tìm thấy")
      * )
      */
-    public function detail(int $id): JsonResponse
+    public function detail(string $slug): JsonResponse
     {
-        $data = $this->jobService->detail($id);
+        $data = $this->jobService->detail($slug);
         return $this->sendResponse($data);
     }
 

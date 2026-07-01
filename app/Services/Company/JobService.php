@@ -47,14 +47,14 @@ class JobService extends BaseService
     /**
      * Method detail
      *
-     * @param int $id [explicite description]
+     * @param string $slug [explicite description]
      *
      * @return Job | array
      */
-    public function detail(int $id): Job|array
+    public function detail(string $slug): Job|array
     {
         try {
-            $job = Job::with('city')->find($id);
+            $job = Job::with('city')->where('slug', $slug)->first();
             if (!$job) {
                 return ResponseHelper::notFound();
             }
@@ -81,7 +81,7 @@ class JobService extends BaseService
                 $company = $job->company()->with('user')->first();
                 if ($company) {
                     $frontendBase = config('app.frontend_url', env('FRONTEND_URL', 'http://localhost:3024'));
-                    $jobUrl = rtrim($frontendBase, '/') . '/page-job/' . $job->id;
+                    $jobUrl = rtrim($frontendBase, '/') . '/page-job/' . $job->slug;
 
                     SendNewJobToFollowers::dispatch(
                         $company->id,
@@ -102,13 +102,13 @@ class JobService extends BaseService
      * update
      *
      * @param  array $data
-     * @param  int $id
+     * @param  string $slug
      * @return bool | array
      */
-    public function update(array $data, int $id): bool|array
+    public function update(array $data, string $slug): bool|array
     {
         try {
-            $job = Job::find($id);
+            $job = Job::where('slug', $slug)->first();
             if (!$job) {
                 return ResponseHelper::notFound();
             }
@@ -122,13 +122,13 @@ class JobService extends BaseService
     /**
      * delete
      *
-     * @param  int $id
+     * @param  string $slug
      * @return bool | array
      */
-    public function delete(int $id): bool|array
+    public function delete(string $slug): bool|array
     {
         try {
-            $job = Job::find($id);
+            $job = Job::where('slug', $slug)->first();
             if (!$job) {
                 return ResponseHelper::notFound();
             }

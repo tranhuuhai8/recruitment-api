@@ -75,4 +75,3 @@ class SendSavedJobDeadlineReminders extends Command
         return self::SUCCESS;
     }
 }
-

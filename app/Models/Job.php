@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasSlug;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Job extends Model
 {
     use HasFactory;
+    use HasSlug;
     use SoftDeletes;
 
     public const TYPE_FULLTIME = 1;
