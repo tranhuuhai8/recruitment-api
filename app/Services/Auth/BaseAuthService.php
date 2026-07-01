@@ -5,22 +5,22 @@ namespace App\Services\Auth;
 use App\Helpers\ResponseHelper;
 use App\Jobs\SendMailAuth;
 use App\Models\PasswordResetToken;
+use App\Models\RefreshToken;
 use Exception;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Cookie;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class BaseAuthService
 {
-    /**
-     * Create new service instance
-     *
-     * @return $this
-     */
+    private const REFRESH_TOKEN_DAYS = 7;
+    private const REFRESH_TOKEN_COOKIE = 'refresh_token';
+
     public static function getInstance()
     {
         return app(static::class);
@@ -29,8 +29,8 @@ class BaseAuthService
     /**
      * Method login
      *
-     * @param mixed $auth
-     * @param array $request
+     * @param mixed $auth [explicite description]
+     * @param array $request [explicite description]
      *
      * @return array
      */
@@ -38,9 +38,8 @@ class BaseAuthService
     {
         try {
             $user = User::where('mail_address', $request['mail_address'])->first();
-            $password = $request['password'];
 
-            if (!$user || !Hash::check($password, $user->password)) {
+            if (!$user || !Hash::check($request['password'], $user->password)) {
                 return ResponseHelper::sendError(
                     trans('auth.login_failed'),
                     ResponseHelper::STATUS_CODE_VALIDATE_ERROR
@@ -61,20 +60,74 @@ class BaseAuthService
                 );
             }
 
-            $token = $auth->login($user);
-            return $this->respondWithToken($token, $auth);
+            $accessToken = $auth->login($user);
+            $result = $this->respondWithToken($accessToken, $auth);
+            $result['refresh_cookie'] = $this->issueRefreshCookie($user->id);
+            return $result;
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
     }
 
     /**
+     * Method refreshToken
+     *
+     * @param ?string $rawToken [explicite description]
+     * @param mixed $auth [explicite description]
+     *
+     * @return array
+     */
+    public function refreshToken(?string $rawToken, mixed $auth): array
+    {
+        if (!$rawToken) {
+            return ResponseHelper::sendError(trans('auth.token_no_cookie'), ResponseHelper::STATUS_CODE_UNAUTHORIZED);
+        }
+
+        $record = RefreshToken::where('token', $this->hashToken($rawToken))
+            ->where('expires_at', '>', now())
+            ->first();
+
+        if (!$record) {
+            return ResponseHelper::sendError(trans('auth.token_expired'), ResponseHelper::STATUS_CODE_UNAUTHORIZED);
+        }
+
+        $user = User::find($record->user_id);
+        if (!$user || $user->status !== User::STATUS_ACTIVE) {
+            return ResponseHelper::sendError(trans('auth.account_invalid'), ResponseHelper::STATUS_CODE_UNAUTHORIZED);
+        }
+
+        $accessToken = $auth->login($user);
+        $result = $this->respondWithToken($accessToken, $auth);
+        $result['refresh_cookie'] = $this->issueRefreshCookie($user->id);
+        return $result;
+    }
+
+    /**
+     * Method logout
+     *
+     * @param ?string $rawToken [explicite description]
+     * @param mixed $auth [explicite description]
+     *
+     * @return Cookie
+     */
+    public function logout(?string $rawToken, mixed $auth): Cookie
+    {
+        $auth->logout();
+
+        if ($rawToken) {
+            RefreshToken::where('token', $this->hashToken($rawToken))->delete();
+        }
+
+        return $this->clearRefreshCookie();
+    }
+
+    /**
      * Method changePassword
      *
-     * @param mixed $auth
-     * @param array $data
+     * @param mixed $auth [explicite description]
+     * @param array $data [explicite description]
      *
-     * @return array | bool
+     * @return array
      */
     public function changePassword(mixed $auth, array $data): array|bool
     {
@@ -97,14 +150,14 @@ class BaseAuthService
      *
      * @param string $email [explicite description]
      *
-     * @return array|bool
+     * @return array
      */
     public function forgotPassword(string $email): array|bool
     {
         try {
             $user = User::where('mail_address', $email)->first();
             if (!$user) {
-                return ResponseHelper::notFound();
+                return true;
             }
 
             DB::beginTransaction();
@@ -135,7 +188,7 @@ class BaseAuthService
      * @param string $token [explicite description]
      * @param array $data [explicite description]
      *
-     * @return array | bool
+     * @return array
      */
     public function resetPassword(string $token, array $data): array|bool
     {
@@ -165,10 +218,10 @@ class BaseAuthService
     /**
      * Method register
      *
-     * @param array $data
-     * @param int $role
+     * @param array $data [explicite description]
+     * @param int $role [explicite description]
      *
-     * @return bool | array
+     * @return bool
      */
     public function register(array $data, int $role): bool|array
     {
@@ -179,11 +232,19 @@ class BaseAuthService
                 'password' => Hash::make($data['password']),
                 'role' => $role,
                 'status' => User::STATUS_UNVERIFIED,
-                'token_verify' => Hash::make($data['mail_address']),
             ]);
 
             if ($user) {
-                SendMailAuth::dispatch('register-account', $user);
+                $verifyUrl = URL::temporarySignedRoute(
+                    'api.auth.verify_email',
+                    now()->addMinutes(config('length.expire_time_verify_email')),
+                    ['id' => $user->id]
+                );
+
+                SendMailAuth::dispatch('register-account', [
+                    'mail_address' => $user->mail_address,
+                    'verify_url'   => $verifyUrl,
+                ]);
             }
 
             DB::commit();
@@ -197,18 +258,18 @@ class BaseAuthService
     /**
      * Method verifyAccount
      *
-     * @param string $token [explicite description]
+     * @param int $userId [explicite description]
      *
      * @return bool
      */
-    public function verifyAccount(string $token): bool|array
+    public function verifyAccount(int $userId): bool
     {
         try {
-            return User::query()
-                ->where('token_verify', $token)
+            return (bool) User::query()
+                ->where('id', $userId)
+                ->where('status', User::STATUS_UNVERIFIED)
                 ->update([
-                    'status' => User::STATUS_ACTIVE,
-                    'token_verify' => null,
+                    'status'            => User::STATUS_ACTIVE,
                     'email_verified_at' => now(),
                 ]);
         } catch (Exception $e) {
@@ -232,10 +293,26 @@ class BaseAuthService
     }
 
     /**
+     * Method me
+     *
+     * @param mixed $auth [explicite description]
+     *
+     * @return User
+     */
+    public function me(mixed $auth): User|null
+    {
+        $user = $auth->user();
+        if ($user && $user->role !== User::ROLE_ADMIN) {
+            $user->load($user->role === User::ROLE_COMPANY ? 'company' : 'applicant');
+        }
+        return $user;
+    }
+
+    /**
      * Method respondWithToken
      *
-     * @param string $token
-     * @param mixed $auth
+     * @param string $token [explicite description]
+     * @param mixed $auth [explicite description]
      *
      * @return array
      */
@@ -263,52 +340,55 @@ class BaseAuthService
         ];
     }
 
-    /**
-     * Method refreshToken
-     *
-     * @param mixed $auth [explicite description]
-     *
-     * @return array
-     */
-    public function refreshToken($auth): array
+    // ── Refresh token helpers ────────────────────────────────────────────────
+
+    private function hashToken(string $rawToken): string
     {
-        try {
-            $token = JWTAuth::parseToken()->refresh();
-            $user = JWTAuth::setToken($token)->toUser();
-
-            $auth->setUser($user);
-
-            return $this->respondWithToken($token, $auth);
-        } catch (JWTException $e) {
-            return ResponseHelper::sendError(trans('auth.token_failed'), ResponseHelper::STATUS_CODE_UNAUTHORIZED);
-        }
+        return hash('sha256', $rawToken);
     }
 
     /**
-     * Method me
+     * Method issueRefreshCookie
      *
-     * @param mixed $auth
+     * @param int $userId [explicite description]
      *
-     * @return User|null
+     * @return Cookie
      */
-    public function me(mixed $auth): User|null
+    private function issueRefreshCookie(int $userId): Cookie
     {
-        $user = $auth->user();
-        if ($user && $user->role !== User::ROLE_ADMIN) {
-            $user->load($user->role === User::ROLE_COMPANY ? 'company' : 'applicant');
-        }
-        return $user;
+        $rawToken = Str::random(64);
+        RefreshToken::where('user_id', $userId)->delete();
+        RefreshToken::create([
+            'user_id'    => $userId,
+            'token'      => $this->hashToken($rawToken),
+            'expires_at' => now()->addDays(self::REFRESH_TOKEN_DAYS),
+        ]);
+
+        return cookie(
+            self::REFRESH_TOKEN_COOKIE,
+            $rawToken,
+            60 * 24 * self::REFRESH_TOKEN_DAYS,
+            '/',
+            null,
+            config('app.env') === 'production',
+            true,
+            false,
+            'Lax'
+        );
     }
 
-    /**
-     * Method logout
-     *
-     * @param mixed $auth
-     *
-     * @return void
-     */
-    public function logout(mixed $auth): void
+    private function clearRefreshCookie(): Cookie
     {
-        $auth->logout();
+        return cookie(
+            self::REFRESH_TOKEN_COOKIE,
+            '',
+            -1,
+            '/',
+            null,
+            config('app.env') === 'production',
+            true,
+            false,
+            'Lax'
+        );
     }
 }

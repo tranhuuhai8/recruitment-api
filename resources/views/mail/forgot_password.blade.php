@@ -97,18 +97,24 @@
             
             <p>{{ __('auth.mail.forgot_password.text') }} Bằng cách nhấn vào nút dưới đây:</p>
             
+            <?php
+                $resetUrl = config('app.url_home') . '/auth/reset-password?' . http_build_query([
+                    'token' => $data['token'],
+                    'email' => $data['mail_address'],
+                ]);
+            ?>
             <div class="btn-container">
-                <a href="{{ config('app.url_home') }}/auth/reset-password?token=<?= $data['token'] ?>&email=<?= $data['mail_address'] ?>" class="btn">
+                <a href="{{ $resetUrl }}" class="btn">
                     Đặt Lại Mật Khẩu
                 </a>
             </div>
-            
+
             <p>Nếu bạn không thực hiện yêu cầu này, bạn có thể bỏ qua email này một cách an toàn. Mật khẩu của bạn sẽ không bị thay đổi cho đến khi bạn truy cập vào liên kết trên và cập nhật mật khẩu mới.</p>
-            
+
             <div class="note">
                 <p style="margin: 0; font-size: 14px;">Nếu nút trên không hoạt động, vui lòng copy và dán đường dẫn sau vào trình duyệt của bạn:</p>
-                <a href="{{ config('app.url_home') }}/auth/reset-password?token=<?= $data['token'] ?>&email=<?= $data['mail_address'] ?>" class="link-fallback">
-                    {{ config('app.url_home') }}/auth/reset-password?token=<?= $data['token'] ?>&email=<?= $data['mail_address'] ?>
+                <a href="{{ $resetUrl }}" class="link-fallback">
+                    {{ $resetUrl }}
                 </a>
             </div>
         </div>
