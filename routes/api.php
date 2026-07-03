@@ -41,10 +41,11 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('auth')->name('auth.')->group(function () {
     // public routes
     Route::controller(UnifiedAuthController::class)->group(function () {
-        Route::post('/login', 'login')->name('login');
-        Route::post('/refresh', 'refresh')->name('refresh');
-        Route::post('/forgot-password', 'forgotPassword')->name('forgot_password');
-        Route::post('/reset-password/{token}', 'resetPassword')->name('reset_password');
+        Route::post('/login', 'login')->name('login')->middleware('throttle:5,1');
+        Route::post('/refresh', 'refresh')->name('refresh')->middleware('throttle:15,1');
+        Route::post('/forgot-password', 'forgotPassword')->name('forgot_password')->middleware('throttle:3,1');
+        Route::post('/reset-password/{token}', 'resetPassword')->name('reset_password')->middleware('throttle:5,1');
+        Route::get('/verify-email', 'verifyEmail')->name('verify_email')->middleware('signed');
     });
 
     // protected routes
