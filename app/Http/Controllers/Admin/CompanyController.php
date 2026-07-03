@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\Company\UpdateCompanyRequest;
+use App\Http\Resources\Admin\Company\CompanyResource;
 use App\Services\Admin\CompanyService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -47,27 +48,27 @@ class CompanyController extends BaseController
     /**
      * Method detail
      *
-     * @param string $slug
+     * @param int $id
      *
      * @return JsonResponse
      */
-    public function detail(string $slug): JsonResponse
+    public function detail(int $id): JsonResponse
     {
-        $data = $this->companyService->detail($slug);
-        return $this->sendResponse($data);
+        $data = $this->companyService->detail($id);
+        return $this->sendResponse(new CompanyResource($data));
     }
 
     /**
      * Method update
      *
      * @param UpdateCompanyRequest $request
-     * @param string $slug
+     * @param int $id
      *
      * @return JsonResponse
      */
-    public function update(UpdateCompanyRequest $request, string $slug): JsonResponse
+    public function update(UpdateCompanyRequest $request, int $id): JsonResponse
     {
-        $data = $this->companyService->update($request->only($this->getFields()), $slug);
+        $data = $this->companyService->update($request->only($this->getFields()), $id);
         return $this->sendResponse($data, 'update');
     }
 

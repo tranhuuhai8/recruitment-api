@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Services\Admin;
+
+use App\Models\CompanyFollower;
+use App\Services\BaseService;
+use Illuminate\Database\Eloquent\Builder as Eloquent;
+use Illuminate\Database\Query\Builder as QueryBuilder;
+
+class CompanyFollowerService extends BaseService
+{
+    protected $orderables = [
+        'id' => 'id',
+        'created_at' => 'created_at',
+    ];
+
+    protected $filterables = [
+        'company_id' => 'filterByCompanyId',
+    ];
+
+    /**
+     * filterByCompanyId
+     *
+     * @param  Eloquent $query
+     * @param  array $filter
+     * @return Eloquent
+     */
+    public function filterByCompanyId(Eloquent $query, array $filter): Eloquent|QueryBuilder
+    {
+        if (!isset($filter['data']) || !$filter['data']) {
+            return $query;
+        }
+
+        return $query->where('company_id', +$filter['data']);
+    }
+
+    /**
+     * makeNewQuery
+     *
+     * @return Eloquent | QueryBuilder
+     */
+    public function makeNewQuery(): Eloquent|QueryBuilder
+    {
+        return CompanyFollower::query()
+            ->with(['applicant.user'])
+            ->orderByDesc('id');
+    }
+}

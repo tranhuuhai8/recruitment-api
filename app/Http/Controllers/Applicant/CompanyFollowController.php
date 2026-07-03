@@ -2,75 +2,45 @@
 
 namespace App\Http\Controllers\Applicant;
 
-use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
-use App\Models\Applicant;
-use App\Models\Company;
-use App\Models\CompanyFollower;
+use App\Http\Resources\Applicant\FollowedCompanyCollection;
+use App\Services\Applicant\CompanyFollowService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class CompanyFollowController extends Controller
 {
+    protected $companyFollowService;
+
+    /**
+     * CompanyFollowController constructor.
+     */
+    public function __construct(CompanyFollowService $companyFollowService)
+    {
+        $this->companyFollowService = $companyFollowService;
+    }
+
+    public function list(Request $request): JsonResponse
+    {
+        $data = $this->companyFollowService::getInstance()->data(...$this->getParamRequest($request));
+        return $this->sendSuccessResponse(new FollowedCompanyCollection($data));
+    }
+
     public function listCompanies(): JsonResponse
     {
-        /** @var \App\Models\User $user */
-        $user = auth('api')->user();
-        $applicant = $user?->applicant;
-        if (!$applicant) {
-            return $this->sendErrorResponse('Applicant not found', null, ResponseHelper::STATUS_CODE_BAD_REQUEST);
-        }
-
-        $companyIds = CompanyFollower::query()
-            ->where('applicant_id', $applicant->id)
-            ->whereNull('deleted_at')
-            ->orderByDesc('id')
-            ->pluck('company_id');
-
-        return $this->sendSuccessResponse([
-            'company_ids' => $companyIds,
-        ]);
+        $data = $this->companyFollowService->listCompanies();
+        return $this->sendResponse($data);
     }
 
     public function toggleCompany(string $slug): JsonResponse
     {
-        /** @var \App\Models\User $user */
-        $user = auth('api')->user();
-        /** @var Applicant|null $applicant */
-        $applicant = $user?->applicant;
-        if (!$applicant) {
-            return $this->sendErrorResponse('Applicant not found', null, ResponseHelper::STATUS_CODE_BAD_REQUEST);
-        }
+        $data = $this->companyFollowService->toggleCompany($slug);
+        return $this->sendResponse($data, 'update');
+    }
 
-        $company = Company::query()->whereNull('deleted_at')->where('slug', $slug)->first();
-        if (!$company) {
-            return $this->sendErrorResponse('Company not found', null, ResponseHelper::STATUS_CODE_NOT_FOUND);
-        }
-
-        $companyId = $company->id;
-        $followed = DB::transaction(function () use ($applicant, $companyId) {
-            $follow = CompanyFollower::withTrashed()
-                ->where('applicant_id', $applicant->id)
-                ->where('company_id', $companyId)
-                ->first();
-
-            if (!$follow) {
-                CompanyFollower::create([
-                    'applicant_id' => $applicant->id,
-                    'company_id' => $companyId,
-                ]);
-                return true;
-            }
-
-            if ($follow->trashed()) {
-                $follow->restore();
-                return true;
-            }
-
-            $follow->delete();
-            return false;
-        });
-
-        return $this->sendSuccessResponse(['followed' => $followed]);
+    public function toggleNotify(string $slug): JsonResponse
+    {
+        $data = $this->companyFollowService->toggleNotify($slug);
+        return $this->sendResponse($data, 'update');
     }
 }

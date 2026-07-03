@@ -15,6 +15,11 @@ class CompanyFollower extends Model
     protected $fillable = [
         'applicant_id',
         'company_id',
+        'notify_new_job',
+    ];
+
+    protected $casts = [
+        'notify_new_job' => 'boolean',
     ];
 
     public function applicant(): BelongsTo

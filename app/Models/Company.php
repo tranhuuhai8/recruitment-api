@@ -65,4 +65,14 @@ class Company extends Model
     {
         return $this->hasMany(Job::class, 'company_id');
     }
+
+    /**
+     * Method followers
+     *
+     * @return HasMany
+     */
+    public function followers(): HasMany
+    {
+        return $this->hasMany(CompanyFollower::class, 'company_id');
+    }
 }

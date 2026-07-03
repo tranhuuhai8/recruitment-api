@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\CompanyFollowerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JobCategoryController;
 use App\Http\Controllers\Admin\JobController as AdminJobController;
+use App\Http\Controllers\Admin\JobApplicationController as AdminJobApplicationController;
+use App\Http\Controllers\Admin\JobFavoriteController as AdminJobFavoriteController;
 use App\Http\Controllers\Admin\MailLogController;
 use App\Http\Controllers\Admin\MailTemplateController;
 use App\Http\Controllers\Applicant\ApplyController;
@@ -71,9 +73,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:api', 'role:admin'])->
     Route::prefix('company')->name('company.')->controller(CompanyController::class)->group(function () {
         Route::get('/', 'list')->name('list');
         Route::get('/get-select', 'listCompany')->name('get_select');
-        Route::get('/{slug}', 'detail')->name('detail');
-        Route::put('/{slug}', 'update')->name('update');
-        Route::delete('/{slug}', 'delete')->name('delete');
+        Route::get('/{id}', 'detail')->name('detail');
+        Route::put('/{id}', 'update')->name('update');
     });
 
     // Followed companies (by applicants)
@@ -88,9 +89,17 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:api', 'role:admin'])->
 
     Route::prefix('job')->name('job.')->controller(AdminJobController::class)->group(function () {
         Route::get('/', 'list')->name('list');
-        Route::get('/{slug}', 'detail')->name('detail');
-        Route::put('/{slug}', 'update')->name('update');
-        Route::delete('/{slug}', 'delete')->name('delete');
+        Route::get('/{id}', 'detail')->name('detail');
+        Route::put('/{id}', 'update')->name('update');
+        Route::delete('/{id}', 'delete')->name('delete');
+    });
+
+    Route::prefix('job-apply')->name('job_apply.')->controller(AdminJobApplicationController::class)->group(function () {
+        Route::get('/', 'list')->name('list');
+    });
+
+    Route::prefix('job-favorite')->name('job_favorite.')->controller(AdminJobFavoriteController::class)->group(function () {
+        Route::get('/', 'list')->name('list');
     });
 
     // ── Contact Routes ──────────────────────────────────
@@ -157,7 +166,9 @@ Route::prefix('applicant')->name('applicant.')->middleware(['auth:api', 'role:ap
     // Follows (Followed companies)
     Route::prefix('follows')->name('follows.')->controller(CompanyFollowController::class)->group(function () {
         Route::get('/companies', 'listCompanies')->name('companies.list');
+        Route::get('/companies/detail', 'list')->name('companies.detail');
         Route::post('/companies/{slug}/toggle', 'toggleCompany')->name('companies.toggle');
+        Route::post('/companies/{slug}/notify/toggle', 'toggleNotify')->name('companies.notify.toggle');
     });
 });
 

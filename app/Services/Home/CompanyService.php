@@ -29,7 +29,7 @@ class CompanyService extends BaseService
     {
         return Company::query()
             ->with('city.parent')
-            ->withCount('jobs')
+            ->withCount(['jobs', 'followers'])
             ->whereRelation('user', 'status', User::STATUS_ACTIVE)
             ->orderByDesc('jobs_count');
     }
@@ -45,7 +45,7 @@ class CompanyService extends BaseService
     {
         try {
             $company = Company::with('user')
-                ->withCount('jobs')
+                ->withCount(['jobs', 'followers'])
                 ->where('slug', $slug)
                 ->first();
             if (!$company) {

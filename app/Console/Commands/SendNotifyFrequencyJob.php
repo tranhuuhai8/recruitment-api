@@ -53,7 +53,7 @@ class SendNotifyFrequencyJob extends Command
                             ->whereBetween('created_at', [$from, $to])
                             ->get();
 
-                        if ($applications) {
+                        if ($applications->isNotEmpty()) {
                             $jobIds[] = $job->id;
 
                             SendMailNotifyJob::dispatch(
