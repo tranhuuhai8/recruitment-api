@@ -8,7 +8,8 @@ use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Auth\ResetPasswordRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use OpenApi\Annotations as OA;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use App\Services\Auth\BaseAuthService;
 use App\Helpers\ResponseHelper;
 
@@ -62,13 +63,24 @@ class UnifiedAuthController extends Controller
     public function login(LoginRequest $request): JsonResponse
     {
         try {
-            if ($request->get('token')) {
-                $this->authService->verifyAccount($request->get('token'));
-            }
             $result = $this->authService->login(auth('api'), $request->validated());
-            return $this->sendResponse($result, '', 'Đăng nhập thành công.');
+            $cookie = $result['refresh_cookie'] ?? null;
+            unset($result['refresh_cookie']);
+
+            $response = $this->sendResponse($result, '', 'Đăng nhập thành công.');
+            return $cookie ? $response->withCookie($cookie) : $response;
         } catch (Exception $e) {
             return $this->sendErrorResponse($e->getMessage(), null, ResponseHelper::STATUS_CODE_UNAUTHORIZED);
+        }
+    }
+
+    public function verifyEmail(Request $request): RedirectResponse
+    {
+        try {
+            $this->authService->verifyAccount((int) $request->query('id'));
+            return redirect(config('app.url_home') . '/tai-khoan/xac-thuc-email?status=success');
+        } catch (Exception) {
+            return redirect(config('app.url_home') . '/tai-khoan/xac-thuc-email?status=expired');
         }
     }
 
@@ -77,18 +89,21 @@ class UnifiedAuthController extends Controller
      *     path="/api/auth/refresh",
      *     operationId="unifiedRefresh",
      *     summary="Làm mới token",
-     *     description="API làm mới access token",
+     *     description="Làm mới access token từ refresh_token cookie (HttpOnly). Không cần Authorization header.",
      *     tags={"Auth"},
-     *     security={{"bearerAuth": {}}},
      *     @OA\Response(response=200, description=""),
      *     @OA\Response(response=401, description="Unauthorized")
      * )
      */
-    public function refresh(): JsonResponse
+    public function refresh(Request $request): JsonResponse
     {
         try {
-            $result = $this->authService->refreshToken(auth('api'));
-            return $this->sendResponse($result);
+            $result = $this->authService->refreshToken($request->cookie('refresh_token'), auth('api'));
+            $cookie = $result['refresh_cookie'] ?? null;
+            unset($result['refresh_cookie']);
+
+            $response = $this->sendResponse($result);
+            return $cookie ? $response->withCookie($cookie) : $response;
         } catch (Exception $e) {
             return $this->sendErrorResponse($e->getMessage(), null, ResponseHelper::STATUS_CODE_UNAUTHORIZED);
         }
@@ -144,17 +159,17 @@ class UnifiedAuthController extends Controller
      *     path="/api/auth/logout",
      *     operationId="unifiedLogout",
      *     summary="Đăng xuất",
-     *     description="API đăng xuất",
+     *     description="API đăng xuất — blacklists access token và xoá refresh_token cookie.",
      *     tags={"Auth"},
      *     security={{"bearerAuth": {}}},
      *     @OA\Response(response=200, description="Đăng xuất thành công"),
      *     @OA\Response(response=401, description="Unauthorized")
      * )
      */
-    public function logout(): JsonResponse
+    public function logout(Request $request): JsonResponse
     {
-        $this->authService->logout(auth('api'));
-        return $this->sendSuccessResponse(true, trans('auth.logout_success'));
+        $clearCookie = $this->authService->logout($request->cookie('refresh_token'), auth('api'));
+        return $this->sendSuccessResponse(true, trans('auth.logout_success'))->withCookie($clearCookie);
     }
 
     /**
@@ -184,10 +199,6 @@ class UnifiedAuthController extends Controller
      *             @OA\Property(property="message", type="string", example=""),
      *             @OA\Property(property="data", type="boolean", example=true)
      *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Email không tồn tại"
      *     )
      * )
      */

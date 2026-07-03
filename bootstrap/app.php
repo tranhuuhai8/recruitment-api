@@ -4,7 +4,9 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\Cors;
+use App\Helpers\ResponseHelper;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
@@ -48,6 +50,12 @@ return Application::configure(basePath: dirname(__DIR__))
         });
         $exceptions->render(function (AuthenticationException $e, $request) {
             return response()->json(['message' => 'Unauthenticated.'], 401);
+        });
+        $exceptions->render(function (ThrottleRequestsException $e, $request) {
+            return response()->json([
+                'message' => 'Bạn đã thao tác quá nhiều lần, vui lòng thử lại sau ít phút.',
+                'status_code' => ResponseHelper::HTTP_TOO_MANY_REQUESTS,
+            ], ResponseHelper::HTTP_TOO_MANY_REQUESTS, $e->getHeaders());
         });
         $exceptions->render(function (\Throwable $e, $request) {
             if ($request->is('api/documentation')) {

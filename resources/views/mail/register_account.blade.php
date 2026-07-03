@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xác Thực Tài Khoản - Recruitment ITH18</title>
+    <title>Xác Thực Tài Khoản - VietJob</title>
     <style>
         body {
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -93,28 +93,28 @@
         <div class="content">
             <p>Xin chào,</p>
             
-            <p>Cảm ơn bạn đã đăng ký tài khoản trên hệ thống tuyển dụng <strong>Recruitment ITH18</strong>. Địa chỉ email đăng ký của bạn là: <strong>{{ $data['mail_address'] }}</strong>.</p>
+            <p>Cảm ơn bạn đã đăng ký tài khoản trên hệ thống tuyển dụng <strong>VietJob</strong>. Địa chỉ email đăng ký của bạn là: <strong>{{ $data['mail_address'] }}</strong>.</p>
             
             <p>Để hoàn tất quá trình đăng ký, vui lòng kích hoạt tài khoản của bạn bằng cách nhấn vào nút bên dưới:</p>
             
             <div class="btn-container">
-                <a href="{{ config('app.url_home') }}/auth/login?token=<?= $data['token_verify'] ?>" class="btn">
+                <a href="{{ $data['verify_url'] }}" class="btn">
                     Xác Thực Email
                 </a>
             </div>
-            
-            <p>Lưu ý: Liên kết kích hoạt này có thời hạn. Nếu bạn không yêu cầu đăng ký tài khoản, vui lòng bỏ qua email này.</p>
-            
+
+            <p>Lưu ý: Liên kết kích hoạt này có hiệu lực trong 24 giờ. Nếu bạn không yêu cầu đăng ký tài khoản, vui lòng bỏ qua email này.</p>
+
             <div class="note">
                 <p style="margin: 0; font-size: 14px;">Nếu nút trên không hoạt động, vui lòng copy và dán đường dẫn sau vào trình duyệt của bạn:</p>
-                <a href="{{ config('app.url_home') }}/auth/login?token=<?= $data['token_verify'] ?>" class="link-fallback">
-                    {{ config('app.url_home') }}/auth/login?token=<?= $data['token_verify'] ?>
+                <a href="{{ $data['verify_url'] }}" class="link-fallback">
+                    {{ $data['verify_url'] }}
                 </a>
             </div>
         </div>
         
         <div class="footer">
-            <p>&copy; {{ date('Y') }} Recruitment ITH18. All rights reserved.</p>
+            <p>&copy; {{ date('Y') }} VietJob. All rights reserved.</p>
             <p>Đây là email tự động, vui lòng không phản hồi.</p>
         </div>
     </div>
