@@ -83,6 +83,16 @@ class Job extends Model
     }
 
     /**
+     * Method favorites
+     *
+     * @return HasMany
+     */
+    public function favorites(): HasMany
+    {
+        return $this->hasMany(JobFavorite::class);
+    }
+
+    /**
      * Method city
      *
      * @return BelongsTo

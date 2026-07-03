@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\Job\UpdateJobRequest;
 use App\Http\Resources\Admin\Job\JobCollection;
+use App\Http\Resources\Admin\Job\JobResource;
 use App\Services\Admin\JobService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -36,40 +37,40 @@ class JobController extends BaseController
     /**
      * Method detail
      *
-     * @param string $slug
+     * @param int $id
      *
      * @return JsonResponse
      */
-    public function detail(string $slug): JsonResponse
+    public function detail(int $id): JsonResponse
     {
-        $data = $this->jobService->detail($slug);
-        return $this->sendResponse($data);
+        $data = $this->jobService->detail($id);
+        return $this->sendResponse(new JobResource($data));
     }
 
     /**
      * Method update
      *
      * @param UpdateJobRequest $request
-     * @param string $slug
+     * @param int $id
      *
      * @return JsonResponse
      */
-    public function update(UpdateJobRequest $request, string $slug): JsonResponse
+    public function update(UpdateJobRequest $request, int $id): JsonResponse
     {
-        $data = $this->jobService->update($request->only($this->getFields()), $slug);
+        $data = $this->jobService->update($request->only($this->getFields()), $id);
         return $this->sendResponse($data, 'update');
     }
 
     /**
      * Method delete
      *
-     * @param string $slug [explicite description]
+     * @param int $id [explicite description]
      *
      * @return JsonResponse
      */
-    public function delete(string $slug): JsonResponse
+    public function delete(int $id): JsonResponse
     {
-        $data = $this->jobService->delete($slug);
+        $data = $this->jobService->delete($id);
         return $this->sendResponse($data, 'delete');
     }
 

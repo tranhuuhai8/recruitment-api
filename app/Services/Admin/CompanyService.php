@@ -99,28 +99,28 @@ class CompanyService extends BaseService
     /**
      * Method detail
      *
-     * A company-role user only gets a `companies` row (and therefore a
-     * slug) once they save their profile for the first time. Until then,
-     * admins still need to be able to open that user to fill it in, so a
-     * purely-numeric "slug" is treated as a fallback user id.
+     * A company-role user only gets a `companies` row once they save their
+     * profile for the first time. Until then, admins still need to be able
+     * to open that user to fill it in, so we fall back to the bare user.
      *
-     * @param string $slug
+     * @param int $id
      *
      * @return Company | User | array
      */
-    public function detail(string $slug): Company|User|array
+    public function detail(int $id): Company|User|array
     {
         try {
-            $company = Company::with('user')->where('slug', $slug)->first();
+            $company = Company::with(['user', 'city'])
+                ->withCount(['jobs', 'followers'])
+                ->where('user_id', $id)
+                ->first();
             if ($company) {
                 return $company;
             }
 
-            if (ctype_digit($slug)) {
-                $user = User::where('role', User::ROLE_COMPANY)->find($slug);
-                if ($user) {
-                    return $user;
-                }
+            $user = User::where('role', User::ROLE_COMPANY)->find($id);
+            if ($user) {
+                return $user;
             }
 
             return ResponseHelper::notFound();
@@ -133,22 +133,15 @@ class CompanyService extends BaseService
      * Method update
      *
      * @param array $data
-     * @param string $slug
+     * @param int $id
      *
      * @return bool | array
      */
-    public function update(array $data, string $slug): bool|array
+    public function update(array $data, int $id): bool|array
     {
         try {
             DB::beginTransaction();
-            $company = Company::where('slug', $slug)->first();
-            $userId = $company?->user_id;
-
-            if (!$company && ctype_digit($slug)) {
-                $userId = (int) $slug;
-            }
-
-            $user = $userId ? User::where('role', User::ROLE_COMPANY)->find($userId) : null;
+            $user = User::where('role', User::ROLE_COMPANY)->find($id);
             if (!$user) {
                 return ResponseHelper::notFound();
             }
@@ -158,10 +151,11 @@ class CompanyService extends BaseService
                 'mail_address' => $data['mail_address'],
             ]);
 
+            $company = Company::where('user_id', $id)->first();
             if ($company) {
                 $company->update($this->makeDataUpdate($data));
             } else {
-                Company::create($this->makeDataUpdate($data) + ['user_id' => $userId]);
+                Company::create($this->makeDataUpdate($data) + ['user_id' => $id]);
             }
 
             DB::commit();

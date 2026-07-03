@@ -76,20 +76,8 @@ class JobService extends BaseService
         try {
             $job = Job::create($data);
 
-            // Notify applicants who followed this company (only when job is open)
             if ($job && (int) $job->status === Job::STATUS_OPEN) {
-                $company = $job->company()->with('user')->first();
-                if ($company) {
-                    $frontendBase = config('app.frontend_url', env('FRONTEND_URL', 'http://localhost:3024'));
-                    $jobUrl = rtrim($frontendBase, '/') . '/page-job/' . $job->slug;
-
-                    SendNewJobToFollowers::dispatch(
-                        $company->id,
-                        ['id' => $company->id, 'name' => $company->name],
-                        ['id' => $job->id, 'title' => $job->title, 'end_date' => $job->end_date],
-                        $jobUrl,
-                    );
-                }
+                $this->notifyFollowers($job);
             }
 
             return $job;
@@ -113,10 +101,41 @@ class JobService extends BaseService
                 return ResponseHelper::notFound();
             }
 
-            return $job->update($data);
+            $previousStatus = (int) $job->status;
+            $result = $job->update($data);
+
+            if ($result && $previousStatus !== Job::STATUS_OPEN && (int) $job->status === Job::STATUS_OPEN) {
+                $this->notifyFollowers($job);
+            }
+
+            return $result;
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+    }
+
+    /**
+     * Notify applicants who followed this job's company that the job is now open.
+     *
+     * @param  Job $job
+     * @return void
+     */
+    private function notifyFollowers(Job $job): void
+    {
+        $company = $job->company()->with('user')->first();
+        if (!$company) {
+            return;
+        }
+
+        $frontendBase = config('app.url_home');
+        $jobUrl = rtrim($frontendBase, '/') . '/viec-lam/' . $job->slug;
+
+        SendNewJobToFollowers::dispatch(
+            $company->id,
+            ['id' => $company->id, 'name' => $company->name],
+            ['id' => $job->id, 'title' => $job->title, 'end_date' => $job->end_date],
+            $jobUrl,
+        );
     }
 
     /**
