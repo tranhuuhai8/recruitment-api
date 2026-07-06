@@ -1,30 +1,22 @@
 <?php
 
-namespace App\Services\Applicant;
+namespace App\Services\Admin;
 
 use App\Models\JobApplication;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Builder as Eloquent;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
-class ApplyService extends BaseService
+class JobApplicationService extends BaseService
 {
     protected $orderables = [
         'id' => 'id',
         'created_at' => 'created_at',
     ];
 
-    protected $searchables = [
-        'title' => 'job.title',
-        'name' => 'job.company.name',
-    ];
-
-    protected $searchableRelations = true;
-
     protected $filterables = [
         'job_id' => 'filterByJobId',
         'status' => 'filterByStatus',
-        'created_at' => 'filterByDate',
     ];
 
     /**
@@ -60,38 +52,13 @@ class ApplyService extends BaseService
     }
 
     /**
-     * Method filterByDate
-     *
-     * @param Eloquent $query [explicite description]
-     * @param array $filter [explicite description]
-     *
-     * @return Eloquent
-     */
-    public function filterByDate(Eloquent $query, array $filter): Eloquent|QueryBuilder
-    {
-        if (!isset($filter['data']) || !$filter['data']) {
-            return $query;
-        }
-
-        return $query->whereDate('created_at', $filter['data']);
-    }
-
-    /**
      * makeNewQuery
      *
      * @return Eloquent | QueryBuilder
      */
     public function makeNewQuery(): Eloquent|QueryBuilder
     {
-        $applicantId = auth('api')->user()?->applicant?->id;
-
-        if (!$applicantId) {
-            return JobApplication::query()->whereRaw('1 = 0');
-        }
-
         return JobApplication::query()
-            ->with(['job.company', 'applicationFile'])
-            ->whereRelation('job', 'deleted_at', null)
-            ->where('applicant_id', $applicantId);
+            ->with(['applicant.user', 'applicationFile', 'job']);
     }
 }

@@ -25,6 +25,7 @@ class CompanyResource extends JsonResource
             'logo' => $this->logo,
             'city_name' => $this->city->name . $cityParent,
             'jobs_count' => $this->jobs_count,
+            'followers_count' => $this->followers_count,
         ];
     }
 }
