@@ -59,8 +59,8 @@ class SendSavedJobDeadlineReminders extends Command
                         continue;
                     }
 
-                    $frontendBase = config('app.frontend_url', env('FRONTEND_URL', 'http://localhost:3024'));
-                    $jobUrl = rtrim($frontendBase, '/') . '/page-job/' . $job->id;
+                    $frontendBase = config('app.url_home');
+                    $jobUrl = rtrim($frontendBase, '/') . '/viec-lam/' . $job->id;
 
                     Mail::to($user->mail_address)->queue(new MailSavedJobDeadlineReminder(
                         ['id' => $job->id, 'title' => $job->title, 'end_date' => $job->end_date],

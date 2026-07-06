@@ -23,26 +23,23 @@ class SendNewJobToFollowers implements ShouldQueue
 
     public function handle(): void
     {
-        $emails = CompanyFollower::query()
+        CompanyFollower::query()
             ->where('company_id', $this->companyId)
-            ->whereNull('deleted_at')
+            ->where('notify_new_job', true)
             ->whereHas('applicant.user', function ($q) {
-                $q->whereNull('deleted_at')
-                    ->where('status', User::STATUS_ACTIVE);
+                $q->where('status', User::STATUS_ACTIVE);
             })
-            ->with(['applicant.user:id,mail_address,status,deleted_at'])
-            ->get()
-            ->pluck('applicant.user.mail_address')
-            ->filter()
-            ->unique()
-            ->values();
+            ->with(['applicant.user:id,mail_address,status'])
+            ->chunkById(200, function ($followers) {
+                $emails = $followers->pluck('applicant.user.mail_address')->filter();
 
-        foreach ($emails as $email) {
-            Mail::to($email)->queue(new MailNewJobToFollower(
-                $this->jobData,
-                $this->companyData,
-                $this->jobUrl,
-            ));
-        }
+                foreach ($emails as $email) {
+                    Mail::to($email)->queue(new MailNewJobToFollower(
+                        $this->jobData,
+                        $this->companyData,
+                        $this->jobUrl,
+                    ));
+                }
+            });
     }
 }

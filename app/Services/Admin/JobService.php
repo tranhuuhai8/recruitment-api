@@ -44,14 +44,14 @@ class JobService extends BaseService
     /**
      * Method detail
      *
-     * @param string $slug [explicite description]
+     * @param int $id [explicite description]
      *
      * @return Job | array
      */
-    public function detail(string $slug): Job|array
+    public function detail(int $id): Job|array
     {
         try {
-            $job = Job::with(['company', 'city.parent', 'jobCategory.parent'])->where('slug', $slug)->first();
+            $job = Job::with(['company', 'city.parent', 'jobCategory.parent'])->find($id);
             if (!$job) {
                 return ResponseHelper::notFound();
             }
@@ -66,13 +66,13 @@ class JobService extends BaseService
      * update
      *
      * @param  array $data
-     * @param  string $slug
+     * @param  int $id
      * @return bool | array
      */
-    public function update(array $data, string $slug): bool|array
+    public function update(array $data, int $id): bool|array
     {
         try {
-            $job = Job::where('slug', $slug)->first();
+            $job = Job::find($id);
             if (!$job) {
                 return ResponseHelper::notFound();
             }
@@ -86,13 +86,13 @@ class JobService extends BaseService
     /**
      * delete
      *
-     * @param  string $slug
+     * @param  int $id
      * @return bool | array
      */
-    public function delete(string $slug): bool|array
+    public function delete(int $id): bool|array
     {
         try {
-            $job = Job::where('slug', $slug)->first();
+            $job = Job::find($id);
             if (!$job) {
                 return ResponseHelper::notFound();
             }
