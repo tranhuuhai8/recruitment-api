@@ -39,6 +39,7 @@ class FavoriteService
             ->with('job:id,slug')
             ->where('applicant_id', $applicant->id)
             ->whereNull('deleted_at')
+            ->whereRelation('job', 'deleted_at', null)
             ->orderByDesc('id')
             ->get();
 
