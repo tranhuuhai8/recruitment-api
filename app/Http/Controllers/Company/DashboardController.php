@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Company;
 
-use App\Services\Admin\DashboardService;
+use App\Services\Company\DashboardService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

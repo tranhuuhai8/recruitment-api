@@ -106,8 +106,8 @@ class JobService extends BaseService
 
 
             if ($applicantId) {
-                $data['application_file_id'] = $this->createApplicationFile($data);
                 $data['order'] = $totalFileUploaded + 1;
+                $data['application_file_id'] = $this->createApplicationFile($data);
                 unset(
                     $data['file_name'],
                     $data['file_path'],
