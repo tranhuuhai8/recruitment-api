@@ -35,7 +35,7 @@ class AccountSeeder extends Seeder
             ],
         ];
 
-        User::truncate();
+        // User::truncate();
         User::insert($dataInsert);
     }
 }

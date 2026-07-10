@@ -15,7 +15,19 @@ class DatabaseSeeder extends Seeder
             AccountSeeder::class,
             CitySeeder::class,
             JobCategorySeeder::class,
+            UserSeeder::class,
+            CompanySeeder::class,
+            ApplicantSeeder::class,
+            JobSeeder::class,
+            CompanyImageSeeder::class,
+            ApplicationFileSeeder::class,
+            JobApplicationSeeder::class,
+            JobFavoriteSeeder::class,
+            CompanyFollowerSeeder::class,
+            ContactSeeder::class,
+            MailTemplateSeeder::class,
+            MailLogSeeder::class,
         ]);
-        
+
     }
 }

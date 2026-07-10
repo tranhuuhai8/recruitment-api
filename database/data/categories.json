@@ -1,0 +1,410 @@
+[
+  {
+    "id": 1,
+    "name": "Công nghệ thông tin",
+    "parent_id": null,
+    "description": "Lĩnh vực về phần mềm, phần cứng, mạng, dữ liệu và hệ thống công nghệ."
+  },
+  {
+    "id": 2,
+    "name": "Front End",
+    "parent_id": 1,
+    "description": "Phát triển giao diện người dùng cho website hoặc ứng dụng."
+  },
+  {
+    "id": 3,
+    "name": "Back End",
+    "parent_id": 1,
+    "description": "Xử lý dữ liệu, logic phía máy chủ và quản lý cơ sở dữ liệu."
+  },
+  {
+    "id": 4,
+    "name": "Full Stack",
+    "parent_id": 1,
+    "description": "Lập trình cả phía client và server, bao gồm front-end và back-end."
+  },
+  {
+    "id": 5,
+    "name": "Tester / QA",
+    "parent_id": 1,
+    "description": "Kiểm thử, đánh giá và đảm bảo chất lượng phần mềm."
+  },
+  {
+    "id": 6,
+    "name": "DevOps",
+    "parent_id": 1,
+    "description": "Tự động hóa, triển khai và quản lý hạ tầng phần mềm."
+  },
+  {
+    "id": 7,
+    "name": "UI/UX Design",
+    "parent_id": 1,
+    "description": "Thiết kế trải nghiệm và giao diện người dùng hiệu quả."
+  },
+  {
+    "id": 8,
+    "name": "PM / Quản lý dự án",
+    "parent_id": 1,
+    "description": "Lập kế hoạch, theo dõi và điều phối các dự án công nghệ."
+  },
+  {
+    "id": 9,
+    "name": "Khoa học dữ liệu / AI",
+    "parent_id": 1,
+    "description": "Phân tích dữ liệu lớn và phát triển các ứng dụng trí tuệ nhân tạo."
+  },
+  {
+    "id": 10,
+    "name": "Kế toán / Kiểm toán",
+    "parent_id": null,
+    "description": "Ghi chép và kiểm tra tài chính, đảm bảo minh bạch tài chính doanh nghiệp."
+  },
+  {
+    "id": 11,
+    "name": "Kế toán tổng hợp",
+    "parent_id": 10,
+    "description": "Tổng hợp, theo dõi và lập báo cáo tài chính định kỳ."
+  },
+  {
+    "id": 12,
+    "name": "Kế toán thuế",
+    "parent_id": 10,
+    "description": "Thực hiện kê khai và quyết toán thuế đúng quy định."
+  },
+  {
+    "id": 13,
+    "name": "Kiểm toán viên",
+    "parent_id": 10,
+    "description": "Kiểm tra, đánh giá độ tin cậy của thông tin tài chính."
+  },
+  {
+    "id": 14,
+    "name": "Kế toán nội bộ",
+    "parent_id": 10,
+    "description": "Quản lý các giao dịch và chi phí vận hành nội bộ."
+  },
+  {
+    "id": 15,
+    "name": "Marketing / Truyền thông",
+    "parent_id": null,
+    "description": "Chiến lược quảng bá thương hiệu và sản phẩm tới khách hàng."
+  },
+  {
+    "id": 16,
+    "name": "Digital Marketing",
+    "parent_id": 15,
+    "description": "Tiếp thị qua nền tảng số như Facebook, Google, email..."
+  },
+  {
+    "id": 17,
+    "name": "SEO / SEM",
+    "parent_id": 15,
+    "description": "Tối ưu hóa công cụ tìm kiếm và quảng cáo từ khóa."
+  },
+  {
+    "id": 18,
+    "name": "Content Marketing",
+    "parent_id": 15,
+    "description": "Sáng tạo nội dung để thu hút và giữ chân khách hàng."
+  },
+  {
+    "id": 19,
+    "name": "PR / Truyền thông",
+    "parent_id": 15,
+    "description": "Xây dựng và quản lý hình ảnh doanh nghiệp với công chúng."
+  },
+  {
+    "id": 20,
+    "name": "Marketing Automation",
+    "parent_id": 15,
+    "description": "Tự động hóa các hoạt động tiếp thị và chăm sóc khách hàng."
+  },
+  {
+    "id": 21,
+    "name": "Hành chính / Văn phòng",
+    "parent_id": null,
+    "description": "Hỗ trợ vận hành doanh nghiệp qua các hoạt động văn phòng."
+  },
+  {
+    "id": 22,
+    "name": "Trợ lý / Thư ký",
+    "parent_id": 21,
+    "description": "Hỗ trợ cấp trên trong công việc hành chính và giao tiếp."
+  },
+  {
+    "id": 23,
+    "name": "Lễ tân",
+    "parent_id": 21,
+    "description": "Tiếp đón khách, xử lý cuộc gọi và công việc tiền sảnh."
+  },
+  {
+    "id": 24,
+    "name": "Nhân viên văn phòng",
+    "parent_id": 21,
+    "description": "Thực hiện các công việc hành chính, giấy tờ và hỗ trợ phòng ban."
+  },
+  {
+    "id": 25,
+    "name": "Nhân sự",
+    "parent_id": null,
+    "description": "Tuyển dụng, đào tạo và quản lý nhân sự trong doanh nghiệp."
+  },
+  {
+    "id": 26,
+    "name": "Tuyển dụng",
+    "parent_id": 25,
+    "description": "Tìm kiếm, phỏng vấn và tuyển chọn nhân sự phù hợp."
+  },
+  {
+    "id": 27,
+    "name": "Đào tạo nội bộ",
+    "parent_id": 25,
+    "description": "Tổ chức và triển khai các chương trình huấn luyện."
+  },
+  {
+    "id": 28,
+    "name": "C&B (Lương thưởng & Phúc lợi)",
+    "parent_id": 25,
+    "description": "Quản lý chính sách lương, thưởng, và chế độ phúc lợi."
+  },
+  {
+    "id": 29,
+    "name": "HRBP",
+    "parent_id": 25,
+    "description": "Đồng hành chiến lược giữa bộ phận nhân sự và các phòng ban."
+  },
+  {
+    "id": 30,
+    "name": "Bán hàng",
+    "parent_id": null,
+    "description": "Tiếp cận khách hàng và thúc đẩy doanh số bán sản phẩm."
+  },
+  {
+    "id": 31,
+    "name": "Tư vấn bán hàng",
+    "parent_id": 30,
+    "description": "Tư vấn sản phẩm và hỗ trợ khách hàng ra quyết định mua hàng."
+  },
+  {
+    "id": 32,
+    "name": "Bán hàng kỹ thuật",
+    "parent_id": 30,
+    "description": "Bán sản phẩm kỹ thuật, máy móc hoặc phần mềm chuyên biệt."
+  },
+  {
+    "id": 33,
+    "name": "Bán hàng online",
+    "parent_id": 30,
+    "description": "Thực hiện giao dịch và chăm sóc khách hàng qua nền tảng số."
+  },
+  {
+    "id": 34,
+    "name": "Sales Admin",
+    "parent_id": 30,
+    "description": "Hỗ trợ quy trình bán hàng, soạn báo giá và chăm sóc đơn hàng."
+  },
+  {
+    "id": 35,
+    "name": "Kinh doanh",
+    "parent_id": null,
+    "description": "Chiến lược phát triển và mở rộng hoạt động thương mại."
+  },
+  {
+    "id": 36,
+    "name": "Phát triển thị trường",
+    "parent_id": 35,
+    "description": "Mở rộng thị trường và xây dựng mạng lưới khách hàng mới."
+  },
+  {
+    "id": 37,
+    "name": "Quản lý kinh doanh",
+    "parent_id": 35,
+    "description": "Điều phối và quản trị hoạt động kinh doanh của doanh nghiệp."
+  },
+  {
+    "id": 38,
+    "name": "Chăm sóc khách hàng",
+    "parent_id": 35,
+    "description": "Tiếp nhận phản hồi và hỗ trợ khách hàng sau bán."
+  },
+  {
+    "id": 39,
+    "name": "Giáo dục / Đào tạo",
+    "parent_id": null,
+    "description": "Truyền đạt kiến thức và kỹ năng cho học sinh, sinh viên."
+  },
+  {
+    "id": 40,
+    "name": "Giáo viên mầm non",
+    "parent_id": 39,
+    "description": "Chăm sóc và giáo dục trẻ em giai đoạn đầu đời."
+  },
+  {
+    "id": 41,
+    "name": "Giáo viên phổ thông",
+    "parent_id": 39,
+    "description": "Giảng dạy kiến thức cho học sinh từ cấp 1 đến cấp 3."
+  },
+  {
+    "id": 42,
+    "name": "Giảng viên đại học",
+    "parent_id": 39,
+    "description": "Giảng dạy và nghiên cứu tại các cơ sở giáo dục đại học."
+  },
+  {
+    "id": 43,
+    "name": "Trợ giảng",
+    "parent_id": 39,
+    "description": "Hỗ trợ giảng viên trong việc giảng dạy và soạn bài."
+  },
+  {
+    "id": 44,
+    "name": "Y tế / Dược",
+    "parent_id": null,
+    "description": "Chăm sóc sức khỏe và phân phối thuốc, thiết bị y tế."
+  },
+  {
+    "id": 45,
+    "name": "Bác sĩ",
+    "parent_id": 44,
+    "description": "Khám và điều trị bệnh cho bệnh nhân."
+  },
+  {
+    "id": 46,
+    "name": "Dược sĩ",
+    "parent_id": 44,
+    "description": "Bán và tư vấn sử dụng thuốc an toàn, hiệu quả."
+  },
+  {
+    "id": 47,
+    "name": "Điều dưỡng",
+    "parent_id": 44,
+    "description": "Chăm sóc và hỗ trợ bệnh nhân trong quá trình điều trị."
+  },
+  {
+    "id": 48,
+    "name": "Trình dược viên",
+    "parent_id": 44,
+    "description": "Giới thiệu sản phẩm thuốc tới nhà thuốc, bệnh viện."
+  },
+  {
+    "id": 49,
+    "name": "Xây dựng",
+    "parent_id": null,
+    "description": "Thiết kế, giám sát và thi công các công trình xây dựng."
+  },
+  {
+    "id": 50,
+    "name": "Kỹ sư xây dựng",
+    "parent_id": 49,
+    "description": "Thiết kế kết cấu và giám sát thi công xây dựng."
+  },
+  {
+    "id": 51,
+    "name": "Giám sát công trình",
+    "parent_id": 49,
+    "description": "Đảm bảo công trình được thi công đúng thiết kế và tiến độ."
+  },
+  {
+    "id": 52,
+    "name": "Thiết kế kiến trúc",
+    "parent_id": 49,
+    "description": "Sáng tạo bản vẽ kiến trúc và không gian sống."
+  },
+  {
+    "id": 53,
+    "name": "Ngân hàng / Tài chính",
+    "parent_id": null,
+    "description": "Cung cấp dịch vụ tài chính, tín dụng và đầu tư."
+  },
+  {
+    "id": 54,
+    "name": "Giao dịch viên",
+    "parent_id": 53,
+    "description": "Thực hiện giao dịch tài chính tại quầy ngân hàng."
+  },
+  {
+    "id": 55,
+    "name": "Tư vấn tài chính",
+    "parent_id": 53,
+    "description": "Hỗ trợ khách hàng quản lý tài sản và đầu tư."
+  },
+  {
+    "id": 56,
+    "name": "Chuyên viên tín dụng",
+    "parent_id": 53,
+    "description": "Thẩm định và xử lý hồ sơ vay vốn."
+  },
+  {
+    "id": 57,
+    "name": "Kiểm soát nội bộ",
+    "parent_id": 53,
+    "description": "Đảm bảo hoạt động tài chính đúng quy trình và pháp luật."
+  },
+  {
+    "id": 58,
+    "name": "Luật / Pháp lý",
+    "parent_id": null,
+    "description": "Tư vấn và thực hiện các hoạt động pháp luật cho cá nhân và tổ chức."
+  },
+  {
+    "id": 59,
+    "name": "Luật sư",
+    "parent_id": 58,
+    "description": "Bảo vệ quyền lợi pháp lý cho thân chủ trước pháp luật."
+  },
+  {
+    "id": 60,
+    "name": "Pháp chế doanh nghiệp",
+    "parent_id": 58,
+    "description": "Hỗ trợ doanh nghiệp đảm bảo tuân thủ pháp luật."
+  },
+  {
+    "id": 61,
+    "name": "Logistics / Chuỗi cung ứng",
+    "parent_id": null,
+    "description": "Quản lý dòng chảy hàng hóa từ sản xuất đến tiêu dùng."
+  },
+  {
+    "id": 62,
+    "name": "Quản lý kho",
+    "parent_id": 61,
+    "description": "Giám sát tồn kho, nhập xuất và bảo quản hàng hóa."
+  },
+  {
+    "id": 63,
+    "name": "Xuất nhập khẩu",
+    "parent_id": 61,
+    "description": "Thực hiện thủ tục giao nhận và hải quan."
+  },
+  {
+    "id": 64,
+    "name": "Vận tải",
+    "parent_id": 61,
+    "description": "Điều phối phương tiện vận chuyển hàng hóa hoặc hành khách."
+  },
+  {
+    "id": 65,
+    "name": "Bất động sản",
+    "parent_id": null,
+    "description": "Mua bán, cho thuê và phát triển dự án nhà đất."
+  },
+  {
+    "id": 66,
+    "name": "Môi giới BĐS",
+    "parent_id": 65,
+    "description": "Tư vấn, chào bán các sản phẩm bất động sản."
+  },
+  {
+    "id": 67,
+    "name": "Quản lý tòa nhà",
+    "parent_id": 65,
+    "description": "Vận hành và bảo trì hệ thống trong các chung cư, văn phòng."
+  },
+  {
+    "id": 68,
+    "name": "Phát triển dự án",
+    "parent_id": 65,
+    "description": "Lập kế hoạch và triển khai các dự án bất động sản mới."
+  }
+]
