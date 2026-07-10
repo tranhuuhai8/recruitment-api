@@ -2,13 +2,12 @@
 
 namespace App\Services\Admin;
 
-use App\Models\Job;
-use App\Models\JobFavorite;
+use App\Models\ApplicationFile;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Builder as Eloquent;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
-class JobFavoriteService extends BaseService
+class ApplicationFileService extends BaseService
 {
     protected $orderables = [
         'id' => 'id',
@@ -16,25 +15,8 @@ class JobFavoriteService extends BaseService
     ];
 
     protected $filterables = [
-        'job_id' => 'filterByJobId',
         'applicant_id' => 'filterByApplicantId',
     ];
-
-    /**
-     * filterByJobId
-     *
-     * @param  Eloquent $query
-     * @param  array $filter
-     * @return Eloquent
-     */
-    public function filterByJobId(Eloquent $query, array $filter): Eloquent|QueryBuilder
-    {
-        if (!isset($filter['data']) || !$filter['data']) {
-            return $query;
-        }
-
-        return $query->where('job_id', +$filter['data']);
-    }
 
     /**
      * filterByApplicantId
@@ -59,12 +41,6 @@ class JobFavoriteService extends BaseService
      */
     public function makeNewQuery(): Eloquent|QueryBuilder
     {
-        return JobFavorite::query()
-            ->with(['applicant.user', 'job.company'])
-            ->whereHas('job', function ($query) {
-                $query->whereNull('deleted_at')
-                    ->where('status', Job::STATUS_OPEN);
-            })
-            ->orderByDesc('id');
+        return ApplicationFile::query()->orderBy('order');
     }
 }

@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\JobCategoryController;
 use App\Http\Controllers\Admin\JobController as AdminJobController;
 use App\Http\Controllers\Admin\JobApplicationController as AdminJobApplicationController;
 use App\Http\Controllers\Admin\JobFavoriteController as AdminJobFavoriteController;
+use App\Http\Controllers\Admin\ApplicationFileController as AdminApplicationFileController;
 use App\Http\Controllers\Admin\MailLogController;
 use App\Http\Controllers\Admin\MailTemplateController;
 use App\Http\Controllers\Applicant\ApplyController;
@@ -101,6 +102,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:api', 'role:admin'])->
     });
 
     Route::prefix('job-favorite')->name('job_favorite.')->controller(AdminJobFavoriteController::class)->group(function () {
+        Route::get('/', 'list')->name('list');
+    });
+
+    Route::prefix('application-file')->name('application_file.')->controller(AdminApplicationFileController::class)->group(function () {
         Route::get('/', 'list')->name('list');
     });
 
