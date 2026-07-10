@@ -164,6 +164,7 @@ Route::prefix('applicant')->name('applicant.')->middleware(['auth:api', 'role:ap
     // Favorites (Saved jobs)
     Route::prefix('favorites')->name('favorites.')->controller(FavoriteController::class)->group(function () {
         Route::get('/jobs', 'listJobs')->name('jobs.list');
+        Route::get('/jobs/detail', 'list')->name('jobs.detail');
         Route::post('/jobs/{slug}/toggle', 'toggleJob')->name('jobs.toggle');
     });
 

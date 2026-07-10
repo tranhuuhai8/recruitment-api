@@ -69,8 +69,10 @@ class ApplicantService extends BaseService
      */
     public function makeNewQuery(): Eloquent|QueryBuilder
     {
-        return User::leftJoin('applicants', 'users.id', 'applicants.user_id')
+        return User::query()
+            ->leftJoin('applicants', 'users.id', 'applicants.user_id')
             ->where('users.role', User::ROLE_APPLICANT)
+            ->orderBy('users.status')
             ->selectRaw($this->getSelectRaw());
     }
 
