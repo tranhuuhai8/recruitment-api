@@ -6,11 +6,30 @@ use App\Helpers\ResponseHelper;
 use App\Models\Applicant;
 use App\Models\Job;
 use App\Models\JobFavorite;
+use App\Services\BaseService;
+use Illuminate\Database\Eloquent\Builder as Eloquent;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
 
-class FavoriteService
+class FavoriteService extends BaseService
 {
+    protected $orderables = [
+        'id' => 'id',
+        'created_at' => 'created_at',
+    ];
+
+    protected $searchables = [
+        'title' => 'job.title',
+        'name' => 'job.company.name',
+    ];
+
+    protected $searchableRelations = true;
+
+    protected $filterables = [
+        'is_applied' => 'filterByApplied',
+    ];
+
     /**
      * Method getCurrentApplicant
      *
@@ -21,6 +40,54 @@ class FavoriteService
         $user = auth('api')->user();
 
         return $user?->applicant;
+    }
+
+    /**
+     * filterByApplied
+     *
+     * @param  Eloquent $query
+     * @param  array $filter
+     * @return Eloquent|QueryBuilder
+     */
+    public function filterByApplied(Eloquent $query, array $filter): Eloquent|QueryBuilder
+    {
+        if (!isset($filter['data']) || !$filter['data']) {
+            return $query;
+        }
+
+        $applicant = $this->getCurrentApplicant();
+        $method = (int) $filter['data'] === 1 ? 'whereHas' : 'whereDoesntHave';
+
+        return $query->{$method}('job.applications', function ($q) use ($applicant) {
+            $q->where('applicant_id', $applicant->id);
+        });
+    }
+
+    /**
+     * makeNewQuery
+     *
+     * @return Eloquent|QueryBuilder
+     */
+    public function makeNewQuery(): Eloquent|QueryBuilder
+    {
+        $applicant = $this->getCurrentApplicant();
+        if (!$applicant) {
+            return JobFavorite::query()->whereRaw('1 = 0');
+        }
+
+        return JobFavorite::query()
+            ->with([
+                'job.company',
+                'job.applications' => function ($query) use ($applicant) {
+                    $query->where('applicant_id', $applicant->id);
+                },
+            ])
+            ->whereHas('job', function ($query) {
+                $query->whereNull('deleted_at')
+                    ->where('status', Job::STATUS_OPEN);
+            })
+            ->where('applicant_id', $applicant->id)
+            ->orderByDesc('id');
     }
 
     /**

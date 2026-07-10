@@ -57,6 +57,7 @@ class CompanyService extends BaseService
         return User::query()
             ->leftJoin('companies', 'users.id', 'companies.user_id')
             ->where('users.role', User::ROLE_COMPANY)
+            ->orderBy('users.status')
             ->selectRaw($this->getSelectRaw());
     }
 
