@@ -15,10 +15,12 @@ use App\Http\Controllers\Admin\MailTemplateController;
 use App\Http\Controllers\Applicant\ApplyController;
 use App\Http\Controllers\Applicant\AuthController as ApplicantAuthController;
 use App\Http\Controllers\Applicant\CompanyFollowController;
+use App\Http\Controllers\Applicant\DashboardController as ApplicantDashboardController;
 use App\Http\Controllers\Applicant\FavoriteController;
 use App\Http\Controllers\Applicant\FileUploadController;
 use App\Http\Controllers\Base\UploadController;
 use App\Http\Controllers\Company\AuthController as CompanyAuthController;
+use App\Http\Controllers\Company\DashboardController as CompanyDashboardController;
 use App\Http\Controllers\Company\JobApplicationController;
 use App\Http\Controllers\Company\JobController;
 use App\Http\Controllers\Home\CityController as HomeCityController;
@@ -148,6 +150,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:api', 'role:admin'])->
 Route::prefix('applicant')->name('applicant.')->middleware(['auth:api', 'role:applicant'])->group(function () {
     Route::put('/update', [ApplicantAuthController::class, 'update'])->name('update');
 
+    Route::get('/dashboard', [ApplicantDashboardController::class, 'list'])->name('dashboard.list');
+
     Route::prefix('file-upload')->name('file-upload.')->controller(FileUploadController::class)->group(function () {
         Route::get('/', 'list')->name('list');
         Route::put('/upsert', 'upsert')->name('upsert');
@@ -175,6 +179,8 @@ Route::prefix('applicant')->name('applicant.')->middleware(['auth:api', 'role:ap
 // Company Routes
 Route::prefix('company')->name('company.')->middleware(['auth:api', 'role:company'])->group(function () {
     Route::put('/update', [CompanyAuthController::class, 'update'])->name('update');
+
+    Route::get('/dashboard', [CompanyDashboardController::class, 'list'])->name('dashboard.list');
 
     Route::prefix('job')->name('job.')->controller(JobController::class)->group(function () {
         Route::get('/', 'list')->name('list');
