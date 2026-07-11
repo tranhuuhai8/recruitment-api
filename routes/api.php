@@ -87,7 +87,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:api', 'role:admin'])->
         Route::get('/', 'list')->name('list');
         Route::get('/{id}', 'detail')->name('detail');
         Route::put('/{id}', 'update')->name('update');
-        Route::delete('/{id}', 'delete')->name('delete');
     });
 
     Route::prefix('job')->name('job.')->controller(AdminJobController::class)->group(function () {
