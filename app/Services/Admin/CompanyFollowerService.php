@@ -3,6 +3,7 @@
 namespace App\Services\Admin;
 
 use App\Models\CompanyFollower;
+use App\Models\User;
 use App\Services\BaseService;
 use Illuminate\Database\Eloquent\Builder as Eloquent;
 use Illuminate\Database\Query\Builder as QueryBuilder;
@@ -60,6 +61,10 @@ class CompanyFollowerService extends BaseService
     {
         return CompanyFollower::query()
             ->with(['applicant.user', 'company'])
+            ->whereHas('applicant.user', function ($query) {
+                $query->where('status', User::STATUS_ACTIVE)
+                    ->whereNull('deleted_at');
+            })
             ->orderByDesc('id');
     }
 }
