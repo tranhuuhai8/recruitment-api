@@ -21,6 +21,9 @@ class CompanyFollowerResource extends JsonResource
             'full_name' => $this->applicant?->name,
             'email' => $this->applicant?->user?->mail_address,
             'telephone' => $this->applicant?->telephone,
+            'company_id' => $this->company_id,
+            'company_name' => $this->company?->name,
+            'company_logo' => $this->company?->logo,
             'notify_new_job' => (bool) $this->notify_new_job,
             'created_at' => DateHelper::parseDateBe($this->created_at),
         ];

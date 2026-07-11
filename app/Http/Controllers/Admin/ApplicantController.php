@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\Applicant\UpdateApplicantRequest;
 use App\Http\Resources\Admin\Applicant\ApplicantCollection;
+use App\Http\Resources\Admin\Applicant\ApplicantResource;
 use App\Services\Admin\ApplicantService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -43,7 +44,7 @@ class ApplicantController extends BaseController
     public function detail(int $id): JsonResponse
     {
         $data = $this->applicantService->detail($id);
-        return $this->sendResponse($data);
+        return $this->sendResponse(new ApplicantResource($data));
     }
 
     /**

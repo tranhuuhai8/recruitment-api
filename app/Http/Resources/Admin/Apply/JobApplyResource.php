@@ -19,6 +19,8 @@ class JobApplyResource extends JsonResource
             'id' => $this->id,
             'job_id' => $this->job_id,
             'job_title' => $this->job?->title,
+            'job_slug' => $this->job?->slug,
+            'company_name' => $this->job?->company?->name,
             'applicant_id' => $this->applicant_id,
             'full_name' => $this->applicant?->name ?? $this->guest_name,
             'email' => $this->applicant?->user?->mail_address ?? $this->guest_email,

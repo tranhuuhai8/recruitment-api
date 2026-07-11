@@ -16,6 +16,7 @@ class JobApplicationService extends BaseService
 
     protected $filterables = [
         'job_id' => 'filterByJobId',
+        'applicant_id' => 'filterByApplicantId',
         'status' => 'filterByStatus',
     ];
 
@@ -33,6 +34,22 @@ class JobApplicationService extends BaseService
         }
 
         return $query->where('job_id', +$filter['data']);
+    }
+
+    /**
+     * filterByApplicantId
+     *
+     * @param  Eloquent $query
+     * @param  array $filter
+     * @return Eloquent
+     */
+    public function filterByApplicantId(Eloquent $query, array $filter): Eloquent|QueryBuilder
+    {
+        if (!isset($filter['data']) || !$filter['data']) {
+            return $query;
+        }
+
+        return $query->where('applicant_id', +$filter['data']);
     }
 
     /**
@@ -59,6 +76,7 @@ class JobApplicationService extends BaseService
     public function makeNewQuery(): Eloquent|QueryBuilder
     {
         return JobApplication::query()
-            ->with(['applicant.user', 'applicationFile', 'job']);
+            ->with(['applicant.user', 'applicationFile', 'job.company'])
+            ->whereRelation('job', 'deleted_at', null);
     }
 }

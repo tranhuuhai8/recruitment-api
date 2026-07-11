@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Resources\Admin\Favorite;
+namespace App\Http\Resources\Admin\ApplicationFile;
 
 use App\Helpers\DateHelper;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class JobFavoriteResource extends JsonResource
+class ApplicationFileResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,14 +17,11 @@ class JobFavoriteResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'job_id' => $this->job_id,
-            'job_title' => $this->job?->title,
-            'job_slug' => $this->job?->slug,
-            'company_name' => $this->job?->company?->name,
             'applicant_id' => $this->applicant_id,
-            'full_name' => $this->applicant?->name,
-            'email' => $this->applicant?->user?->mail_address,
-            'telephone' => $this->applicant?->telephone,
+            'file_name' => $this->file_name,
+            'file_path' => $this->file_path,
+            'file_type' => $this->file_type,
+            'file_size' => $this->file_size,
             'created_at' => DateHelper::parseDateBe($this->created_at),
         ];
     }

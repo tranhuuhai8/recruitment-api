@@ -16,6 +16,7 @@ class CompanyFollowerService extends BaseService
 
     protected $filterables = [
         'company_id' => 'filterByCompanyId',
+        'applicant_id' => 'filterByApplicantId',
     ];
 
     /**
@@ -35,6 +36,22 @@ class CompanyFollowerService extends BaseService
     }
 
     /**
+     * filterByApplicantId
+     *
+     * @param  Eloquent $query
+     * @param  array $filter
+     * @return Eloquent
+     */
+    public function filterByApplicantId(Eloquent $query, array $filter): Eloquent|QueryBuilder
+    {
+        if (!isset($filter['data']) || !$filter['data']) {
+            return $query;
+        }
+
+        return $query->where('applicant_id', +$filter['data']);
+    }
+
+    /**
      * makeNewQuery
      *
      * @return Eloquent | QueryBuilder
@@ -42,7 +59,7 @@ class CompanyFollowerService extends BaseService
     public function makeNewQuery(): Eloquent|QueryBuilder
     {
         return CompanyFollower::query()
-            ->with(['applicant.user'])
+            ->with(['applicant.user', 'company'])
             ->orderByDesc('id');
     }
 }
