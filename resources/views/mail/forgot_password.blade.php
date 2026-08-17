@@ -98,7 +98,7 @@
             <p>{{ __('auth.mail.forgot_password.text') }} Bằng cách nhấn vào nút dưới đây:</p>
             
             <?php
-                $resetUrl = config('app.url_home') . '/auth/reset-password?' . http_build_query([
+                $resetUrl = config('app.url_home') . '/tai-khoan/dat-lai-mat-khau?' . http_build_query([
                     'token' => $data['token'],
                     'email' => $data['mail_address'],
                 ]);
